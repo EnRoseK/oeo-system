@@ -1,6 +1,7 @@
 import { CloseIcon, WarningIcon } from '@/assets/icons';
 import { FC } from 'react';
 import { MediumButton } from '../form';
+import { motion, AnimatePresence, MotionConfig } from '@/libs';
 
 interface PopupProps {
 	show: boolean;
@@ -11,14 +12,22 @@ interface PopupProps {
 
 export const Popup: FC<PopupProps> = ({ show, title, confirm, cancel }) => {
 	return (
-		<>
+		<AnimatePresence>
 			{show && (
-				<>
-					<div
+				<MotionConfig transition={{ duration: 0.5, ease: 'anticipate' }}>
+					<motion.div
+						variants={{
+							initial: { opacity: 0, y: '-100%' },
+							animate: { opacity: 1, y: 0 },
+							exit: { opacity: 0, y: '100%' },
+						}}
+						initial='initial'
+						animate='animate'
+						exit='exit'
 						tabIndex={-1}
-						className='overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full'
+						className='overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 flex justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full pointer-events-none'
 					>
-						<div className='relative p-4 w-full max-w-md max-h-full'>
+						<div className='relative p-4 w-full max-w-md max-h-full pointer-events-auto'>
 							<div className='relative bg-white rounded-lg shadow dark:bg-gray-700'>
 								<button
 									onClick={() => cancel && cancel()}
@@ -44,14 +53,18 @@ export const Popup: FC<PopupProps> = ({ show, title, confirm, cancel }) => {
 								</div>
 							</div>
 						</div>
-					</div>
+					</motion.div>
 
-					<div
+					<motion.div
+						variants={{ initial: { opacity: 0 }, animate: { opacity: 1 } }}
+						initial='initial'
+						animate='animate'
+						exit='initial'
 						onClick={() => cancel && cancel()}
 						className='bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-30'
-					></div>
-				</>
+					/>
+				</MotionConfig>
 			)}
-		</>
+		</AnimatePresence>
 	);
 };

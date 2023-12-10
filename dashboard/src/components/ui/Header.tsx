@@ -1,7 +1,7 @@
 import { Dispatch, FC, SetStateAction } from 'react';
 import Link from 'next/link';
 import { UserMenu } from './UserMenu';
-import { Icons } from '@/libs';
+import { Icons, AnimatePresence } from '@/libs';
 import { CloseIcon, MobileMenuIcon } from '@/assets/icons';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
@@ -47,7 +47,7 @@ export const Header: FC<HeaderProps> = ({ showMobileSidebar, setShowMobileSideba
 							{currentTheme === 'dark' ? <Icons.FiSun size={20} /> : <Icons.FiMoon size={20} />}
 						</button>
 
-						<div className='flex items-center ml-3'>
+						<div ref={userMenuRef} className='flex items-center ml-3'>
 							<div>
 								<button
 									onClick={() => setShowUserMenu(!showUserMenu)}
@@ -63,11 +63,7 @@ export const Header: FC<HeaderProps> = ({ showMobileSidebar, setShowMobileSideba
 									/>
 								</button>
 							</div>
-							{showUserMenu && (
-								<div ref={userMenuRef}>
-									<UserMenu />
-								</div>
-							)}
+							<AnimatePresence>{showUserMenu && <UserMenu />}</AnimatePresence>
 						</div>
 					</div>
 				</div>

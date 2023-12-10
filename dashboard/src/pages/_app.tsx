@@ -1,3 +1,4 @@
+import 'react-toastify/dist/ReactToastify.css';
 import '@/styles/globals.css';
 import type { AppProps } from 'next/app';
 import { DashboardLayout } from '@/layouts';
@@ -5,6 +6,7 @@ import { NextPage } from 'next';
 import { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 import { ConfirmProvider } from '@/providers';
+import { ToastContainer } from 'react-toastify';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactNode) => ReactNode;
@@ -20,7 +22,10 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
 	return (
 		<ThemeProvider attribute='class'>
-			<ConfirmProvider>{getLayout(<Component {...pageProps} />)}</ConfirmProvider>
+			<ConfirmProvider>
+				{getLayout(<Component {...pageProps} />)}
+				<ToastContainer />
+			</ConfirmProvider>
 		</ThemeProvider>
 	);
 }

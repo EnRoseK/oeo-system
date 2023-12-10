@@ -1,10 +1,18 @@
 import { UserMenuItems } from '@/constants';
 import Link from 'next/link';
 import { FC } from 'react';
+import { motion } from '@/libs';
 
 export const UserMenu: FC = () => {
 	return (
-		<div className='absolute top-14 right-2 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600'>
+		<motion.div
+			variants={{ initial: { y: -50, opacity: 0 }, animate: { y: 0, opacity: 1 } }}
+			initial='initial'
+			animate='animate'
+			exit='initial'
+			transition={{ duration: 0.4, ease: 'anticipate' }}
+			className='absolute top-14 right-2 z-50 my-4 text-base list-none bg-white divide-y divide-gray-100 rounded shadow dark:bg-gray-700 dark:divide-gray-600'
+		>
 			<div className='px-4 py-3'>
 				<p className='text-sm text-gray-900 dark:text-white'>Neil Sims</p>
 				<p className='text-sm font-medium text-gray-900 truncate dark:text-gray-300'>
@@ -25,6 +33,6 @@ export const UserMenu: FC = () => {
 					);
 				})}
 			</ul>
-		</div>
+		</motion.div>
 	);
 };
