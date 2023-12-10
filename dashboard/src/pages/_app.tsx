@@ -4,6 +4,7 @@ import { DashboardLayout } from '@/layouts';
 import { NextPage } from 'next';
 import { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
+import { ConfirmProvider } from '@/providers';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactNode) => ReactNode;
@@ -17,5 +18,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 	const getLayout =
 		Component.getLayout ?? ((page): ReactNode => <DashboardLayout>{page}</DashboardLayout>);
 
-	return <ThemeProvider attribute='class'>{getLayout(<Component {...pageProps} />)}</ThemeProvider>;
+	return (
+		<ThemeProvider attribute='class'>
+			<ConfirmProvider>{getLayout(<Component {...pageProps} />)}</ConfirmProvider>
+		</ThemeProvider>
+	);
 }

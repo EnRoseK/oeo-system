@@ -7,3 +7,4 @@ export * from './PageHeader';
 export * from './Pagination';
 export * from './ActionButtons';
 export * from './Drawer';
+export * from './Popup';
