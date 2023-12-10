@@ -4,7 +4,12 @@ import { Table, TableBody, TableHead, TableHeadItem } from '@/components/Table';
 
 const TABLE_HEADS = ['Нэр', 'Ангилал', 'Тайлбар', 'Үлдэгдэл', 'Үйлдэл'];
 
-export const ProductList: FC = () => {
+interface ProductListProps {
+	editHandler: () => void;
+	deleteHandler: () => void;
+}
+
+export const ProductList: FC<ProductListProps> = ({ editHandler, deleteHandler }) => {
 	return (
 		<div className='flex flex-col'>
 			<div className='overflow-x-auto'>
@@ -18,7 +23,9 @@ export const ProductList: FC = () => {
 							</TableHead>
 							<TableBody>
 								{Array.from(Array(5)).map((_, ind) => {
-									return <ListItem key={ind} />;
+									return (
+										<ListItem editHandler={editHandler} deleteHandler={deleteHandler} key={ind} />
+									);
 								})}
 							</TableBody>
 						</Table>

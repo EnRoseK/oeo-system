@@ -6,3 +6,4 @@ export * from './Breadcrumbs';
 export * from './PageHeader';
 export * from './Pagination';
 export * from './ActionButtons';
+export * from './Drawer';

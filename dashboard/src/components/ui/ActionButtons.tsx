@@ -2,13 +2,18 @@ import React, { FC } from 'react';
 import { SmallButton } from '../form';
 import { DeleteIcon, UpdateIcon } from '@/assets/icons';
 
-export const ActionButtons: FC = () => {
+interface ActionButtonsProps {
+	editHandler: () => void;
+	deleteHandler: () => void;
+}
+
+export const ActionButtons: FC<ActionButtonsProps> = ({ editHandler, deleteHandler }) => {
 	return (
 		<td className='p-4 space-x-2 whitespace-nowrap'>
-			<SmallButton variant='primary' Icon={UpdateIcon}>
+			<SmallButton onClick={editHandler} variant='primary' Icon={UpdateIcon}>
 				Шинэчлэх
 			</SmallButton>
-			<SmallButton variant='danger' Icon={DeleteIcon}>
+			<SmallButton onClick={deleteHandler} variant='danger' Icon={DeleteIcon}>
 				Устгах
 			</SmallButton>
 		</td>

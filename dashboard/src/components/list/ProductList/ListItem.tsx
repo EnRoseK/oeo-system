@@ -12,7 +12,12 @@ const content = [
 	{ text: '100' },
 ];
 
-export const ListItem: FC = () => {
+interface ListItemProps {
+	editHandler: () => void;
+	deleteHandler: () => void;
+}
+
+export const ListItem: FC<ListItemProps> = ({ editHandler, deleteHandler }) => {
 	return (
 		<TableRow>
 			{content.map((c, index) => {
@@ -27,7 +32,7 @@ export const ListItem: FC = () => {
 				);
 			})}
 
-			<ActionButtons />
+			<ActionButtons editHandler={editHandler} deleteHandler={deleteHandler} />
 		</TableRow>
 	);
 };

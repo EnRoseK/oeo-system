@@ -6,9 +6,10 @@ import { CheckboxDropdown, MediumButton, SearchInput } from '../form';
 interface PageHeaderProps {
 	breadcrumbItems: IBreadcrumbItem[];
 	title: string;
+	addBtnHandler: () => void;
 }
 
-export const PageHeader: FC<PageHeaderProps> = ({ breadcrumbItems, title }) => {
+export const PageHeader: FC<PageHeaderProps> = ({ breadcrumbItems, title, addBtnHandler }) => {
 	return (
 		<div className='p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 lg:mt-1.5 dark:bg-gray-800 dark:border-gray-700'>
 			<div className='w-full mb-1'>
@@ -22,7 +23,7 @@ export const PageHeader: FC<PageHeaderProps> = ({ breadcrumbItems, title }) => {
 						<CheckboxDropdown />
 						<CheckboxDropdown />
 					</div>
-					<MediumButton>Нэмэх</MediumButton>
+					<MediumButton onClick={addBtnHandler}>Нэмэх</MediumButton>
 				</div>
 			</div>
 		</div>

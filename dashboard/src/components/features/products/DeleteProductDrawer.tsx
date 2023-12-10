@@ -1,14 +1,14 @@
+import { Drawer } from '@/components/ui';
 import React, { FC } from 'react';
 
-export const DeleteProductDrawer: FC = () => {
+interface DeleteProductDrawerProps {
+	show: boolean;
+	closeHandler: () => void;
+}
+
+export const DeleteProductDrawer: FC<DeleteProductDrawerProps> = ({ show, closeHandler }) => {
 	return (
-		<div
-			id='drawer-delete-product-default'
-			className='fixed top-0 right-0 z-40 w-full h-screen max-w-xs p-4 overflow-y-auto transition-transform translate-x-full bg-white dark:bg-gray-800'
-			tabIndex={-1}
-			aria-labelledby='drawer-label'
-			aria-hidden='true'
-		>
+		<Drawer show={show} closeHandler={closeHandler}>
 			<h5
 				id='drawer-label'
 				className='inline-flex items-center text-sm font-semibold text-gray-500 uppercase dark:text-gray-400'
@@ -66,6 +66,6 @@ export const DeleteProductDrawer: FC = () => {
 			>
 				No, cancel
 			</a>
-		</div>
+		</Drawer>
 	);
 };
