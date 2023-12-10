@@ -7,3 +7,4 @@ export * from './NextIcon';
 export * from './UpdateIcon';
 export * from './DeleteIcon';
 export * from './WarningIcon';
+export * from './UploadIcon';

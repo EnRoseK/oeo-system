@@ -8,3 +8,4 @@ export * from './Pagination';
 export * from './ActionButtons';
 export * from './Drawer';
 export * from './Popup';
+export * from './PasswordRequirement';

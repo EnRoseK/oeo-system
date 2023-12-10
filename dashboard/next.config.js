@@ -8,6 +8,11 @@ const nextConfig = {
 				hostname: 'flowbite.com',
 				pathname: '/**',
 			},
+			{
+				protocol: 'https',
+				hostname: 'flowbite-admin-dashboard.vercel.app',
+				pathname: '/**',
+			},
 		],
 	},
 };
