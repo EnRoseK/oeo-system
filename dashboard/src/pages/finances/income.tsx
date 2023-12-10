@@ -1,12 +1,12 @@
-import { AddUserDrawer, EditUserDrawer } from '@/components/features';
-import { UserList } from '@/components/list';
+import { AddFinanceIncomeDrawer, EditFinanceIncomeDrawer } from '@/components/features';
+import { FinanceIncomeList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
 import { useConfirm } from '@/hooks';
 import { NextPage } from 'next';
 import { useState } from 'react';
 
-const UsersPage: NextPage = () => {
+const FinanceIncomePage: NextPage = () => {
 	const { isConfirmed } = useConfirm();
 	const [drawerStates, setDrawerStates] = useState({
 		add: false,
@@ -30,18 +30,21 @@ const UsersPage: NextPage = () => {
 	return (
 		<>
 			<PageHeader
-				breadcrumbItems={[{ title: translations.users, url: '/users' }]}
-				title={translations.users}
+				breadcrumbItems={[{ title: translations.financeIncome, url: '/finances/income' }]}
+				title={translations.financeIncome}
 				addBtnHandler={() => showDrawer('add')}
 			/>
 
-			<UserList editHandler={() => showDrawer('edit')} deleteHandler={() => deleteProduct()} />
+			<FinanceIncomeList
+				editHandler={() => showDrawer('edit')}
+				deleteHandler={() => deleteProduct()}
+			/>
 			<Pagination />
 
-			<AddUserDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
-			<EditUserDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
+			<AddFinanceIncomeDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+			<EditFinanceIncomeDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
 		</>
 	);
 };
 
-export default UsersPage;
+export default FinanceIncomePage;
