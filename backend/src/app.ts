@@ -6,6 +6,7 @@ import { CategoryRoutes } from './modules/category/category.route';
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 // Routes
 app.use('/categories', CategoryRoutes);

@@ -13,6 +13,6 @@ export const validate =
 			return next();
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		} catch (err: any) {
-			next(createHttpError(500, err.message));
+			next(createHttpError(400, err.message));
 		}
 	};
