@@ -1,15 +1,17 @@
 import React, { FC } from 'react';
 import { ListItem } from './ListItem';
 import { Table, TableBody, TableHead, TableHeadItem } from '@/components/Table';
+import { ICategory } from '@/interfaces';
 
-const TABLE_HEADS = ['Нэр', 'Тайлбар', 'Урвалжийн тоо', 'Үйлдэл'];
+const TABLE_HEADS = ['#', 'Нэр', 'Тайлбар', 'Урвалжийн тоо', 'Үүссэн огноо', 'Үйлдэл'];
 
 interface CategoryListProps {
+	categories: ICategory[];
 	editHandler: () => void;
 	deleteHandler: () => void;
 }
 
-export const CategoryList: FC<CategoryListProps> = ({ editHandler, deleteHandler }) => {
+export const CategoryList: FC<CategoryListProps> = ({ categories, editHandler, deleteHandler }) => {
 	return (
 		<div className='flex flex-col'>
 			<div className='overflow-x-auto'>
@@ -22,9 +24,14 @@ export const CategoryList: FC<CategoryListProps> = ({ editHandler, deleteHandler
 								})}
 							</TableHead>
 							<TableBody>
-								{Array.from(Array(5)).map((_, ind) => {
+								{categories.map((category) => {
 									return (
-										<ListItem editHandler={editHandler} deleteHandler={deleteHandler} key={ind} />
+										<ListItem
+											category={category}
+											editHandler={editHandler}
+											deleteHandler={deleteHandler}
+											key={category._id}
+										/>
 									);
 								})}
 							</TableBody>
