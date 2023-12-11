@@ -6,6 +6,7 @@ import { CloseIcon, MobileMenuIcon } from '@/assets/icons';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import { useClickOutside } from '@/hooks';
+import { ThemeSwitcher } from './ThemeSwitcher';
 
 interface HeaderProps {
 	showMobileSidebar: boolean;
@@ -14,12 +15,6 @@ interface HeaderProps {
 
 export const Header: FC<HeaderProps> = ({ showMobileSidebar, setShowMobileSidebar }) => {
 	const [showUserMenu, setShowUserMenu, userMenuRef] = useClickOutside();
-	const { systemTheme, theme, setTheme } = useTheme();
-	const currentTheme = theme === 'system' ? systemTheme : theme;
-
-	const toggleTheme = () => {
-		setTheme(currentTheme == 'dark' ? 'light' : 'dark');
-	};
 
 	return (
 		<nav className='fixed z-30 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
@@ -39,13 +34,7 @@ export const Header: FC<HeaderProps> = ({ showMobileSidebar, setShowMobileSideba
 						</Link>
 					</div>
 					<div className='flex items-center'>
-						<button
-							onClick={toggleTheme}
-							type='button'
-							className='text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5'
-						>
-							{currentTheme === 'dark' ? <Icons.FiSun size={20} /> : <Icons.FiMoon size={20} />}
-						</button>
+						<ThemeSwitcher />
 
 						<div ref={userMenuRef} className='flex items-center ml-3'>
 							<div>

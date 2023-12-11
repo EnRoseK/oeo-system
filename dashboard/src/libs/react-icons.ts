@@ -6,6 +6,7 @@ import { GrDocumentStore, GrHistory } from 'react-icons/gr';
 import { IoDocumentsOutline } from 'react-icons/io5';
 import { FaMoneyBillTransfer } from 'react-icons/fa6';
 import { FaCog } from 'react-icons/fa';
+import { MdOutlineWbSunny } from 'react-icons/md';
 
 export const Icons = {
 	FiSun,
@@ -20,4 +21,5 @@ export const Icons = {
 	FiUsers,
 	GrHistory,
 	FaCog,
+	MdOutlineWbSunny,
 };
