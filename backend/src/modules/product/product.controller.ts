@@ -6,6 +6,16 @@ import { CategoryModel } from '../category/category.model';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 
+const getAllProducts: RequestHandler = async (req, res, next) => {
+  try {
+    const products = await ProductModel.find().sort({ createdAt: -1 });
+
+    res.status(200).json({ data: products });
+  } catch (error) {
+    next(error);
+  }
+};
+
 const getFilteredProducts: RequestHandler = async (req, res, next) => {
   try {
     const { page = '1', q = '' } = req.query;
@@ -136,4 +146,4 @@ const deleteProduct: RequestHandler = async (req, res, next) => {
   }
 };
 
-export const ProductController = { getFilteredProducts, createProduct, updateProduct, deleteProduct };
+export const ProductController = { getFilteredProducts, createProduct, updateProduct, deleteProduct, getAllProducts };

@@ -5,6 +5,7 @@ import { createAndUpdateProductValidation } from './product.validation';
 
 const router = express.Router();
 
+router.get('/all', ProductController.getAllProducts);
 router.get('/', ProductController.getFilteredProducts);
 router.post('/', validate(createAndUpdateProductValidation), ProductController.createProduct);
 router.patch('/:id', validateMongoId, validate(createAndUpdateProductValidation), ProductController.updateProduct);
