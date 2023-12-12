@@ -5,19 +5,23 @@ import { FC } from 'react';
 
 interface ListItemProps {
 	category: ICategory;
-	editHandler: () => void;
-	deleteHandler: () => void;
+	editHandler: (category: ICategory) => void;
+	deleteHandler: (id: string) => void;
+	number: number;
 }
 
-export const ListItem: FC<ListItemProps> = ({ category, editHandler, deleteHandler }) => {
+export const ListItem: FC<ListItemProps> = ({ category, editHandler, deleteHandler, number }) => {
 	return (
 		<TableRow>
-			<TableRowItem>1</TableRowItem>
+			<TableRowItem>{number}</TableRowItem>
 			<TableRowItem>{category.title}</TableRowItem>
 			<TableRowItemDescription>{category.description}</TableRowItemDescription>
 			<TableRowItem>{category.productCount}</TableRowItem>
-			<TableRowItem>{category.createdAt}</TableRowItem>
-			<ActionButtons editHandler={editHandler} deleteHandler={deleteHandler} />
+			<TableRowItem>{new Date(category.createdAt).toLocaleDateString()}</TableRowItem>
+			<ActionButtons
+				editHandler={() => editHandler(category)}
+				deleteHandler={() => deleteHandler(category._id)}
+			/>
 		</TableRow>
 	);
 };

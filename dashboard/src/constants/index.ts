@@ -74,3 +74,5 @@ export const UserMenuItems: IUserMenuItem[] = [
 	{ title: translations.settings, url: '/settings' },
 	{ title: translations.logout, url: '/logout' },
 ];
+
+export const PAGE_SIZE = 5;

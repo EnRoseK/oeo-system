@@ -9,3 +9,4 @@ export * from './ActionButtons';
 export * from './Drawer';
 export * from './Popup';
 export * from './PasswordRequirement';
+export * from './EmptyPage';

@@ -7,6 +7,7 @@ import { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 import { ConfirmProvider } from '@/providers';
 import { ToastContainer } from 'react-toastify';
+import NextProgress from 'next-progress';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactNode) => ReactNode;
@@ -25,6 +26,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 			<ConfirmProvider>
 				{getLayout(<Component {...pageProps} />)}
 				<ToastContainer />
+				<NextProgress height={3} color='#3b82f6' />
 			</ConfirmProvider>
 		</ThemeProvider>
 	);

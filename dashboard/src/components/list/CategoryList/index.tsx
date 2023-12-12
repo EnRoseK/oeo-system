@@ -2,16 +2,21 @@ import React, { FC } from 'react';
 import { ListItem } from './ListItem';
 import { Table, TableBody, TableHead, TableHeadItem } from '@/components/Table';
 import { ICategory } from '@/interfaces';
+import { EmptyPage } from '@/components/ui';
+import { useGetCurrentPage } from '@/hooks';
+import { PAGE_SIZE } from '@/constants';
 
 const TABLE_HEADS = ['#', 'Нэр', 'Тайлбар', 'Урвалжийн тоо', 'Үүссэн огноо', 'Үйлдэл'];
 
 interface CategoryListProps {
 	categories: ICategory[];
-	editHandler: () => void;
-	deleteHandler: () => void;
+	editHandler: (category: ICategory) => void;
+	deleteHandler: (id: string) => void;
 }
 
 export const CategoryList: FC<CategoryListProps> = ({ categories, editHandler, deleteHandler }) => {
+	const currentPage = useGetCurrentPage();
+
 	return (
 		<div className='flex flex-col'>
 			<div className='overflow-x-auto'>
@@ -24,9 +29,10 @@ export const CategoryList: FC<CategoryListProps> = ({ categories, editHandler, d
 								})}
 							</TableHead>
 							<TableBody>
-								{categories.map((category) => {
+								{categories.map((category, index) => {
 									return (
 										<ListItem
+											number={(currentPage - 1) * PAGE_SIZE + index + 1}
 											category={category}
 											editHandler={editHandler}
 											deleteHandler={deleteHandler}

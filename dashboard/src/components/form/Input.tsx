@@ -4,9 +4,11 @@ interface InputProps extends ComponentProps<'input'> {
 	label?: string;
 	id?: string;
 	name?: string;
+	error?: boolean;
+	errorMsg?: string;
 }
 
-export const Input: FC<InputProps> = ({ label, id, name, ...rest }) => {
+export const Input: FC<InputProps> = ({ label, id, name, error = false, errorMsg, ...rest }) => {
 	return (
 		<div>
 			{label && (
@@ -20,9 +22,12 @@ export const Input: FC<InputProps> = ({ label, id, name, ...rest }) => {
 			<input
 				name={name}
 				id={id}
-				className='bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500'
+				className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500  ${
+					error ? 'ring-red-600 border-red-600 dark:ring-red-500 dark:border-red-500' : ''
+				}`}
 				{...rest}
 			/>
+			{error && <p className='italic text-xs mt-1 text-red-600 dark:text-red-500'>{errorMsg}</p>}
 		</div>
 	);
 };

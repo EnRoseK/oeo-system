@@ -6,3 +6,9 @@ export interface ICategory {
 	createdAt: string;
 	updatedAt: string;
 }
+
+export interface IPagination {
+	total: number;
+	currentPage: number;
+	totalPage: number;
+}
