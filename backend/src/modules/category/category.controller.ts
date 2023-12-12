@@ -2,12 +2,32 @@ import { RequestHandler } from 'express';
 import { CategoryModel } from './category.model';
 import createHttpError from 'http-errors';
 import { CreateAndUpdateCategoryBody, UpdateCategoryParams } from './category.dto';
+import { PAGE_SIZE } from '../../constants';
 
 const getAllCategories: RequestHandler = async (req, res, next) => {
 	try {
-		const categories = await CategoryModel.find();
+		const { page = '1', q = '' } = req.query;
+		const currentPage = Number(page);
 
-		res.status(200).json({ data: categories });
+		const categories = await CategoryModel.find({
+			title: new RegExp('^' + q, 'i'),
+		})
+			.sort({ createdAt: -1 })
+			.limit(PAGE_SIZE)
+			.skip((currentPage - 1) * PAGE_SIZE);
+
+		const categoryCount = await CategoryModel.find({
+			title: new RegExp('^' + q, 'i'),
+		}).countDocuments();
+
+		res.status(200).json({
+			data: categories,
+			pagination: {
+				total: categoryCount,
+				currentPage,
+				totalPage: Math.ceil(categoryCount / PAGE_SIZE),
+			},
+		});
 	} catch (error) {
 		next(error);
 	}
