@@ -10,24 +10,34 @@ import { ToastContainer } from 'react-toastify';
 import NextProgress from 'next-progress';
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
-	getLayout?: (page: ReactNode) => ReactNode;
+  getLayout?: (page: ReactNode) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps & {
-	Component: NextPageWithLayout;
+  Component: NextPageWithLayout;
 };
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-	const getLayout =
-		Component.getLayout ?? ((page): ReactNode => <DashboardLayout>{page}</DashboardLayout>);
+  const getLayout = Component.getLayout ?? ((page): ReactNode => <DashboardLayout>{page}</DashboardLayout>);
 
-	return (
-		<ThemeProvider attribute='class'>
-			<ConfirmProvider>
-				{getLayout(<Component {...pageProps} />)}
-				<ToastContainer />
-				<NextProgress height={3} color='#3b82f6' />
-			</ConfirmProvider>
-		</ThemeProvider>
-	);
+  return (
+    <ThemeProvider attribute='class'>
+      <ConfirmProvider>
+        {getLayout(<Component {...pageProps} />)}
+        <ToastContainer
+          position='top-center'
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme='light'
+        />
+        <NextProgress height={3} color='#3b82f6' />
+      </ConfirmProvider>
+    </ThemeProvider>
+  );
 }

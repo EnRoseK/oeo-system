@@ -1,12 +1,14 @@
-import { getAllCategories, getFilteredProducts } from '@/api/services';
+import { getAllCategories, getFilteredProducts, removeProduct } from '@/api/services';
 import { AddProductDrawer, EditProductDrawer } from '@/components/features';
 import { ProductList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm } from '@/hooks';
+import { useConfirm, useRefreshData } from '@/hooks';
 import { ICategory, IPagination, IProduct } from '@/interfaces';
+import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface ProductsPageProps {
   products: IProduct[];
@@ -32,6 +34,8 @@ export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async (
 };
 
 const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categories }) => {
+  const refreshData = useRefreshData();
+  const [selectedProduct, setSelectedProduct] = useState<IProduct | undefined>(undefined);
   const { isConfirmed } = useConfirm();
   const [drawerStates, setDrawerStates] = useState({
     add: false,
@@ -46,10 +50,19 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categ
     setDrawerStates((prev) => ({ ...prev, [drawer]: false }));
   };
 
-  const deleteProduct = async () => {
+  const deleteProduct = async (id: string) => {
     try {
       const confirmed = await isConfirmed('Та энэ урвалжийг устгахдаа итгэлтэй байна уу?');
-    } catch (error) {}
+
+      if (!confirmed) return;
+
+      await removeProduct(id);
+
+      refreshData();
+      toast.success('Урвалж амжилттай устлаа');
+    } catch (error) {
+      errorHandler(error);
+    }
   };
 
   return (
@@ -59,14 +72,26 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categ
         title={translations.products}
         addBtnHandler={() => showDrawer('add')}
       />
-      <ProductList products={products} editHandler={() => showDrawer('edit')} deleteHandler={() => deleteProduct()} />
+      <ProductList
+        products={products}
+        editHandler={(product: IProduct) => {
+          showDrawer('edit');
+          setSelectedProduct(product);
+        }}
+        deleteHandler={(id: string) => deleteProduct(id)}
+      />
       <Pagination pagination={pagination} />
 
       {/* Add Product Drawer */}
-      <AddProductDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      <AddProductDrawer categories={categories} show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
 
       {/* Edit Product Drawer */}
-      <EditProductDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
+      <EditProductDrawer
+        product={selectedProduct}
+        categories={categories}
+        show={drawerStates.edit}
+        closeHandler={() => closeDrawer('edit')}
+      />
     </>
   );
 };

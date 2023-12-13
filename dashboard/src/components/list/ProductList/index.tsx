@@ -9,8 +9,8 @@ const TABLE_HEADS = ['#', 'Нэр', 'Ангилал', 'Тайлбар', 'Үлд�
 
 interface ProductListProps {
   products: IProduct[];
-  editHandler: () => void;
-  deleteHandler: () => void;
+  editHandler: (product: IProduct) => void;
+  deleteHandler: (id: string) => void;
 }
 
 export const ProductList: FC<ProductListProps> = ({ products, editHandler, deleteHandler }) => {

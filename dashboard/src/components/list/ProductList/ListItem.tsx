@@ -6,8 +6,8 @@ import React, { FC } from 'react';
 interface ListItemProps {
   product: IProduct;
   number: number;
-  editHandler: () => void;
-  deleteHandler: () => void;
+  editHandler: (product: IProduct) => void;
+  deleteHandler: (id: string) => void;
 }
 
 export const ListItem: FC<ListItemProps> = ({ product, number, editHandler, deleteHandler }) => {
@@ -19,7 +19,7 @@ export const ListItem: FC<ListItemProps> = ({ product, number, editHandler, dele
       <TableRowItemDescription>{product.description}</TableRowItemDescription>
       <TableRowItem>{product.remainder.toLocaleString()}ш</TableRowItem>
 
-      <ActionButtons editHandler={editHandler} deleteHandler={deleteHandler} />
+      <ActionButtons editHandler={() => editHandler(product)} deleteHandler={() => deleteHandler(product?._id!)} />
     </TableRow>
   );
 };

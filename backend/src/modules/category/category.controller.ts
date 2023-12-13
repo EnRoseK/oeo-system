@@ -108,6 +108,10 @@ const deleteCategory: RequestHandler = async (req, res, next) => {
       throw createHttpError(404, 'Ангилал олдсонгүй!');
     }
 
+    if (categoryExist.productCount > 0) {
+      throw createHttpError(400, 'Сонгосон ангилалд бүртгэлтэй урвалж байгаа тул устгах боломжгүй!');
+    }
+
     await CategoryModel.findByIdAndDelete(id);
 
     res.sendStatus(204);
