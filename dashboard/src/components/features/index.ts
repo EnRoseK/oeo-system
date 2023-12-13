@@ -3,7 +3,6 @@ export * from './products/EditProductDrawer';
 export * from './categories/AddCategoryDrawer';
 export * from './categories/EditCategoryDrawer';
 export * from './productIncome/AddProductIncomeDrawer';
-export * from './productIncome/EditProductIncomeDrawer';
 export * from './productExpense/AddProductExpenseDrawer';
 export * from './productExpense/EditProductExpenseDrawer';
 export * from './financeIncome/AddFinanceIncomeDrawer';

@@ -1,38 +1,25 @@
-import { TableRow, TableRowItem, TableRowItemDescription } from '@/components/Table';
+import { TableRow, TableRowItem } from '@/components/Table';
 import { ActionButtons } from '@/components/ui';
-import React, { FC, Fragment } from 'react';
-
-const content = [
-	{ text: 'Education Dashboard' },
-	{ text: 'Angular' },
-	{
-		text: 'Start developing with an open-source library of over 450+ UI components, sections, and pages built with the utility classes from Tailwind CSS and designed in Figma.',
-		isDescription: true,
-	},
-	{ text: '100' },
-];
+import { IProductIncome } from '@/interfaces';
+import React, { FC } from 'react';
 
 interface ListItemProps {
-	editHandler: () => void;
-	deleteHandler: () => void;
+  number: number;
+  productIncome: IProductIncome;
+  deleteHandler: (id: string) => void;
 }
 
-export const ListItem: FC<ListItemProps> = ({ editHandler, deleteHandler }) => {
-	return (
-		<TableRow>
-			{content.map((c, index) => {
-				return (
-					<Fragment key={index}>
-						{c.isDescription ? (
-							<TableRowItemDescription>{c.text}</TableRowItemDescription>
-						) : (
-							<TableRowItem>{c.text}</TableRowItem>
-						)}
-					</Fragment>
-				);
-			})}
+export const ListItem: FC<ListItemProps> = ({ number, productIncome, deleteHandler }) => {
+  return (
+    <TableRow>
+      <TableRowItem>{number}</TableRowItem>
+      <TableRowItem>{productIncome.product.title}</TableRowItem>
+      <TableRowItem>{productIncome.quantity.toLocaleString()}ш</TableRowItem>
+      <TableRowItem>{productIncome.basePrice.toLocaleString()}₮</TableRowItem>
+      <TableRowItem>{productIncome.totalPrice.toLocaleString()}₮</TableRowItem>
+      <TableRowItem>{new Date(productIncome.createdAt).toLocaleDateString()}</TableRowItem>
 
-			<ActionButtons editHandler={editHandler} deleteHandler={deleteHandler} />
-		</TableRow>
-	);
+      <ActionButtons showEdit={false} deleteHandler={() => deleteHandler(productIncome._id)} />
+    </TableRow>
+  );
 };

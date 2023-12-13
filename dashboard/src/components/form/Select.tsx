@@ -10,7 +10,7 @@ interface SelectProps extends ComponentProps<'select'> {
   errorMsg?: string;
 }
 
-export const Select: FC<SelectProps> = ({ label, id, name, items, placeHolder, error, errorMsg, ...rest }) => {
+export const Select: FC<SelectProps> = ({ label, id, name, items = [], placeHolder, error, errorMsg, ...rest }) => {
   return (
     <div>
       {label && (

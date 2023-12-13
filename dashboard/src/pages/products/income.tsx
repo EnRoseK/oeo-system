@@ -1,53 +1,86 @@
-import { AddProductIncomeDrawer, EditProductIncomeDrawer } from '@/components/features';
+import { getAllProducts, getFilteredProductIncomes, removeProductIncome } from '@/api/services';
+import { AddProductIncomeDrawer } from '@/components/features';
 import { ProductIncomeList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm } from '@/hooks';
-import { NextPage } from 'next';
+import { useConfirm, useRefreshData } from '@/hooks';
+import { IPagination, IProduct, IProductIncome } from '@/interfaces';
+import { errorHandler } from '@/utils';
+import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
-const ProductIncomePage: NextPage = () => {
-	const { isConfirmed } = useConfirm();
-	const [drawerStates, setDrawerStates] = useState({
-		add: false,
-		edit: false,
-	});
+interface ProductIncomePageProps {
+  productIncomes: IProductIncome[];
+  pagination: IPagination;
+  products: IProduct[];
+}
 
-	const showDrawer = (drawer: 'add' | 'edit') => {
-		setDrawerStates((prev) => ({ ...prev, [drawer]: true }));
-	};
+export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = async ({ query }) => {
+  const { page } = query;
 
-	const closeDrawer = (drawer: 'add' | 'edit') => {
-		setDrawerStates((prev) => ({ ...prev, [drawer]: false }));
-	};
+  const [productIncomesRes, productsRes] = await Promise.all([
+    getFilteredProductIncomes(Number(page)),
+    getAllProducts(),
+  ]);
 
-	const deleteProduct = async () => {
-		try {
-			const confirmed = await isConfirmed('Та энэ урвалжийг устгахдаа итгэлтэй байна уу?');
-		} catch (error) {}
-	};
+  return {
+    props: {
+      productIncomes: productIncomesRes.data,
+      pagination: productIncomesRes.pagination,
+      products: productsRes.data,
+    },
+  };
+};
 
-	return (
-		<>
-			<PageHeader
-				breadcrumbItems={[
-					{ title: translations.products, url: '/products' },
-					{ title: translations.productIncome, url: '/products/income' },
-				]}
-				title={translations.productIncome}
-				addBtnHandler={() => showDrawer('add')}
-			/>
+const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, pagination, products }) => {
+  const refreshData = useRefreshData();
+  const { isConfirmed } = useConfirm();
+  const [drawerStates, setDrawerStates] = useState({
+    add: false,
+    edit: false,
+  });
 
-			<ProductIncomeList
-				editHandler={() => showDrawer('edit')}
-				deleteHandler={() => deleteProduct()}
-			/>
-			<Pagination />
+  const showDrawer = (drawer: 'add') => {
+    setDrawerStates((prev) => ({ ...prev, [drawer]: true }));
+  };
 
-			<AddProductIncomeDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
-			<EditProductIncomeDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
-		</>
-	);
+  const closeDrawer = (drawer: 'add') => {
+    setDrawerStates((prev) => ({ ...prev, [drawer]: false }));
+  };
+
+  const deleteProductIncome = async (id: string) => {
+    try {
+      const confirmed = await isConfirmed('Та энэ урвалж орлогыг устгахдаа итгэлтэй байна уу?');
+
+      if (!confirmed) return;
+
+      await removeProductIncome(id);
+
+      refreshData();
+      toast.success('Урвалж орлого амжилттай устлаа');
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
+
+  return (
+    <>
+      <PageHeader
+        breadcrumbItems={[
+          { title: translations.products, url: '/products' },
+          { title: translations.productIncome, url: '/products/income' },
+        ]}
+        title={translations.productIncome}
+        addBtnHandler={() => showDrawer('add')}
+      />
+
+      <ProductIncomeList productIncomes={productIncomes} deleteHandler={(id: string) => deleteProductIncome(id)} />
+      <Pagination pagination={pagination} />
+
+      <AddProductIncomeDrawer products={products} show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+    </>
+  );
 };
 
 export default ProductIncomePage;

@@ -1,26 +1,104 @@
 import { CloseIcon } from '@/assets/icons';
-import { Input, MediumButton, Select, Textarea } from '@/components/form';
+import { Input, MediumButton, Select } from '@/components/form';
+import { IProduct } from '@/interfaces';
+import { FormikHelpers } from 'formik';
 import { FC } from 'react';
+import { Form, Formik } from 'formik';
+import { productIncomeCreateAndUpdateValidation } from '@/validations';
 
-export const ProductIncomeAddEditForm: FC = () => {
-	return (
-		<form>
-			<div className='space-y-4'>
-				<Input label='Нэр' id='name' name='name' />
+export interface ProductIncomeInitialValueType {
+  productId: string;
+  basePrice: number;
+  quantity: number;
+}
 
-				<Select label='Ангилал' id='category' name='category' />
+interface ProductIncomeAddEditFormProps {
+  products: IProduct[];
+  closeHandler: () => void;
+  initialValues: ProductIncomeInitialValueType;
+  onSubmitHandler: (
+    values: ProductIncomeInitialValueType,
+    helpers: FormikHelpers<ProductIncomeInitialValueType>,
+  ) => void;
+}
 
-				<Input label='Үлдэгдэл' type='number' id='remainder' name='remainder' />
+export const ProductIncomeAddEditForm: FC<ProductIncomeAddEditFormProps> = ({
+  products,
+  closeHandler,
+  initialValues,
+  onSubmitHandler,
+}) => {
+  return (
+    <Formik
+      initialValues={initialValues}
+      onSubmit={onSubmitHandler}
+      validationSchema={productIncomeCreateAndUpdateValidation}
+    >
+      {({ values, handleChange, handleBlur, errors, touched, isSubmitting }) => (
+        <Form>
+          <div className='space-y-4'>
+            <Select
+              label='Урвалж'
+              id='productId'
+              name='productId'
+              items={products.map((p) => ({ label: p.title, value: p._id }))}
+              placeHolder='Урвалж сонгох'
+              value={values.productId}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={!!errors.productId && touched.productId}
+              errorMsg={errors.productId}
+            />
 
-				<Textarea label='Тайлбар' id='description' name='description' />
+            <Input
+              label='Нэгж үнэ'
+              type='number'
+              id='basePrice'
+              name='basePrice'
+              value={values.basePrice}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={!!errors.basePrice && touched.basePrice}
+              errorMsg={errors.basePrice}
+            />
+            <Input
+              label='Тоо ширхэг'
+              type='number'
+              id='quantity'
+              name='quantity'
+              value={values.quantity}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={!!errors.quantity && touched.quantity}
+              errorMsg={errors.quantity}
+            />
+            <Input
+              label='Нийт үнэ'
+              type='number'
+              id='totalPrice'
+              name='totalPrice'
+              value={values.basePrice * values.quantity}
+              disabled
+            />
 
-				<div className='bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute'>
-					<MediumButton width='100%'>Нэмэх</MediumButton>
-					<MediumButton width='100%' variant='white' Icon={CloseIcon}>
-						Цуцлах
-					</MediumButton>
-				</div>
-			</div>
-		</form>
-	);
+            <div className='bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute'>
+              <MediumButton disabled={isSubmitting} type='submit' width='100%'>
+                Нэмэх
+              </MediumButton>
+              <MediumButton
+                disabled={isSubmitting}
+                type='button'
+                onClick={closeHandler}
+                width='100%'
+                variant='white'
+                Icon={CloseIcon}
+              >
+                Цуцлах
+              </MediumButton>
+            </div>
+          </div>
+        </Form>
+      )}
+    </Formik>
+  );
 };
