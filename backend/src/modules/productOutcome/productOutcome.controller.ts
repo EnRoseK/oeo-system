@@ -5,6 +5,7 @@ import { createProductOutcomeBody } from './productOutcome.dto';
 import { ProductModel } from '../product/product.model';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
+import { FinanceIncomeModel } from '../financeIncome/financeIncome.model';
 
 const getFilteredProductOutcomes: RequestHandler = async (req, res, next) => {
   try {
@@ -56,6 +57,11 @@ const createProductOutcome: RequestHandler<unknown, unknown, createProductOutcom
       { session },
     );
 
+    await FinanceIncomeModel.create(
+      [{ type: 'PRODUCT', amount: newProductOutcome.totalPrice, productOutcomeId: newProductOutcome._id }],
+      { session },
+    );
+
     await session.commitTransaction();
 
     res.status(201).json({ data: newProductOutcome });
@@ -87,6 +93,7 @@ const removeProductOutcome: RequestHandler = async (req, res, next) => {
     );
 
     await ProductOutcomeModel.findByIdAndDelete(id);
+    await FinanceIncomeModel.findOneAndDelete({ productOutcomeId: id });
 
     await session.commitTransaction();
 
