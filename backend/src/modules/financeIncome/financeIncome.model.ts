@@ -21,7 +21,14 @@ const FinanceIncomeSchema = new Schema<IFinanceIncome>(
     },
     productOutcomeId: String,
   },
-  { timestamps: true },
+  { timestamps: true, toJSON: { virtuals: true } },
 );
+
+FinanceIncomeSchema.virtual('productOutcome', {
+  ref: 'ProductOutcome',
+  localField: 'productOutcomeId',
+  foreignField: '_id',
+  justOne: true,
+});
 
 export const FinanceIncomeModel = model<IFinanceIncome>('FinanceIncome', FinanceIncomeSchema);

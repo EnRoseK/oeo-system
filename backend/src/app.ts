@@ -6,6 +6,7 @@ import { ProductRoutes } from './modules/product/product.route';
 import { ProductIncomeRoutes } from './modules/productIncome/productIncome.route';
 import { ProductOutcomeRoutes } from './modules/productOutcome/productOutcome.route';
 import { FinanceIncomeRoutes } from './modules/financeIncome/financeIncome.route';
+import { FinanceExpenseRoutes } from './modules/financeExpense/financeExpense.route';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use('/products/incomes', ProductIncomeRoutes);
 app.use('/products/outcomes', ProductOutcomeRoutes);
 app.use('/products', ProductRoutes);
 app.use('/finance/incomes', FinanceIncomeRoutes);
+app.use('/finance/expenses', FinanceExpenseRoutes);
 
 app.use(wrongEndpointHandler);
 

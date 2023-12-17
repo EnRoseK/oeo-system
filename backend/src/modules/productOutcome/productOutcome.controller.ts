@@ -6,6 +6,7 @@ import { ProductModel } from '../product/product.model';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
 import { FinanceIncomeModel } from '../financeIncome/financeIncome.model';
+import { nanoid } from '../../libs';
 
 const getFilteredProductOutcomes: RequestHandler = async (req, res, next) => {
   try {
@@ -57,7 +58,7 @@ const createProductOutcome: RequestHandler<unknown, unknown, createProductOutcom
     await ProductModel.findByIdAndUpdate(productId, { $inc: { remainder: -quantity } }, { session });
 
     const [newProductOutcome] = await ProductOutcomeModel.create(
-      [{ productId, quantity, basePrice, totalPrice: quantity * basePrice }],
+      [{ productId, quantity, basePrice, totalPrice: quantity * basePrice, productOutcomeId: 'PO' + nanoid() }],
       { session },
     );
 

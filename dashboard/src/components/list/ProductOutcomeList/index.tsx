@@ -5,7 +5,16 @@ import { IProductOutcome } from '@/interfaces';
 import { PAGE_SIZE } from '@/constants';
 import { useGetCurrentPage } from '@/hooks';
 
-const TABLE_HEADS = ['#', 'Урвалжийн нэр', 'Тоо ширхэг', 'Нэгж үнэ', 'Нийт үнэ', 'Үүссэн огноо', 'Үйлдэл'];
+const TABLE_HEADS = [
+  '#',
+  'Шинжилгээний дугаар',
+  'Урвалжийн нэр',
+  'Тоо ширхэг',
+  'Нэгж үнэ',
+  'Нийт үнэ',
+  'Үүссэн огноо',
+  'Үйлдэл',
+];
 
 interface ProductOutcomesListProps {
   productOutcomes: IProductOutcome[];

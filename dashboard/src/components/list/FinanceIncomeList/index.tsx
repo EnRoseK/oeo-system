@@ -5,7 +5,7 @@ import { IFinanceIncome } from '@/interfaces';
 import { PAGE_SIZE } from '@/constants';
 import { useGetCurrentPage } from '@/hooks';
 
-const TABLE_HEADS = ['#', 'Төрөл', 'Дүн', 'Үүссэн огноо'];
+const TABLE_HEADS = ['#', 'Төрөл', 'Дүн', 'Шижилгээний дугаар', 'Үүссэн огноо'];
 
 interface FinanceIncomeListProps {
   financeIncomes: IFinanceIncome[];

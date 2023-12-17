@@ -6,7 +6,7 @@ export const translations = {
   products: 'Урвалжууд',
   categories: 'Урвалж ангилал',
   productIncome: 'Урвалж орлого',
-  productExpense: 'Урвалж зарлага',
+  productOutcome: 'Шинжилгээ',
   financeIncome: 'Санхүүгийн орлого',
   financeExpense: 'Санхүүгийн зарлага',
   users: 'Хэрэглэгчид',
@@ -38,7 +38,7 @@ export const SidebarItems: ISidebarItem[] = [
     icon: Icons.GrDocumentStore,
   },
   {
-    title: translations.productExpense,
+    title: translations.productOutcome,
     url: '/products/outcome',
     icon: Icons.IoDocumentsOutline,
   },

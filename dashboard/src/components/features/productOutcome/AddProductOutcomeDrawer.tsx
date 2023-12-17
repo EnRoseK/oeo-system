@@ -8,6 +8,7 @@ import { useRefreshData } from '@/hooks';
 import { errorHandler } from '@/utils';
 import { createProductOutcome } from '@/api/services';
 import { toast } from 'react-toastify';
+import { translations } from '@/constants';
 
 interface AddProductOutcomeDrawerProps {
   products: IProduct[];
@@ -26,7 +27,7 @@ export const AddProductOutcomeDrawer: FC<AddProductOutcomeDrawerProps> = ({ prod
       await createProductOutcome(values);
 
       refreshData();
-      toast.success('Урвалж зарлага амжилттай нэмэгдлээ');
+      toast.success(`${translations.productOutcome} амжилттай нэмэгдлээ`);
       helpers.resetForm();
       closeHandler();
     } catch (error) {
@@ -37,7 +38,7 @@ export const AddProductOutcomeDrawer: FC<AddProductOutcomeDrawerProps> = ({ prod
   return (
     <Drawer show={show} closeHandler={closeHandler}>
       <h5 className='inline-flex items-center mb-6 text-sm font-semibold text-gray-500 uppercase dark:text-gray-400'>
-        Урвалж зарлага нэмэх
+        {translations.productOutcome} нэмэх
       </h5>
       <button
         onClick={closeHandler}

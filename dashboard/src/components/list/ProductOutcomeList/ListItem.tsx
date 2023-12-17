@@ -13,6 +13,7 @@ export const ListItem: FC<ListItemProps> = ({ productOutcome, number, deleteHand
   return (
     <TableRow>
       <TableRowItem>{number}</TableRowItem>
+      <TableRowItem>{productOutcome.productOutcomeId}</TableRowItem>
       <TableRowItem>{productOutcome.product.title}</TableRowItem>
       <TableRowItem>{productOutcome.quantity.toLocaleString()}ш</TableRowItem>
       <TableRowItem>{productOutcome.basePrice.toLocaleString()}₮</TableRowItem>

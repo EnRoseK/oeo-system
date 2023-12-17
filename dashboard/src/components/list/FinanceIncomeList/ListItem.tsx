@@ -13,6 +13,7 @@ export const ListItem: FC<ListItemProps> = ({ financeIncome, number }) => {
       <TableRowItem>{number}</TableRowItem>
       <TableRowItem>{financeIncome.type.replaceAll('PRODUCT', 'Шинжилгээ')}</TableRowItem>
       <TableRowItem>{financeIncome.amount.toLocaleString()}₮</TableRowItem>
+      <TableRowItem>{financeIncome.productOutcome.productOutcomeId}</TableRowItem>
       <TableRowItem>{new Date(financeIncome.createdAt).toLocaleDateString()}</TableRowItem>
     </TableRow>
   );

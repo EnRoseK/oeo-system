@@ -5,6 +5,8 @@ import { createProductIncomeBody } from './productIncome.dto';
 import { ProductModel } from '../product/product.model';
 import createHttpError from 'http-errors';
 import mongoose from 'mongoose';
+import { nanoid } from '../../libs';
+import { FinanceExpenseModel } from '../financeExpense/financeExpense.model';
 
 const getFilteredProductIncomes: RequestHandler = async (req, res, next) => {
   try {
@@ -46,11 +48,15 @@ const createProductIncome: RequestHandler<unknown, unknown, createProductIncomeB
     session.startTransaction();
 
     const [newProductIncome] = await ProductIncomeModel.create(
-      [{ productId, quantity, basePrice, totalPrice: quantity * basePrice }],
+      [{ productId, quantity, basePrice, totalPrice: quantity * basePrice, productIncomeId: 'PI' + nanoid() }],
       { session },
     );
 
     await ProductModel.findByIdAndUpdate(productId, { $inc: { remainder: quantity } }, { session });
+    await FinanceExpenseModel.create(
+      [{ type: 'PRODUCT', amount: newProductIncome.totalPrice, productIncomeId: newProductIncome._id }],
+      { session },
+    );
 
     await session.commitTransaction();
 
@@ -83,6 +89,7 @@ const removeProductIncome: RequestHandler = async (req, res, next) => {
     );
 
     await ProductIncomeModel.findByIdAndDelete(id);
+    await FinanceExpenseModel.findOneAndDelete({ productIncomeId: productIncomeExist._id });
 
     await session.commitTransaction();
 

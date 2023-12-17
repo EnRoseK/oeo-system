@@ -51,13 +51,13 @@ const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes
 
   const deleteProduct = async (id: string) => {
     try {
-      const confirmed = await isConfirmed('Та энэ урвалж зарлагыг устгахдаа итгэлтэй байна уу?');
+      const confirmed = await isConfirmed('Та энэ шинжилгээг устгахдаа итгэлтэй байна уу?');
       if (!confirmed) return;
 
       await removeProductOutcome(id);
 
       refreshData();
-      toast.success('Урвалж зарлага амжилттай устлаа');
+      toast.success(`${translations.productOutcome} амжилттай устлаа`);
     } catch (error) {
       errorHandler(error);
     }
@@ -68,9 +68,9 @@ const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes
       <PageHeader
         breadcrumbItems={[
           { title: translations.products, url: '/products' },
-          { title: translations.productExpense, url: '/products/expense' },
+          { title: translations.productOutcome, url: '/products/expense' },
         ]}
-        title={translations.productExpense}
+        title={translations.productOutcome}
         addBtnHandler={() => showDrawer('add')}
       />
 

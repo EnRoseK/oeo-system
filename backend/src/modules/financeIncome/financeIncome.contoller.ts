@@ -10,16 +10,15 @@ const getFilteredFinanceIncomes: RequestHandler = async (req, res, next) => {
     const financeIncomes = await FinanceIncomeModel.find()
       .sort({ createdAt: -1 })
       .limit(PAGE_SIZE)
-      .skip((currentPage - 1) * PAGE_SIZE);
+      .skip((currentPage - 1) * PAGE_SIZE)
+      .populate({ path: 'productOutcome' });
 
     const financeIncomesCount = await FinanceIncomeModel.countDocuments();
 
-    res
-      .status(200)
-      .json({
-        data: financeIncomes,
-        pagination: { total: financeIncomesCount, currentPage, totalPage: Math.ceil(financeIncomesCount / PAGE_SIZE) },
-      });
+    res.status(200).json({
+      data: financeIncomes,
+      pagination: { total: financeIncomesCount, currentPage, totalPage: Math.ceil(financeIncomesCount / PAGE_SIZE) },
+    });
   } catch (error) {
     next(error);
   }

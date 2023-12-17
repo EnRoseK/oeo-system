@@ -1,6 +1,7 @@
 import { Document, Schema, Types, model } from 'mongoose';
 
 export interface IProductIncome extends Document<Types.ObjectId> {
+  productIncomeId: string;
   productId: string;
   basePrice: number;
   quantity: number;
@@ -11,6 +12,10 @@ export interface IProductIncome extends Document<Types.ObjectId> {
 
 const ProductIncomeSchema = new Schema<IProductIncome>(
   {
+    productIncomeId: {
+      type: String,
+      required: true,
+    },
     productId: {
       type: String,
       required: true,
