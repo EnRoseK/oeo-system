@@ -4,6 +4,7 @@ import { errorHandler, wrongEndpointHandler } from './middlewares';
 import { CategoryRoutes } from './modules/category/category.route';
 import { ProductRoutes } from './modules/product/product.route';
 import { ProductIncomeRoutes } from './modules/productIncome/productIncome.route';
+import { ProductOutcomeRoutes } from './modules/productOutcome/productOutcome.route';
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use(express.json());
 // Routes
 app.use('/categories', CategoryRoutes);
 app.use('/products/incomes', ProductIncomeRoutes);
+app.use('/products/outcomes', ProductOutcomeRoutes);
 app.use('/products', ProductRoutes);
 
 app.use(wrongEndpointHandler);
