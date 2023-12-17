@@ -4,3 +4,4 @@ export * from './data/category';
 export * from './data/product';
 export * from './data/productIncome';
 export * from './data/productOutcome';
+export * from './data/financeIncome';

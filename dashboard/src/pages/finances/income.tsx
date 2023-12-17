@@ -1,50 +1,43 @@
-import { AddFinanceIncomeDrawer, EditFinanceIncomeDrawer } from '@/components/features';
+import { getFilteredFinanceIncomes } from '@/api/services';
 import { FinanceIncomeList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
 import { useConfirm } from '@/hooks';
-import { NextPage } from 'next';
+import { IFinanceIncome, IPagination } from '@/interfaces';
+import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
 
-const FinanceIncomePage: NextPage = () => {
-	const { isConfirmed } = useConfirm();
-	const [drawerStates, setDrawerStates] = useState({
-		add: false,
-		edit: false,
-	});
+interface FinanceIncomePageProps {
+  financeIncomes: IFinanceIncome[];
+  pagination: IPagination;
+}
 
-	const showDrawer = (drawer: 'add' | 'edit') => {
-		setDrawerStates((prev) => ({ ...prev, [drawer]: true }));
-	};
+export const getServerSideProps: GetServerSideProps<FinanceIncomePageProps> = async ({ query }) => {
+  const { page = '1' } = query;
 
-	const closeDrawer = (drawer: 'add' | 'edit') => {
-		setDrawerStates((prev) => ({ ...prev, [drawer]: false }));
-	};
+  const [financeIncomesRes] = await Promise.all([getFilteredFinanceIncomes(Number(page))]);
 
-	const deleteProduct = async () => {
-		try {
-			const confirmed = await isConfirmed('Та энэ урвалжийг устгахдаа итгэлтэй байна уу?');
-		} catch (error) {}
-	};
+  return {
+    props: {
+      financeIncomes: financeIncomesRes.data,
+      pagination: financeIncomesRes.pagination,
+    },
+  };
+};
 
-	return (
-		<>
-			<PageHeader
-				breadcrumbItems={[{ title: translations.financeIncome, url: '/finances/income' }]}
-				title={translations.financeIncome}
-				addBtnHandler={() => showDrawer('add')}
-			/>
+const FinanceIncomePage: NextPage<FinanceIncomePageProps> = ({ financeIncomes, pagination }) => {
+  return (
+    <>
+      <PageHeader
+        breadcrumbItems={[{ title: translations.financeIncome, url: '/finances/income' }]}
+        title={translations.financeIncome}
+        showAddBtn={false}
+      />
 
-			<FinanceIncomeList
-				editHandler={() => showDrawer('edit')}
-				deleteHandler={() => deleteProduct()}
-			/>
-			<Pagination />
-
-			<AddFinanceIncomeDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
-			<EditFinanceIncomeDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
-		</>
-	);
+      <FinanceIncomeList financeIncomes={financeIncomes} />
+      <Pagination pagination={pagination} />
+    </>
+  );
 };
 
 export default FinanceIncomePage;
