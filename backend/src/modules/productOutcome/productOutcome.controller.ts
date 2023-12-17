@@ -43,9 +43,13 @@ const createProductOutcome: RequestHandler<unknown, unknown, createProductOutcom
   try {
     const { productId, quantity, basePrice } = req.body;
 
-    const productExist = await ProductModel.exists({ _id: productId });
+    const productExist = await ProductModel.findById(productId);
     if (!productExist) {
       throw createHttpError(404, 'Сонгосон урвалж олдсонгүй!');
+    }
+
+    if (productExist.remainder < quantity) {
+      throw createHttpError(400, 'Урвалжийн үлдэгдэл хүрэлцэхгүй байна!');
     }
 
     session.startTransaction();
