@@ -49,7 +49,7 @@ const createProductOutcome: RequestHandler<unknown, unknown, createProductOutcom
 
     session.startTransaction();
 
-    await ProductModel.findByIdAndUpdate(productId, { $inc: { remainder: quantity } }, { session });
+    await ProductModel.findByIdAndUpdate(productId, { $inc: { remainder: -quantity } }, { session });
 
     const [newProductOutcome] = await ProductOutcomeModel.create(
       [{ productId, quantity, basePrice, totalPrice: quantity * basePrice }],
@@ -82,7 +82,7 @@ const removeProductOutcome: RequestHandler = async (req, res, next) => {
 
     await ProductModel.findByIdAndUpdate(
       productOutcomeExist.productId,
-      { $inc: { remainder: -productOutcomeExist.quantity } },
+      { $inc: { remainder: productOutcomeExist.quantity } },
       { session },
     );
 
