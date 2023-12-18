@@ -5,7 +5,16 @@ import { IProductIncome } from '@/interfaces';
 import { PAGE_SIZE } from '@/constants';
 import { useGetCurrentPage } from '@/hooks';
 
-const TABLE_HEADS = ['#', 'Урвалжийн нэр', 'Тоо ширхэг', 'Нэгж үнэ', 'Нийт үнэ', 'Үүссэн огноо', 'Үйлдэл'];
+const TABLE_HEADS = [
+  '#',
+  'Урвалж орлогын дугаар',
+  'Урвалжийн нэр',
+  'Тоо ширхэг',
+  'Нэгж үнэ',
+  'Нийт үнэ',
+  'Үүссэн огноо',
+  'Үйлдэл',
+];
 
 interface ProductIncomeListProps {
   productIncomes: IProductIncome[];

@@ -1,38 +1,36 @@
 import { TableRow, TableRowItem, TableRowItemDescription } from '@/components/Table';
 import { ActionButtons } from '@/components/ui';
-import React, { FC, Fragment } from 'react';
-
-const content = [
-	{ text: 'Education Dashboard' },
-	{ text: 'Angular' },
-	{
-		text: 'Start developing with an open-source library of over 450+ UI components, sections, and pages built with the utility classes from Tailwind CSS and designed in Figma.',
-		isDescription: true,
-	},
-	{ text: '100' },
-];
+import { IFinanceExpense } from '@/interfaces';
+import React, { FC } from 'react';
 
 interface ListItemProps {
-	editHandler: () => void;
-	deleteHandler: () => void;
+  financeExpense: IFinanceExpense;
+  number: number;
+  deleteHandler: (id: string) => void;
 }
 
-export const ListItem: FC<ListItemProps> = ({ editHandler, deleteHandler }) => {
-	return (
-		<TableRow>
-			{content.map((c, index) => {
-				return (
-					<Fragment key={index}>
-						{c.isDescription ? (
-							<TableRowItemDescription>{c.text}</TableRowItemDescription>
-						) : (
-							<TableRowItem>{c.text}</TableRowItem>
-						)}
-					</Fragment>
-				);
-			})}
+export const ListItem: FC<ListItemProps> = ({ number, financeExpense, deleteHandler }) => {
+  return (
+    <TableRow>
+      <TableRowItem>{number}</TableRowItem>
+      <TableRowItem>
+        {financeExpense.type
+          .replaceAll('PRODUCT', 'Урвалж орлого')
+          .replaceAll('SALARY', 'Цалин')
+          .replaceAll('RENT', 'Түрээс')
+          .replaceAll('TAX', 'Татвар')
+          .replaceAll('OTHER', 'Бусад')}
+      </TableRowItem>
+      <TableRowItem>{financeExpense.amount.toLocaleString()}₮</TableRowItem>
+      <TableRowItemDescription>{financeExpense.description}</TableRowItemDescription>
+      <TableRowItem>{financeExpense.productIncome?.productIncomeId || '-'}</TableRowItem>
+      <TableRowItem>{new Date(financeExpense.createdAt).toLocaleDateString()}</TableRowItem>
 
-			<ActionButtons editHandler={editHandler} deleteHandler={deleteHandler} />
-		</TableRow>
-	);
+      <ActionButtons
+        deleteHandler={() => deleteHandler(financeExpense._id)}
+        showEdit={false}
+        showDelete={financeExpense.type !== 'PRODUCT'}
+      />
+    </TableRow>
+  );
 };

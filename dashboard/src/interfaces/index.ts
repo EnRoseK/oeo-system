@@ -5,3 +5,4 @@ export * from './data/product';
 export * from './data/productIncome';
 export * from './data/productOutcome';
 export * from './data/financeIncome';
+export * from './data/financeExpense';

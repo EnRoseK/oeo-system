@@ -43,4 +43,4 @@ ProductIncomeSchema.virtual('product', {
   justOne: true,
 });
 
-export const ProductIncomeModel = model<IProductIncome>('ProcutIncome', ProductIncomeSchema);
+export const ProductIncomeModel = model<IProductIncome>('ProductIncome', ProductIncomeSchema);

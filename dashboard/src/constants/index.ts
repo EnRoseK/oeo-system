@@ -49,7 +49,7 @@ export const SidebarItems: ISidebarItem[] = [
   },
   {
     title: translations.financeExpense,
-    url: '/finances/outcome',
+    url: '/finances/expense',
     icon: Icons.FaMoneyBillTransfer,
   },
   {

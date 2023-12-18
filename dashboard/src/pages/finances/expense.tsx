@@ -1,50 +1,76 @@
-import { AddFinanceExpenseDrawer, EditFinanceExpenseDrawer } from '@/components/features';
+import { getFilteredFinanceExpenses, removeFinanceExpense } from '@/api/services';
+import { AddFinanceExpenseDrawer } from '@/components/features';
 import { FinanceExpenseList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm } from '@/hooks';
-import { NextPage } from 'next';
+import { useConfirm, useRefreshData } from '@/hooks';
+import { IFinanceExpense, IPagination } from '@/interfaces';
+import { errorHandler } from '@/utils';
+import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
-const FinanceExpensePage: NextPage = () => {
-	const { isConfirmed } = useConfirm();
-	const [drawerStates, setDrawerStates] = useState({
-		add: false,
-		edit: false,
-	});
+interface FinanceExpensePageProps {
+  financeExpenses: IFinanceExpense[];
+  pagination: IPagination;
+}
 
-	const showDrawer = (drawer: 'add' | 'edit') => {
-		setDrawerStates((prev) => ({ ...prev, [drawer]: true }));
-	};
+export const getServerSideProps: GetServerSideProps<FinanceExpensePageProps> = async ({ query }) => {
+  const { page = '1' } = query;
 
-	const closeDrawer = (drawer: 'add' | 'edit') => {
-		setDrawerStates((prev) => ({ ...prev, [drawer]: false }));
-	};
+  const financeExpensesRes = await getFilteredFinanceExpenses(Number(page));
 
-	const deleteProduct = async () => {
-		try {
-			const confirmed = await isConfirmed('Та энэ урвалжийг устгахдаа итгэлтэй байна уу?');
-		} catch (error) {}
-	};
+  return {
+    props: {
+      financeExpenses: financeExpensesRes.data,
+      pagination: financeExpensesRes.pagination,
+    },
+  };
+};
 
-	return (
-		<>
-			<PageHeader
-				breadcrumbItems={[{ title: translations.financeExpense, url: '/finances/expense' }]}
-				title={translations.financeExpense}
-				addBtnHandler={() => showDrawer('add')}
-			/>
+const FinanceExpensePage: NextPage<FinanceExpensePageProps> = ({ financeExpenses, pagination }) => {
+  const refreshData = useRefreshData();
+  const { isConfirmed } = useConfirm();
+  const [drawerStates, setDrawerStates] = useState({
+    add: false,
+    edit: false,
+  });
 
-			<FinanceExpenseList
-				editHandler={() => showDrawer('edit')}
-				deleteHandler={() => deleteProduct()}
-			/>
-			<Pagination />
+  const showDrawer = (drawer: 'add' | 'edit') => {
+    setDrawerStates((prev) => ({ ...prev, [drawer]: true }));
+  };
 
-			<AddFinanceExpenseDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
-			<EditFinanceExpenseDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
-		</>
-	);
+  const closeDrawer = (drawer: 'add' | 'edit') => {
+    setDrawerStates((prev) => ({ ...prev, [drawer]: false }));
+  };
+
+  const deleteProduct = async (id: string) => {
+    try {
+      const confirmed = await isConfirmed('Та энэ санхүүгийн зарлагыг устгахдаа итгэлтэй байна уу?');
+      if (!confirmed) return;
+
+      await removeFinanceExpense(id);
+      refreshData();
+      toast.success('Санхүүгийн зарлага амжилттай устлаа');
+    } catch (error) {
+      errorHandler(error);
+    }
+  };
+
+  return (
+    <>
+      <PageHeader
+        breadcrumbItems={[{ title: translations.financeExpense, url: '/finances/expense' }]}
+        title={translations.financeExpense}
+        addBtnHandler={() => showDrawer('add')}
+      />
+
+      <FinanceExpenseList financeExpesnes={financeExpenses} deleteHandler={(id: string) => deleteProduct(id)} />
+      <Pagination pagination={pagination} />
+
+      <AddFinanceExpenseDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+    </>
+  );
 };
 
 export default FinanceExpensePage;
