@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { FinanceExpenseContoller } from './financeExpense.controller';
+import { authorizeAccountant } from '../../middlewares/auth';
 
 const router = Router();
 
-router.get('/', FinanceExpenseContoller.getFilteredFinanceExpenses);
-router.post('/', FinanceExpenseContoller.createFinanceExpenses);
-router.delete('/:id', FinanceExpenseContoller.removeFinanceExpense);
+router.get('/', authorizeAccountant, FinanceExpenseContoller.getFilteredFinanceExpenses);
+router.post('/', authorizeAccountant, FinanceExpenseContoller.createFinanceExpenses);
+router.delete('/:id', authorizeAccountant, FinanceExpenseContoller.removeFinanceExpense);
 
 export { router as FinanceExpenseRoutes };

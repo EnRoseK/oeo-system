@@ -2,27 +2,54 @@ import { getFilteredFinanceIncomes } from '@/api/services';
 import { FinanceIncomeList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm } from '@/hooks';
 import { IFinanceIncome, IPagination } from '@/interfaces';
+import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
-import { useState } from 'react';
 
 interface FinanceIncomePageProps {
   financeIncomes: IFinanceIncome[];
   pagination: IPagination;
 }
 
-export const getServerSideProps: GetServerSideProps<FinanceIncomePageProps> = async ({ query }) => {
-  const { page = '1' } = query;
+export const getServerSideProps: GetServerSideProps<FinanceIncomePageProps> = async ({ query, req }) => {
+  try {
+    const { page = '1' } = query;
 
-  const [financeIncomesRes] = await Promise.all([getFilteredFinanceIncomes(Number(page))]);
+    const [financeIncomesRes] = await Promise.all([
+      getFilteredFinanceIncomes(Number(page), req.cookies['connect.sid']),
+    ]);
 
-  return {
-    props: {
-      financeIncomes: financeIncomesRes.data,
-      pagination: financeIncomesRes.pagination,
-    },
-  };
+    return {
+      props: {
+        financeIncomes: financeIncomesRes.data,
+        pagination: financeIncomesRes.pagination,
+      },
+    };
+  } catch (error) {
+    if (isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        return {
+          redirect: {
+            destination: '/login',
+            statusCode: 302,
+          },
+        };
+      }
+
+      if (error.response?.status === 403) {
+        return {
+          redirect: {
+            destination: '/',
+            statusCode: 302,
+          },
+        };
+      }
+    }
+
+    return {
+      notFound: true,
+    };
+  }
 };
 
 const FinanceIncomePage: NextPage<FinanceIncomePageProps> = ({ financeIncomes, pagination }) => {

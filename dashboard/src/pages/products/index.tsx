@@ -6,6 +6,7 @@ import { translations } from '@/constants';
 import { useConfirm, useRefreshData } from '@/hooks';
 import { ICategory, IPagination, IProduct } from '@/interfaces';
 import { errorHandler } from '@/utils';
+import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -16,21 +17,47 @@ interface ProductsPageProps {
   categories: ICategory[];
 }
 
-export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async ({ query }) => {
-  const { page = '1', search = '' } = query;
+export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async ({ query, req }) => {
+  try {
+    const { page = '1', search = '' } = query;
 
-  const [productsRes, categoryRes] = await Promise.all([
-    getFilteredProducts(Number(page), search as string),
-    getAllCategories(),
-  ]);
+    const [productsRes, categoryRes] = await Promise.all([
+      getFilteredProducts(Number(page), search as string, req.cookies['connect.sid']),
+      getAllCategories(req.cookies['connect.sid']),
+    ]);
 
-  return {
-    props: {
-      products: productsRes.data,
-      pagination: productsRes.pagination,
-      categories: categoryRes.data,
-    },
-  };
+    return {
+      props: {
+        products: productsRes.data,
+        pagination: productsRes.pagination,
+        categories: categoryRes.data,
+      },
+    };
+  } catch (error) {
+    if (isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        return {
+          redirect: {
+            destination: '/login',
+            statusCode: 302,
+          },
+        };
+      }
+
+      if (error.response?.status === 403) {
+        return {
+          redirect: {
+            destination: '/',
+            statusCode: 302,
+          },
+        };
+      }
+    }
+
+    return {
+      notFound: true,
+    };
+  }
 };
 
 const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categories }) => {

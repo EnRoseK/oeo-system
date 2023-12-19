@@ -3,3 +3,4 @@ export * from './products';
 export * from './productIncomes';
 export * from './productOutcome';
 export * from './financeExpense';
+export * from './user';

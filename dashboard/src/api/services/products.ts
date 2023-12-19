@@ -2,11 +2,17 @@ import { axiosInstance } from '@/libs';
 import { CREATE_PRODUCT, GET_ALL_PRODUCTS, GET_FILTERED_PRODUCTS, REMOVE_PRODUCT, UPDATE_PRODUCT } from '../endpoints';
 import { IPagination, IProduct } from '@/interfaces';
 
-export const getAllProducts = async () => {
-  return await axiosInstance.get<{ data: IProduct[] }>(GET_ALL_PRODUCTS).then((res) => res.data);
+export const getAllProducts = async (cookie?: string) => {
+  return await axiosInstance
+    .get<{ data: IProduct[] }>(GET_ALL_PRODUCTS, {
+      headers: {
+        Cookie: `connect.sid=${cookie}`,
+      },
+    })
+    .then((res) => res.data);
 };
 
-export const getFilteredProducts = async (page: number, search: string) => {
+export const getFilteredProducts = async (page: number, search: string, cookie?: string) => {
   const searchParams = new URLSearchParams();
   if (page) {
     searchParams.set('page', page.toString());
@@ -16,7 +22,11 @@ export const getFilteredProducts = async (page: number, search: string) => {
   }
 
   return await axiosInstance
-    .get<{ data: IProduct[]; pagination: IPagination }>(GET_FILTERED_PRODUCTS(searchParams.toString()))
+    .get<{ data: IProduct[]; pagination: IPagination }>(GET_FILTERED_PRODUCTS(searchParams.toString()), {
+      headers: {
+        Cookie: `connect.sid=${cookie}`,
+      },
+    })
     .then((res) => res.data);
 };
 

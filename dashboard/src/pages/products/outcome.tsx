@@ -6,6 +6,7 @@ import { translations } from '@/constants';
 import { useConfirm, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductOutcome } from '@/interfaces';
 import { errorHandler } from '@/utils';
+import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -16,21 +17,47 @@ interface ProductOutcomePageProps {
   products: IProduct[];
 }
 
-export const getServerSideProps: GetServerSideProps<ProductOutcomePageProps> = async ({ query }) => {
-  const { page = '1' } = query;
+export const getServerSideProps: GetServerSideProps<ProductOutcomePageProps> = async ({ query, req }) => {
+  try {
+    const { page = '1' } = query;
 
-  const [productOutcomesRes, productsRes] = await Promise.all([
-    getFilteredProductOutcomes(Number(page)),
-    getAllProducts(),
-  ]);
+    const [productOutcomesRes, productsRes] = await Promise.all([
+      getFilteredProductOutcomes(Number(page), req.cookies['connect.sid']),
+      getAllProducts(req.cookies['connect.sid']),
+    ]);
 
-  return {
-    props: {
-      productOutcomes: productOutcomesRes.data,
-      pagination: productOutcomesRes.pagination,
-      products: productsRes.data,
-    },
-  };
+    return {
+      props: {
+        productOutcomes: productOutcomesRes.data,
+        pagination: productOutcomesRes.pagination,
+        products: productsRes.data,
+      },
+    };
+  } catch (error) {
+    if (isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        return {
+          redirect: {
+            destination: '/login',
+            statusCode: 302,
+          },
+        };
+      }
+
+      if (error.response?.status === 403) {
+        return {
+          redirect: {
+            destination: '/',
+            statusCode: 302,
+          },
+        };
+      }
+    }
+
+    return {
+      notFound: true,
+    };
+  }
 };
 
 const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes, pagination, products }) => {

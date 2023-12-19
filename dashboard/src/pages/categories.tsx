@@ -6,6 +6,7 @@ import { translations } from '@/constants';
 import { useConfirm, useRefreshData } from '@/hooks';
 import { ICategory, IPagination } from '@/interfaces';
 import { errorHandler } from '@/utils';
+import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -15,17 +16,43 @@ interface CategoriesPageProps {
   pagination: IPagination;
 }
 
-export const getServerSideProps: GetServerSideProps<CategoriesPageProps> = async ({ query }) => {
-  const { page = '1', search = '' } = query;
+export const getServerSideProps: GetServerSideProps<CategoriesPageProps> = async ({ query, req }) => {
+  try {
+    const { page = '1', search = '' } = query;
 
-  const categoriesRes = await getFilteredCategories(Number(page), search as string);
+    const categoriesRes = await getFilteredCategories(Number(page), search as string, req.cookies['connect.sid']);
 
-  return {
-    props: {
-      categories: categoriesRes.data,
-      pagination: categoriesRes.pagination,
-    },
-  };
+    return {
+      props: {
+        categories: categoriesRes.data,
+        pagination: categoriesRes.pagination,
+      },
+    };
+  } catch (error) {
+    if (isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        return {
+          redirect: {
+            destination: '/login',
+            statusCode: 302,
+          },
+        };
+      }
+
+      if (error.response?.status === 403) {
+        return {
+          redirect: {
+            destination: '/',
+            statusCode: 302,
+          },
+        };
+      }
+    }
+
+    return {
+      notFound: true,
+    };
+  }
 };
 
 const CategoriesPage: NextPage<CategoriesPageProps> = ({ categories, pagination }) => {

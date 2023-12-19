@@ -12,5 +12,9 @@ export const createUserValidation = yup.object().shape({
     password: yup.string().required('Нууц үг хоосон байж болохгүй').matches(passwordChecker, {
       message: 'Нууц үг шаардлага хангахгүй байна',
     }),
+    role: yup
+      .mixed<'ADMIN' | 'USER' | 'ACCOUNTANT'>()
+      .optional()
+      .oneOf(['ACCOUNTANT', 'ADMIN', 'USER'], 'Role буруу байна'),
   }),
 });

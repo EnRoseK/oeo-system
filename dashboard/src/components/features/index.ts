@@ -10,7 +10,6 @@ export * from './financeExpense/AddFinanceExpenseDrawer';
 export * from './financeExpense/EditFinanceExpenseDrawer';
 export * from './users/AddUserDrawer';
 export * from './users/EditUserDrawer';
-export * from './settings/ProfilePictureForm';
 export * from './settings/GeneralInformationForm';
 export * from './settings/PasswordForm';
 export * from './login/LoginForm';

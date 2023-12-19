@@ -9,11 +9,17 @@ import {
 } from '../endpoints';
 import { ICategory, IPagination } from '@/interfaces';
 
-export const getAllCategories = async () => {
-  return await axiosInstance.get<{ data: ICategory[] }>(GET_ALL_CATEGORIES).then((res) => res.data);
+export const getAllCategories = async (cookie?: string) => {
+  return await axiosInstance
+    .get<{ data: ICategory[] }>(GET_ALL_CATEGORIES, {
+      headers: {
+        Cookie: `connect.sid=${cookie}`,
+      },
+    })
+    .then((res) => res.data);
 };
 
-export const getFilteredCategories = async (page: number, search: string) => {
+export const getFilteredCategories = async (page: number, search: string, cookie?: string) => {
   const searchParams = new URLSearchParams();
   if (page) {
     searchParams.set('page', page.toString());
@@ -23,7 +29,11 @@ export const getFilteredCategories = async (page: number, search: string) => {
   }
 
   return await axiosInstance
-    .get<{ data: ICategory[]; pagination: IPagination }>(GET_FILTERED_CATEGORIES(searchParams.toString()))
+    .get<{ data: ICategory[]; pagination: IPagination }>(GET_FILTERED_CATEGORIES(searchParams.toString()), {
+      headers: {
+        Cookie: `connect.sid=${cookie}`,
+      },
+    })
     .then((res) => res.data);
 };
 

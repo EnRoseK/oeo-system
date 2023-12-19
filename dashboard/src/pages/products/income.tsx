@@ -6,6 +6,7 @@ import { translations } from '@/constants';
 import { useConfirm, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductIncome } from '@/interfaces';
 import { errorHandler } from '@/utils';
+import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -16,21 +17,47 @@ interface ProductIncomePageProps {
   products: IProduct[];
 }
 
-export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = async ({ query }) => {
-  const { page } = query;
+export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = async ({ query, req }) => {
+  try {
+    const { page } = query;
 
-  const [productIncomesRes, productsRes] = await Promise.all([
-    getFilteredProductIncomes(Number(page)),
-    getAllProducts(),
-  ]);
+    const [productIncomesRes, productsRes] = await Promise.all([
+      getFilteredProductIncomes(Number(page), req.cookies['connect.sid']),
+      getAllProducts(req.cookies['connect.sid']),
+    ]);
 
-  return {
-    props: {
-      productIncomes: productIncomesRes.data,
-      pagination: productIncomesRes.pagination,
-      products: productsRes.data,
-    },
-  };
+    return {
+      props: {
+        productIncomes: productIncomesRes.data,
+        pagination: productIncomesRes.pagination,
+        products: productsRes.data,
+      },
+    };
+  } catch (error) {
+    if (isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        return {
+          redirect: {
+            destination: '/login',
+            statusCode: 302,
+          },
+        };
+      }
+
+      if (error.response?.status === 403) {
+        return {
+          redirect: {
+            destination: '/',
+            statusCode: 302,
+          },
+        };
+      }
+    }
+
+    return {
+      notFound: true,
+    };
+  }
 };
 
 const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, pagination, products }) => {

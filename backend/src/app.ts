@@ -7,14 +7,27 @@ import { ProductIncomeRoutes } from './modules/productIncome/productIncome.route
 import { ProductOutcomeRoutes } from './modules/productOutcome/productOutcome.route';
 import { FinanceIncomeRoutes } from './modules/financeIncome/financeIncome.route';
 import { FinanceExpenseRoutes } from './modules/financeExpense/financeExpense.route';
+import { AuthRoutes } from './modules/auth/auth.route';
 import { UserRoutes } from './modules/user/user.route';
+import session from 'express-session';
+import { sessionConfig } from './libs';
+import { envalid } from './libs';
+import { authenticateUser } from './middlewares/auth';
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: envalid.CLIENT_URL,
+    credentials: true,
+  }),
+);
 app.use(express.json());
+app.use(session(sessionConfig));
 
 // Routes
+app.use('/auth', AuthRoutes);
+app.use(authenticateUser);
 app.use('/categories', CategoryRoutes);
 app.use('/products/incomes', ProductIncomeRoutes);
 app.use('/products/outcomes', ProductOutcomeRoutes);

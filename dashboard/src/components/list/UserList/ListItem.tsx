@@ -1,38 +1,27 @@
-import { TableRow, TableRowItem, TableRowItemDescription } from '@/components/Table';
+import { TableRow, TableRowItem } from '@/components/Table';
 import { ActionButtons } from '@/components/ui';
-import React, { FC, Fragment } from 'react';
-
-const content = [
-	{ text: 'Education Dashboard' },
-	{ text: 'Angular' },
-	{
-		text: 'Start developing with an open-source library of over 450+ UI components, sections, and pages built with the utility classes from Tailwind CSS and designed in Figma.',
-		isDescription: true,
-	},
-	{ text: '100' },
-];
+import { IUser } from '@/interfaces/data/user';
+import React, { FC } from 'react';
 
 interface ListItemProps {
-	editHandler: () => void;
-	deleteHandler: () => void;
+  user: IUser;
+  number: number;
+  editHandler: () => void;
+  deleteHandler: () => void;
 }
 
-export const ListItem: FC<ListItemProps> = ({ editHandler, deleteHandler }) => {
-	return (
-		<TableRow>
-			{content.map((c, index) => {
-				return (
-					<Fragment key={index}>
-						{c.isDescription ? (
-							<TableRowItemDescription>{c.text}</TableRowItemDescription>
-						) : (
-							<TableRowItem>{c.text}</TableRowItem>
-						)}
-					</Fragment>
-				);
-			})}
+export const ListItem: FC<ListItemProps> = ({ user, number, editHandler, deleteHandler }) => {
+  return (
+    <TableRow>
+      <TableRowItem>{number}</TableRowItem>
+      <TableRowItem>{user.firstName}</TableRowItem>
+      <TableRowItem>{user.lastName}</TableRowItem>
+      <TableRowItem>{user.email}</TableRowItem>
+      <TableRowItem>
+        {user.role.replaceAll('ADMIN', 'Админ').replaceAll('ACCOUNTANT', 'Нягтлан').replaceAll('USER', 'Хэрэглэгч')}
+      </TableRowItem>
 
-			<ActionButtons editHandler={editHandler} deleteHandler={deleteHandler} />
-		</TableRow>
-	);
+      <ActionButtons editHandler={editHandler} deleteHandler={deleteHandler} />
+    </TableRow>
+  );
 };
