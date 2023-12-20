@@ -2,21 +2,26 @@ import express from 'express';
 import { CategoryController } from './category.controller';
 import { validate, validateMongoId } from '../../middlewares';
 import { createAndUpdateCategoryValidation } from './category.validation';
-import { authorizeAdmin } from '../../middlewares/auth';
+import { checkUserPermission } from '../../middlewares/auth';
 
 const router = express.Router();
 
 router.get('/all', CategoryController.getAllCategories);
-router.get('/', CategoryController.getFilteredCategories);
-router.get('/:id', validateMongoId, CategoryController.getSingleCategoryById);
-router.post('/', authorizeAdmin, validate(createAndUpdateCategoryValidation), CategoryController.createCategory);
+router.get('/', checkUserPermission('category', 'read'), CategoryController.getFilteredCategories);
+router.get('/:id', checkUserPermission('category', 'read'), validateMongoId, CategoryController.getSingleCategoryById);
+router.post(
+  '/',
+  checkUserPermission('category', 'create'),
+  validate(createAndUpdateCategoryValidation),
+  CategoryController.createCategory,
+);
 router.patch(
   '/:id',
-  authorizeAdmin,
+  checkUserPermission('category', 'update'),
   validateMongoId,
   validate(createAndUpdateCategoryValidation),
   CategoryController.updateCategory,
 );
-router.delete('/:id', authorizeAdmin, validateMongoId, CategoryController.deleteCategory);
+router.delete('/:id', checkUserPermission('category', 'delete'), validateMongoId, CategoryController.deleteCategory);
 
 export { router as CategoryRoutes };

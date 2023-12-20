@@ -12,7 +12,7 @@ import { UserRoutes } from './modules/user/user.route';
 import session from 'express-session';
 import { sessionConfig } from './libs';
 import { envalid } from './libs';
-import { authenticateUser } from './middlewares/auth';
+import { authorizeUser } from './middlewares/auth';
 
 const app = express();
 
@@ -27,7 +27,7 @@ app.use(session(sessionConfig));
 
 // Routes
 app.use('/auth', AuthRoutes);
-app.use(authenticateUser);
+app.use(authorizeUser);
 app.use('/categories', CategoryRoutes);
 app.use('/products/incomes', ProductIncomeRoutes);
 app.use('/products/outcomes', ProductOutcomeRoutes);

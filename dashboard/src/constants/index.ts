@@ -58,11 +58,6 @@ export const SidebarItems: ISidebarItem[] = [
     icon: Icons.FiUsers,
   },
   {
-    title: translations.log,
-    url: '/logs',
-    icon: Icons.GrHistory,
-  },
-  {
     title: translations.settings,
     url: '/settings',
     icon: Icons.FaCog,

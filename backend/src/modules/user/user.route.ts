@@ -1,13 +1,16 @@
 import { Router } from 'express';
 import { UserController } from './user.controller';
 import { validate, validateMongoId } from '../../middlewares';
-import { createUserValidation } from './user.validation';
-import { authorizeAdmin } from '../../middlewares/auth';
+import { createUserValidation, updateUserInfoValidation, updateUserPasswordValidation } from './user.validation';
+import { checkUserPermission } from '../../middlewares/auth';
 
 const router = Router();
 
-router.get('/', authorizeAdmin, UserController.getFilterdUsers);
-router.post('/', authorizeAdmin, validate(createUserValidation), UserController.createUser);
-router.delete('/:id', authorizeAdmin, validateMongoId, UserController.removeUser);
+router.get('/', checkUserPermission('users', 'read'), UserController.getFilterdUsers);
+router.post('/', checkUserPermission('users', 'create'), validate(createUserValidation), UserController.createUser);
+router.patch('/:id', checkUserPermission('users', 'update'), validateMongoId, UserController.updateUserPermission);
+router.patch('/info', validate(updateUserInfoValidation), UserController.changeUserInfo);
+router.patch('/password', validate(updateUserPasswordValidation), UserController.changeUserPassword);
+router.delete('/:id', checkUserPermission('users', 'delete'), validateMongoId, UserController.removeUser);
 
 export { router as UserRoutes };

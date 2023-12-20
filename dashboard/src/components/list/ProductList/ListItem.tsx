@@ -1,5 +1,6 @@
 import { TableRow, TableRowItem, TableRowItemDescription } from '@/components/Table';
 import { ActionButtons } from '@/components/ui';
+import { useAuth } from '@/hooks';
 import { IProduct } from '@/interfaces';
 import React, { FC } from 'react';
 
@@ -11,6 +12,8 @@ interface ListItemProps {
 }
 
 export const ListItem: FC<ListItemProps> = ({ product, number, editHandler, deleteHandler }) => {
+  const { currentUser } = useAuth();
+
   return (
     <TableRow>
       <TableRowItem>{number}</TableRowItem>
@@ -19,7 +22,9 @@ export const ListItem: FC<ListItemProps> = ({ product, number, editHandler, dele
       <TableRowItemDescription>{product.description}</TableRowItemDescription>
       <TableRowItem>{product.remainder.toLocaleString()}ш</TableRowItem>
 
-      <ActionButtons editHandler={() => editHandler(product)} deleteHandler={() => deleteHandler(product?._id!)} />
+      {currentUser?.role === 'ADMIN' && (
+        <ActionButtons editHandler={() => editHandler(product)} deleteHandler={() => deleteHandler(product?._id!)} />
+      )}
     </TableRow>
   );
 };

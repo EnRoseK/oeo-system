@@ -6,7 +6,16 @@ export interface IUser extends Document<Types.ObjectId> {
   firstName: string;
   lastName: string;
   password: string;
-  role: 'ADMIN' | 'ACCOUNTANT' | 'USER';
+  permission: {
+    category: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    product: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    productIncome: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    productOutcome: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    financeIncome: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    financeExpense: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    users: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    log: { read: boolean; update: boolean; delete: boolean; create: boolean };
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -31,10 +40,151 @@ const UserSchema = new Schema<IUser>(
       required: true,
       select: false,
     },
-    role: {
-      type: String,
-      enum: ['ADMIN', 'ACCOUNTANT', 'USER'],
-      default: 'USER',
+    permission: {
+      category: {
+        read: {
+          type: Boolean,
+          default: true,
+        },
+        create: {
+          type: Boolean,
+          default: false,
+        },
+        update: {
+          type: Boolean,
+          default: false,
+        },
+        delete: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      product: {
+        read: {
+          type: Boolean,
+          default: true,
+        },
+        create: {
+          type: Boolean,
+          default: false,
+        },
+        update: {
+          type: Boolean,
+          default: false,
+        },
+        delete: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      productIncome: {
+        read: {
+          type: Boolean,
+          default: true,
+        },
+        create: {
+          type: Boolean,
+          default: false,
+        },
+        update: {
+          type: Boolean,
+          default: false,
+        },
+        delete: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      productOutcome: {
+        read: {
+          type: Boolean,
+          default: true,
+        },
+        create: {
+          type: Boolean,
+          default: false,
+        },
+        update: {
+          type: Boolean,
+          default: false,
+        },
+        delete: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      financeIncome: {
+        read: {
+          type: Boolean,
+          default: true,
+        },
+        create: {
+          type: Boolean,
+          default: false,
+        },
+        update: {
+          type: Boolean,
+          default: false,
+        },
+        delete: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      financeExpense: {
+        read: {
+          type: Boolean,
+          default: true,
+        },
+        create: {
+          type: Boolean,
+          default: false,
+        },
+        update: {
+          type: Boolean,
+          default: false,
+        },
+        delete: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      users: {
+        read: {
+          type: Boolean,
+          default: true,
+        },
+        create: {
+          type: Boolean,
+          default: false,
+        },
+        update: {
+          type: Boolean,
+          default: false,
+        },
+        delete: {
+          type: Boolean,
+          default: false,
+        },
+      },
+      log: {
+        read: {
+          type: Boolean,
+          default: true,
+        },
+        create: {
+          type: Boolean,
+          default: false,
+        },
+        update: {
+          type: Boolean,
+          default: false,
+        },
+        delete: {
+          type: Boolean,
+          default: false,
+        },
+      },
     },
   },
   { timestamps: true },
