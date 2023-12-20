@@ -3,7 +3,7 @@ import { AddUserDrawer, EditUserDrawer } from '@/components/features';
 import { UserList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm } from '@/hooks';
+import { useAuth, useConfirm } from '@/hooks';
 import { IPagination } from '@/interfaces';
 import { IUser } from '@/interfaces/data/user';
 import { isAxiosError } from 'axios';
@@ -55,6 +55,7 @@ export const getServerSideProps: GetServerSideProps<UsersPageProps> = async ({ q
 };
 
 const UsersPage: NextPage<UsersPageProps> = ({ users, pagination }) => {
+  const { currentUser } = useAuth();
   const { isConfirmed } = useConfirm();
   const [drawerStates, setDrawerStates] = useState({
     add: false,
@@ -70,6 +71,7 @@ const UsersPage: NextPage<UsersPageProps> = ({ users, pagination }) => {
   };
 
   const deleteProduct = async () => {
+    if (!currentUser?.permission.users.delete) return;
     try {
       const confirmed = await isConfirmed('Та энэ урвалжийг устгахдаа итгэлтэй байна уу?');
     } catch (error) {}
@@ -81,13 +83,18 @@ const UsersPage: NextPage<UsersPageProps> = ({ users, pagination }) => {
         breadcrumbItems={[{ title: translations.users, url: '/users' }]}
         title={translations.users}
         addBtnHandler={() => showDrawer('add')}
+        showAddBtn={currentUser?.permission.users.create}
       />
 
       <UserList users={users} editHandler={() => showDrawer('edit')} deleteHandler={() => deleteProduct()} />
       <Pagination pagination={pagination} />
 
-      <AddUserDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
-      <EditUserDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
+      {currentUser?.permission.users.create && (
+        <AddUserDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      )}
+      {currentUser?.permission.users.update && (
+        <EditUserDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
+      )}
     </>
   );
 };

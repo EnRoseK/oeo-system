@@ -5,7 +5,7 @@ import { IUser } from '@/interfaces/data/user';
 import { useGetCurrentPage } from '@/hooks';
 import { PAGE_SIZE } from '@/constants';
 
-const TABLE_HEADS = ['#', 'Нэр', 'Овог', 'И-мэйл', 'Үүрэг', 'Үйлдэл'];
+const TABLE_HEADS = ['#', 'Нэр', 'Овог', 'И-мэйл', 'Үйлдэл'];
 
 interface UserListProps {
   users: IUser[];

@@ -1,5 +1,6 @@
 import { TableRow, TableRowItem } from '@/components/Table';
 import { ActionButtons } from '@/components/ui';
+import { useAuth } from '@/hooks';
 import { IUser } from '@/interfaces/data/user';
 import React, { FC } from 'react';
 
@@ -11,17 +12,21 @@ interface ListItemProps {
 }
 
 export const ListItem: FC<ListItemProps> = ({ user, number, editHandler, deleteHandler }) => {
+  const { currentUser } = useAuth();
+
   return (
     <TableRow>
       <TableRowItem>{number}</TableRowItem>
       <TableRowItem>{user.firstName}</TableRowItem>
       <TableRowItem>{user.lastName}</TableRowItem>
       <TableRowItem>{user.email}</TableRowItem>
-      <TableRowItem>
-        {user.role.replaceAll('ADMIN', 'Админ').replaceAll('ACCOUNTANT', 'Нягтлан').replaceAll('USER', 'Хэрэглэгч')}
-      </TableRowItem>
 
-      <ActionButtons editHandler={editHandler} deleteHandler={deleteHandler} />
+      <ActionButtons
+        showEdit={currentUser?.permission.users.update}
+        showDelete={currentUser?.permission.users.delete}
+        editHandler={editHandler}
+        deleteHandler={deleteHandler}
+      />
     </TableRow>
   );
 };

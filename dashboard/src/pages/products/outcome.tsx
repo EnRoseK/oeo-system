@@ -3,7 +3,7 @@ import { AddProductOutcomeDrawer } from '@/components/features';
 import { ProductOutcomesList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm, useRefreshData } from '@/hooks';
+import { useAuth, useConfirm, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductOutcome } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
@@ -61,6 +61,7 @@ export const getServerSideProps: GetServerSideProps<ProductOutcomePageProps> = a
 };
 
 const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes, pagination, products }) => {
+  const { currentUser } = useAuth();
   const refreshData = useRefreshData();
 
   const { isConfirmed } = useConfirm();
@@ -77,6 +78,8 @@ const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes
   };
 
   const deleteProduct = async (id: string) => {
+    if (!currentUser?.permission.productOutcome.delete) return;
+
     try {
       const confirmed = await isConfirmed('Та энэ шинжилгээг устгахдаа итгэлтэй байна уу?');
       if (!confirmed) return;
@@ -99,12 +102,15 @@ const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes
         ]}
         title={translations.productOutcome}
         addBtnHandler={() => showDrawer('add')}
+        showAddBtn={currentUser?.permission.productOutcome.create}
       />
 
       <ProductOutcomesList productOutcomes={productOutcomes} deleteHandler={(id: string) => deleteProduct(id)} />
       <Pagination pagination={pagination} />
 
-      <AddProductOutcomeDrawer products={products} show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      {currentUser?.permission.productOutcome.create && (
+        <AddProductOutcomeDrawer products={products} show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      )}
     </>
   );
 };

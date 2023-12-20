@@ -3,7 +3,7 @@ import { AddCategoryDrawer, EditCategoryDrawer } from '@/components/features';
 import { CategoryList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm, useRefreshData } from '@/hooks';
+import { useAuth, useConfirm, useRefreshData } from '@/hooks';
 import { ICategory, IPagination } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
@@ -56,6 +56,7 @@ export const getServerSideProps: GetServerSideProps<CategoriesPageProps> = async
 };
 
 const CategoriesPage: NextPage<CategoriesPageProps> = ({ categories, pagination }) => {
+  const { currentUser } = useAuth();
   const refreshData = useRefreshData();
   const [selectedCategory, setSelectedCategory] = useState<ICategory | undefined>(undefined);
   const { isConfirmed } = useConfirm();
@@ -73,6 +74,8 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ categories, pagination 
   };
 
   const deleteCategory = async (id: string) => {
+    if (!currentUser?.permission.category.delete) return;
+
     try {
       const confirmed = await isConfirmed('Та энэ ангилалыг устгахдаа итгэлтэй байна уу?');
 
@@ -92,6 +95,7 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ categories, pagination 
         breadcrumbItems={[{ title: translations.categories, url: '/categories' }]}
         title={translations.categories}
         addBtnHandler={() => showDrawer('add')}
+        showAddBtn={currentUser?.permission.category.create}
       />
       <CategoryList
         categories={categories}
@@ -103,13 +107,17 @@ const CategoriesPage: NextPage<CategoriesPageProps> = ({ categories, pagination 
       />
       <Pagination pagination={pagination} />
 
-      <AddCategoryDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      {currentUser?.permission.category.create && (
+        <AddCategoryDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      )}
 
-      <EditCategoryDrawer
-        show={drawerStates.edit}
-        closeHandler={() => closeDrawer('edit')}
-        category={selectedCategory}
-      />
+      {currentUser?.permission.category.update && (
+        <EditCategoryDrawer
+          show={drawerStates.edit}
+          closeHandler={() => closeDrawer('edit')}
+          category={selectedCategory}
+        />
+      )}
     </>
   );
 };

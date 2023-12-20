@@ -3,7 +3,7 @@ import { AddFinanceExpenseDrawer } from '@/components/features';
 import { FinanceExpenseList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm, useRefreshData } from '@/hooks';
+import { useAuth, useConfirm, useRefreshData } from '@/hooks';
 import { IFinanceExpense, IPagination } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
@@ -56,6 +56,7 @@ export const getServerSideProps: GetServerSideProps<FinanceExpensePageProps> = a
 };
 
 const FinanceExpensePage: NextPage<FinanceExpensePageProps> = ({ financeExpenses, pagination }) => {
+  const { currentUser } = useAuth();
   const refreshData = useRefreshData();
   const { isConfirmed } = useConfirm();
   const [drawerStates, setDrawerStates] = useState({
@@ -72,6 +73,7 @@ const FinanceExpensePage: NextPage<FinanceExpensePageProps> = ({ financeExpenses
   };
 
   const deleteProduct = async (id: string) => {
+    if (!currentUser?.permission.financeExpense.delete) return;
     try {
       const confirmed = await isConfirmed('Та энэ санхүүгийн зарлагыг устгахдаа итгэлтэй байна уу?');
       if (!confirmed) return;
@@ -90,12 +92,15 @@ const FinanceExpensePage: NextPage<FinanceExpensePageProps> = ({ financeExpenses
         breadcrumbItems={[{ title: translations.financeExpense, url: '/finances/expense' }]}
         title={translations.financeExpense}
         addBtnHandler={() => showDrawer('add')}
+        showAddBtn={currentUser?.permission.financeExpense.create}
       />
 
       <FinanceExpenseList financeExpesnes={financeExpenses} deleteHandler={(id: string) => deleteProduct(id)} />
       <Pagination pagination={pagination} />
 
-      <AddFinanceExpenseDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      {currentUser?.permission.financeExpense.create && (
+        <AddFinanceExpenseDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      )}
     </>
   );
 };

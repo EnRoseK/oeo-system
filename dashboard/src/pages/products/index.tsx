@@ -3,7 +3,7 @@ import { AddProductDrawer, EditProductDrawer } from '@/components/features';
 import { ProductList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm, useRefreshData } from '@/hooks';
+import { useAuth, useConfirm, useRefreshData } from '@/hooks';
 import { ICategory, IPagination, IProduct } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
@@ -61,6 +61,7 @@ export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async (
 };
 
 const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categories }) => {
+  const { currentUser } = useAuth();
   const refreshData = useRefreshData();
   const [selectedProduct, setSelectedProduct] = useState<IProduct | undefined>(undefined);
   const { isConfirmed } = useConfirm();
@@ -78,6 +79,8 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categ
   };
 
   const deleteProduct = async (id: string) => {
+    if (!currentUser?.permission.product.delete) return;
+
     try {
       const confirmed = await isConfirmed('Та энэ урвалжийг устгахдаа итгэлтэй байна уу?');
 
@@ -98,6 +101,7 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categ
         breadcrumbItems={[{ title: translations.products, url: '/products' }]}
         title={translations.products}
         addBtnHandler={() => showDrawer('add')}
+        showAddBtn={currentUser?.permission.product.create}
       />
       <ProductList
         products={products}
@@ -110,15 +114,19 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categ
       <Pagination pagination={pagination} />
 
       {/* Add Product Drawer */}
-      <AddProductDrawer categories={categories} show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      {currentUser?.permission.product.create && (
+        <AddProductDrawer categories={categories} show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      )}
 
       {/* Edit Product Drawer */}
-      <EditProductDrawer
-        product={selectedProduct}
-        categories={categories}
-        show={drawerStates.edit}
-        closeHandler={() => closeDrawer('edit')}
-      />
+      {currentUser?.permission.product.update && (
+        <EditProductDrawer
+          product={selectedProduct}
+          categories={categories}
+          show={drawerStates.edit}
+          closeHandler={() => closeDrawer('edit')}
+        />
+      )}
     </>
   );
 };

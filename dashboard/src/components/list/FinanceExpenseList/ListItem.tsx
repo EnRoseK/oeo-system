@@ -1,5 +1,6 @@
 import { TableRow, TableRowItem, TableRowItemDescription } from '@/components/Table';
 import { ActionButtons } from '@/components/ui';
+import { useAuth } from '@/hooks';
 import { IFinanceExpense } from '@/interfaces';
 import React, { FC } from 'react';
 
@@ -10,6 +11,8 @@ interface ListItemProps {
 }
 
 export const ListItem: FC<ListItemProps> = ({ number, financeExpense, deleteHandler }) => {
+  const { currentUser } = useAuth();
+
   return (
     <TableRow>
       <TableRowItem>{number}</TableRowItem>
@@ -29,7 +32,7 @@ export const ListItem: FC<ListItemProps> = ({ number, financeExpense, deleteHand
       <ActionButtons
         deleteHandler={() => deleteHandler(financeExpense._id)}
         showEdit={false}
-        showDelete={financeExpense.type !== 'PRODUCT'}
+        showDelete={financeExpense.type !== 'PRODUCT' && currentUser?.permission.financeExpense.delete}
       />
     </TableRow>
   );

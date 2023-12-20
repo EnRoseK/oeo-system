@@ -22,9 +22,12 @@ export const ListItem: FC<ListItemProps> = ({ product, number, editHandler, dele
       <TableRowItemDescription>{product.description}</TableRowItemDescription>
       <TableRowItem>{product.remainder.toLocaleString()}ш</TableRowItem>
 
-      {currentUser?.role === 'ADMIN' && (
-        <ActionButtons editHandler={() => editHandler(product)} deleteHandler={() => deleteHandler(product?._id!)} />
-      )}
+      <ActionButtons
+        editHandler={() => editHandler(product)}
+        deleteHandler={() => deleteHandler(product?._id!)}
+        showEdit={currentUser?.permission.product.update}
+        showDelete={currentUser?.permission.product.delete}
+      />
     </TableRow>
   );
 };

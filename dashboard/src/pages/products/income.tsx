@@ -3,7 +3,7 @@ import { AddProductIncomeDrawer } from '@/components/features';
 import { ProductIncomeList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useConfirm, useRefreshData } from '@/hooks';
+import { useAuth, useConfirm, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductIncome } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
@@ -61,6 +61,7 @@ export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = as
 };
 
 const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, pagination, products }) => {
+  const { currentUser } = useAuth();
   const refreshData = useRefreshData();
   const { isConfirmed } = useConfirm();
   const [drawerStates, setDrawerStates] = useState({
@@ -77,6 +78,8 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, p
   };
 
   const deleteProductIncome = async (id: string) => {
+    if (!currentUser?.permission.productIncome.delete) return;
+
     try {
       const confirmed = await isConfirmed('Та энэ урвалж орлогыг устгахдаа итгэлтэй байна уу?');
 
@@ -100,12 +103,15 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, p
         ]}
         title={translations.productIncome}
         addBtnHandler={() => showDrawer('add')}
+        showAddBtn={currentUser?.permission.productIncome.create}
       />
 
       <ProductIncomeList productIncomes={productIncomes} deleteHandler={(id: string) => deleteProductIncome(id)} />
       <Pagination pagination={pagination} />
 
-      <AddProductIncomeDrawer products={products} show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      {currentUser?.permission.productIncome.create && (
+        <AddProductIncomeDrawer products={products} show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
+      )}
     </>
   );
 };
