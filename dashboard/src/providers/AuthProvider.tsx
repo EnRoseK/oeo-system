@@ -11,6 +11,7 @@ interface AuthContextType {
   currentUser?: IUser;
   fetchCurrentUser: () => Promise<void>;
   clearUser: () => void;
+  updateUser: (data: IUser) => void;
 }
 
 export const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -33,11 +34,15 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
     setCurrentUser(undefined);
   };
 
+  const updateUser = (data: IUser) => {
+    setCurrentUser(data);
+  };
+
   useEffect(() => {
     fetchCurrentUser();
   }, []);
 
-  const value = { currentUser, fetchCurrentUser, clearUser };
+  const value = { currentUser, fetchCurrentUser, clearUser, updateUser };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

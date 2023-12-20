@@ -17,7 +17,7 @@ export const createUserValidation = yup.object().shape({
 
 export const updateUserInfoValidation = yup.object().shape({
   body: yup.object({
-    irstName: yup.string().required('Нэр хоосон байж болохгүй'),
+    firstName: yup.string().required('Нэр хоосон байж болохгүй'),
     lastName: yup.string().required('Овог хоосон байж болохгүй'),
     email: yup
       .string()

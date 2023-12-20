@@ -8,7 +8,7 @@ export const useAuth = () => {
     throw new Error('Consumer must be used inside provider!');
   }
 
-  const { currentUser, fetchCurrentUser, clearUser } = ctx;
+  const { currentUser, fetchCurrentUser, clearUser, updateUser } = ctx;
 
-  return { currentUser, fetchCurrentUser, clearUser };
+  return { currentUser, fetchCurrentUser, clearUser, updateUser };
 };

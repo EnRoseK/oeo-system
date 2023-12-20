@@ -74,7 +74,7 @@ const changeUserInfo: RequestHandler<unknown, unknown, updateUserInfoBody, unkno
 
   try {
     const { email, firstName, lastName } = req.body;
-    const userWithEmailExist = await UserModel.findOne({ email });
+    const userWithEmailExist = await UserModel.findOne({ email, _id: { $ne: userId } });
     if (userWithEmailExist) throw createHttpError(400, 'Энэ и-мэйл бүртгэгдсэн байна!');
 
     const updatedUser = await UserModel.findByIdAndUpdate(userId, { email, firstName, lastName }, { new: true });
