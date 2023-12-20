@@ -26,36 +26,43 @@ export const SidebarItems: ISidebarItem[] = [
     title: translations.products,
     url: '/products',
     icon: Icons.GiChemicalDrop,
+    permissionKey: 'product',
   },
   {
     title: translations.categories,
     url: '/categories',
     icon: Icons.BiSolidCategory,
+    permissionKey: 'category',
   },
   {
     title: translations.productIncome,
     url: '/products/income',
     icon: Icons.GrDocumentStore,
+    permissionKey: 'productIncome',
   },
   {
     title: translations.productOutcome,
     url: '/products/outcome',
     icon: Icons.IoDocumentsOutline,
+    permissionKey: 'productOutcome',
   },
   {
     title: translations.financeIncome,
     url: '/finances/income',
     icon: Icons.GiReceiveMoney,
+    permissionKey: 'financeIncome',
   },
   {
     title: translations.financeExpense,
     url: '/finances/expense',
     icon: Icons.FaMoneyBillTransfer,
+    permissionKey: 'financeExpense',
   },
   {
     title: translations.users,
     url: '/users',
     icon: Icons.FiUsers,
+    permissionKey: 'users',
   },
   {
     title: translations.settings,

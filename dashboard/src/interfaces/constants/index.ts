@@ -4,6 +4,15 @@ export interface ISidebarItem {
   title: string;
   url: string;
   icon: IconType;
+  permissionKey?:
+    | 'category'
+    | 'product'
+    | 'productIncome'
+    | 'productOutcome'
+    | 'financeIncome'
+    | 'financeExpense'
+    | 'users'
+    | 'log';
 }
 
 export interface IUserMenuItem {

@@ -25,26 +25,28 @@ export const Sidebar: FC<SidebarProps> = ({ showMobileSidebar }) => {
               <ul className='pb-2 space-y-2'>
                 {SidebarItems.map((item, index) => {
                   const isActive = pathname === item.url;
+                  const shouldShow = !item.permissionKey || currentUser?.permission[item.permissionKey].read;
 
-                  return (
-                    <li key={index}>
-                      <Link
-                        href={item.url}
-                        className={`flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 ${
-                          isActive ? 'bg-gray-100 dark:bg-gray-700' : ''
-                        }`}
-                      >
-                        <span
-                          className={`text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white ${
-                            isActive ? 'text-gray-900 dark:text-white' : ''
+                  if (shouldShow)
+                    return (
+                      <li key={index}>
+                        <Link
+                          href={item.url}
+                          className={`flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 ${
+                            isActive ? 'bg-gray-100 dark:bg-gray-700' : ''
                           }`}
                         >
-                          <item.icon size={24} />
-                        </span>
-                        <span className='ml-3'>{item.title}</span>
-                      </Link>
-                    </li>
-                  );
+                          <span
+                            className={`text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white ${
+                              isActive ? 'text-gray-900 dark:text-white' : ''
+                            }`}
+                          >
+                            <item.icon size={24} />
+                          </span>
+                          <span className='ml-3'>{item.title}</span>
+                        </Link>
+                      </li>
+                    );
                 })}
               </ul>
             </div>
