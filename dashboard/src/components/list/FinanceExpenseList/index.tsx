@@ -3,7 +3,8 @@ import { FC } from 'react';
 import { ListItem } from './ListItem';
 import { IFinanceExpense } from '@/interfaces';
 import { PAGE_SIZE } from '@/constants';
-import { useGetCurrentPage } from '@/hooks';
+import { useCheckEmpty, useGetCurrentPage } from '@/hooks';
+import { ResultNotFound } from '@/components/ui';
 
 const TABLE_HEADS = ['#', 'Төрөл', 'Дүн', 'Тайлбар', 'Урвалж орлогын дугаар', 'Үүссэн огноо', 'Үйлдэл'];
 
@@ -14,6 +15,7 @@ interface FinanceExpenseListProps {
 
 export const FinanceExpenseList: FC<FinanceExpenseListProps> = ({ financeExpesnes, deleteHandler }) => {
   const currentPage = useGetCurrentPage();
+  const isEmpty = useCheckEmpty(financeExpesnes.length);
 
   return (
     <div className='flex flex-col'>
@@ -26,18 +28,21 @@ export const FinanceExpenseList: FC<FinanceExpenseListProps> = ({ financeExpesne
                   return <TableHeadItem key={index}>{head}</TableHeadItem>;
                 })}
               </TableHead>
-              <TableBody>
-                {financeExpesnes.map((financeExpense, ind) => {
-                  return (
-                    <ListItem
-                      number={(currentPage - 1) * PAGE_SIZE + ind + 1}
-                      financeExpense={financeExpense}
-                      deleteHandler={deleteHandler}
-                      key={financeExpense._id}
-                    />
-                  );
-                })}
-              </TableBody>
+              {!isEmpty && (
+                <TableBody>
+                  {financeExpesnes.map((financeExpense, ind) => {
+                    return (
+                      <ListItem
+                        number={(currentPage - 1) * PAGE_SIZE + ind + 1}
+                        financeExpense={financeExpense}
+                        deleteHandler={deleteHandler}
+                        key={financeExpense._id}
+                      />
+                    );
+                  })}
+                </TableBody>
+              )}
+              {isEmpty && <ResultNotFound />}
             </Table>
           </div>
         </div>

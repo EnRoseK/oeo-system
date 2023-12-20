@@ -3,7 +3,8 @@ import { FC } from 'react';
 import { ListItem } from './ListItem';
 import { IProductIncome } from '@/interfaces';
 import { PAGE_SIZE } from '@/constants';
-import { useGetCurrentPage } from '@/hooks';
+import { useCheckEmpty, useGetCurrentPage } from '@/hooks';
+import { ResultNotFound } from '@/components/ui';
 
 const TABLE_HEADS = [
   '#',
@@ -23,6 +24,7 @@ interface ProductIncomeListProps {
 
 export const ProductIncomeList: FC<ProductIncomeListProps> = ({ productIncomes, deleteHandler }) => {
   const currentPage = useGetCurrentPage();
+  const isEmpty = useCheckEmpty(productIncomes.length);
 
   return (
     <div className='flex flex-col'>
@@ -35,18 +37,22 @@ export const ProductIncomeList: FC<ProductIncomeListProps> = ({ productIncomes, 
                   return <TableHeadItem key={index}>{head}</TableHeadItem>;
                 })}
               </TableHead>
-              <TableBody>
-                {productIncomes.map((productIncome, ind) => {
-                  return (
-                    <ListItem
-                      number={(currentPage - 1) * PAGE_SIZE + ind + 1}
-                      productIncome={productIncome}
-                      deleteHandler={deleteHandler}
-                      key={productIncome._id}
-                    />
-                  );
-                })}
-              </TableBody>
+
+              {!isEmpty && (
+                <TableBody>
+                  {productIncomes.map((productIncome, ind) => {
+                    return (
+                      <ListItem
+                        number={(currentPage - 1) * PAGE_SIZE + ind + 1}
+                        productIncome={productIncome}
+                        deleteHandler={deleteHandler}
+                        key={productIncome._id}
+                      />
+                    );
+                  })}
+                </TableBody>
+              )}
+              {isEmpty && <ResultNotFound />}
             </Table>
           </div>
         </div>

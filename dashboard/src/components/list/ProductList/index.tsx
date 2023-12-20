@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 import { ListItem } from './ListItem';
 import { Table, TableBody, TableHead, TableHeadItem } from '@/components/Table';
 import { IProduct } from '@/interfaces';
-import { useGetCurrentPage } from '@/hooks';
+import { useCheckEmpty, useGetCurrentPage } from '@/hooks';
 import { PAGE_SIZE } from '@/constants';
+import { ResultNotFound } from '@/components/ui';
 
 const TABLE_HEADS = ['#', 'Нэр', 'Ангилал', 'Тайлбар', 'Үлдэгдэл', 'Үйлдэл'];
 
@@ -15,6 +16,7 @@ interface ProductListProps {
 
 export const ProductList: FC<ProductListProps> = ({ products, editHandler, deleteHandler }) => {
   const currentPage = useGetCurrentPage();
+  const isEmpty = useCheckEmpty(products.length);
 
   return (
     <div className='flex flex-col'>
@@ -27,19 +29,22 @@ export const ProductList: FC<ProductListProps> = ({ products, editHandler, delet
                   return <TableHeadItem key={index}>{head}</TableHeadItem>;
                 })}
               </TableHead>
-              <TableBody>
-                {products.map((product, ind) => {
-                  return (
-                    <ListItem
-                      product={product}
-                      number={(currentPage - 1) * PAGE_SIZE + ind + 1}
-                      editHandler={editHandler}
-                      deleteHandler={deleteHandler}
-                      key={product._id}
-                    />
-                  );
-                })}
-              </TableBody>
+              {!isEmpty && (
+                <TableBody>
+                  {products.map((product, ind) => {
+                    return (
+                      <ListItem
+                        product={product}
+                        number={(currentPage - 1) * PAGE_SIZE + ind + 1}
+                        editHandler={editHandler}
+                        deleteHandler={deleteHandler}
+                        key={product._id}
+                      />
+                    );
+                  })}
+                </TableBody>
+              )}
+              {isEmpty && <ResultNotFound />}
             </Table>
           </div>
         </div>
