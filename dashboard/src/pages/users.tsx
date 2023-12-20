@@ -1,14 +1,16 @@
-import { getFilteredUsers } from '@/api/services';
+import { getFilteredUsers, removeUser } from '@/api/services';
 import { AddUserDrawer, EditUserDrawer } from '@/components/features';
 import { UserList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
-import { useAuth, useConfirm } from '@/hooks';
+import { useAuth, useConfirm, useRefreshData } from '@/hooks';
 import { IPagination } from '@/interfaces';
 import { IUser } from '@/interfaces/data/user';
+import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface UsersPageProps {
   users: IUser[];
@@ -56,11 +58,13 @@ export const getServerSideProps: GetServerSideProps<UsersPageProps> = async ({ q
 
 const UsersPage: NextPage<UsersPageProps> = ({ users, pagination }) => {
   const { currentUser } = useAuth();
+  const refreshData = useRefreshData();
   const { isConfirmed } = useConfirm();
   const [drawerStates, setDrawerStates] = useState({
     add: false,
     edit: false,
   });
+  const [selectedUser, setSelectedUser] = useState<IUser | undefined>(undefined);
 
   const showDrawer = (drawer: 'add' | 'edit') => {
     setDrawerStates((prev) => ({ ...prev, [drawer]: true }));
@@ -70,11 +74,19 @@ const UsersPage: NextPage<UsersPageProps> = ({ users, pagination }) => {
     setDrawerStates((prev) => ({ ...prev, [drawer]: false }));
   };
 
-  const deleteProduct = async () => {
+  const deleteUser = async (id: string) => {
     if (!currentUser?.permission.users.delete) return;
     try {
       const confirmed = await isConfirmed('Та энэ урвалжийг устгахдаа итгэлтэй байна уу?');
-    } catch (error) {}
+      if (!confirmed) return;
+
+      await removeUser(id);
+
+      refreshData();
+      toast.success('Хэрэглэгч амжилттай устлаа');
+    } catch (error) {
+      errorHandler(error);
+    }
   };
 
   return (
@@ -86,14 +98,21 @@ const UsersPage: NextPage<UsersPageProps> = ({ users, pagination }) => {
         showAddBtn={currentUser?.permission.users.create}
       />
 
-      <UserList users={users} editHandler={() => showDrawer('edit')} deleteHandler={() => deleteProduct()} />
+      <UserList
+        users={users}
+        editHandler={(user: IUser) => {
+          showDrawer('edit');
+          setSelectedUser(user);
+        }}
+        deleteHandler={(id: string) => deleteUser(id)}
+      />
       <Pagination pagination={pagination} />
 
       {currentUser?.permission.users.create && (
         <AddUserDrawer show={drawerStates.add} closeHandler={() => closeDrawer('add')} />
       )}
       {currentUser?.permission.users.update && (
-        <EditUserDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} />
+        <EditUserDrawer show={drawerStates.edit} closeHandler={() => closeDrawer('edit')} user={selectedUser!} />
       )}
     </>
   );

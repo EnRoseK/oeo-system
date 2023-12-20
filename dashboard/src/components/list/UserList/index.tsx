@@ -9,8 +9,8 @@ const TABLE_HEADS = ['#', 'Нэр', 'Овог', 'И-мэйл', 'Үйлдэл'];
 
 interface UserListProps {
   users: IUser[];
-  editHandler: () => void;
-  deleteHandler: () => void;
+  editHandler: (user: IUser) => void;
+  deleteHandler: (id: string) => void;
 }
 
 export const UserList: FC<UserListProps> = ({ users, editHandler, deleteHandler }) => {

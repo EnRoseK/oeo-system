@@ -3,16 +3,25 @@ export interface IUser {
   firstName: string;
   lastName: string;
   email: string;
-  permission: {
-    category: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    product: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    productIncome: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    productOutcome: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    financeIncome: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    financeExpense: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    users: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    log: { read: boolean; update: boolean; delete: boolean; create: boolean };
-  };
+  permission: IPermission;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface IPermission {
+  category: IPermissionItem;
+  product: IPermissionItem;
+  productIncome: IPermissionItem;
+  productOutcome: IPermissionItem;
+  financeIncome: IPermissionItem;
+  financeExpense: IPermissionItem;
+  users: IPermissionItem;
+  log: IPermissionItem;
+}
+
+export interface IPermissionItem {
+  read: boolean;
+  update: boolean;
+  delete: boolean;
+  create: boolean;
 }

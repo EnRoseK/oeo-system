@@ -1,12 +1,13 @@
 import { Drawer } from '@/components/ui';
 import { FC } from 'react';
-import { UserAddEditForm, UserInitialValueType } from './UserAddEditForm';
+import { UserAddForm, UserInitialValueType } from './UserAddForm';
 import { CloseIcon } from '@/assets/icons';
 import { errorHandler } from '@/utils';
 import { FormikHelpers } from 'formik';
 import { createUser } from '@/api/services';
 import { useRefreshData } from '@/hooks';
 import { toast } from 'react-toastify';
+import { IPermission } from '@/interfaces';
 
 interface AddUserDrawerProps {
   show: boolean;
@@ -16,9 +17,13 @@ interface AddUserDrawerProps {
 export const AddUserDrawer: FC<AddUserDrawerProps> = ({ show, closeHandler }) => {
   const refreshData = useRefreshData();
 
-  const onSubmit = async (values: UserInitialValueType, helpers: FormikHelpers<UserInitialValueType>) => {
+  const onSubmit = async (
+    values: UserInitialValueType,
+    helpers: FormikHelpers<UserInitialValueType>,
+    permission: IPermission,
+  ) => {
     try {
-      await createUser(values);
+      await createUser({ ...values, permission });
 
       refreshData();
       toast.success('Хэрэглэгч амжилттай үүслээ');
@@ -42,9 +47,14 @@ export const AddUserDrawer: FC<AddUserDrawerProps> = ({ show, closeHandler }) =>
         <CloseIcon width={20} height={20} />
       </button>
 
-      <UserAddEditForm
+      <UserAddForm
         closeHandler={closeHandler}
-        initialValues={{ firstName: '', lastName: '', email: '', password: '', role: 'USER' }}
+        initialValues={{
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+        }}
         onSubmitHandler={onSubmit}
       />
     </Drawer>

@@ -7,6 +7,7 @@ interface ActionButtonsProps {
   deleteHandler?: () => void;
   showEdit?: boolean;
   showDelete?: boolean;
+  editLabel?: string;
 }
 
 export const ActionButtons: FC<ActionButtonsProps> = ({
@@ -14,12 +15,13 @@ export const ActionButtons: FC<ActionButtonsProps> = ({
   deleteHandler,
   showDelete = true,
   showEdit = true,
+  editLabel = 'Шинэчлэх',
 }) => {
   return (
     <td className='p-4 space-x-2 whitespace-nowrap'>
       {showEdit && (
         <SmallButton onClick={() => editHandler && editHandler()} variant='primary' Icon={UpdateIcon}>
-          Шинэчлэх
+          {editLabel}
         </SmallButton>
       )}
       {showDelete && (

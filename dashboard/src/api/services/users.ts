@@ -1,5 +1,12 @@
 import { axiosInstance } from '@/libs';
-import { CREATE_USER, GET_FILTERED_USERS, REMOVE_USER, UPDATE_USER_INFO, UPDATE_USER_PASSWORD } from '../endpoints';
+import {
+  CREATE_USER,
+  GET_FILTERED_USERS,
+  REMOVE_USER,
+  UPDATE_USER_INFO,
+  UPDATE_USER_PASSWORD,
+  UPDATE_USER_PERMISSION,
+} from '../endpoints';
 import { IUser } from '@/interfaces/data/user';
 import { IPagination } from '@/interfaces';
 
@@ -33,4 +40,10 @@ export const updateUserInfo = async (data: unknown) => {
 
 export const updateUserPassword = async (data: unknown) => {
   return await axiosInstance.patch<{ message: string }>(UPDATE_USER_PASSWORD, data).then((res) => res.data);
+};
+
+export const updateUserPermission = async (id: string, data: unknown) => {
+  return await axiosInstance
+    .patch<{ message: string }>(UPDATE_USER_PERMISSION(id), { permission: data })
+    .then((res) => res.data);
 };

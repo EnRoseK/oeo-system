@@ -7,8 +7,8 @@ import React, { FC } from 'react';
 interface ListItemProps {
   user: IUser;
   number: number;
-  editHandler: () => void;
-  deleteHandler: () => void;
+  editHandler: (user: IUser) => void;
+  deleteHandler: (id: string) => void;
 }
 
 export const ListItem: FC<ListItemProps> = ({ user, number, editHandler, deleteHandler }) => {
@@ -22,10 +22,11 @@ export const ListItem: FC<ListItemProps> = ({ user, number, editHandler, deleteH
       <TableRowItem>{user.email}</TableRowItem>
 
       <ActionButtons
+        editLabel='Эрх шинэчлэх'
         showEdit={currentUser?.permission.users.update}
         showDelete={currentUser?.permission.users.delete}
-        editHandler={editHandler}
-        deleteHandler={deleteHandler}
+        editHandler={() => editHandler(user)}
+        deleteHandler={() => deleteHandler(user._id)}
       />
     </TableRow>
   );
