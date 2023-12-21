@@ -6,12 +6,12 @@ const cookieConfig: CookieOptions = {
   maxAge: 60 * 60 * 1000,
 };
 
-// if (env.NODE_ENV === "production") {
-//   cookieConfig.secure = true;
-//   cookieConfig.sameSite = "none";
-//   cookieConfig.httpOnly = false;
-//   cookieConfig.domain = ".e-cpta.mn";
-// }
+if (envalid.NODE_ENV === 'production') {
+  cookieConfig.secure = true;
+  cookieConfig.sameSite = 'none';
+  cookieConfig.httpOnly = false;
+  // cookieConfig.domain = ".e-cpta.mn";
+}
 
 export const sessionConfig: SessionOptions = {
   secret: envalid.SESSION_SECRET,

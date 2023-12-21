@@ -21,6 +21,14 @@ export const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
     return () => window.removeEventListener('resize', updateSize);
   }, []);
 
+  useLayoutEffect(() => {
+    if (window.innerWidth >= 1024) {
+      setShowMobileSidebar(true);
+    } else {
+      setShowMobileSidebar(false);
+    }
+  }, []);
+
   return (
     <>
       <Header showMobileSidebar={showMobileSidebar} setShowMobileSidebar={setShowMobileSidebar} />

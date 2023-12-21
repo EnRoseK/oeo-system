@@ -7,4 +7,5 @@ export const envalid = cleanEnv(process.env, {
   PORT: port(),
   SESSION_SECRET: str(),
   CLIENT_URL: str(),
+  NODE_ENV: str(),
 });
