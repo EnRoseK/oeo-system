@@ -1,5 +1,5 @@
 import { RequestHandler } from 'express';
-import { UserModel } from './user.model';
+import { IUser, UserModel } from './user.model';
 import { PAGE_SIZE } from '../../constants';
 import {
   createUserBody,
@@ -10,18 +10,27 @@ import {
 } from './user.dto';
 import createHttpError from 'http-errors';
 import * as bcrypt from 'bcrypt';
+import { FilterQuery } from 'mongoose';
 
 const getFilterdUsers: RequestHandler = async (req, res, next) => {
   try {
-    const { page = '1' } = req.query;
+    const { page = '1', q = '' } = req.query;
     const currentPage = Number(page);
 
-    const users = await UserModel.find()
+    const filterQuery: FilterQuery<IUser> = {
+      $or: [
+        { firstName: new RegExp('^' + q, 'i') },
+        { lastName: new RegExp('^' + q, 'i') },
+        { email: new RegExp('^' + q, 'i') },
+      ],
+    };
+
+    const users = await UserModel.find(filterQuery)
       .limit(PAGE_SIZE)
       .skip((currentPage - 1) * PAGE_SIZE)
       .sort({ createdAt: -1 });
 
-    const usersCount = await UserModel.countDocuments();
+    const usersCount = await UserModel.countDocuments(filterQuery);
 
     res.status(200).json({
       data: users,

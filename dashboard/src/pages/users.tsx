@@ -19,9 +19,9 @@ interface UsersPageProps {
 
 export const getServerSideProps: GetServerSideProps<UsersPageProps> = async ({ query, req }) => {
   try {
-    const { page = '1' } = query;
+    const { page = '1', search = '' } = query;
 
-    const usersRes = await getFilteredUsers(Number(page), req.cookies['connect.sid']);
+    const usersRes = await getFilteredUsers(Number(page), search as string, req.cookies['connect.sid']);
 
     return {
       props: {

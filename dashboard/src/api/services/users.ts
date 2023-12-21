@@ -10,11 +10,14 @@ import {
 import { IUser } from '@/interfaces/data/user';
 import { IPagination } from '@/interfaces';
 
-export const getFilteredUsers = async (page?: number, cookie?: string) => {
+export const getFilteredUsers = async (page?: number, search?: string, cookie?: string) => {
   const searchParams = new URLSearchParams();
 
   if (page) {
     searchParams.set('page', page.toString());
+  }
+  if (search) {
+    searchParams.set('q', search);
   }
 
   return await axiosInstance
