@@ -1,5 +1,5 @@
 import { Footer, Header, MainWrapper, Sidebar } from '@/components/ui';
-import { FC, ReactNode, useState } from 'react';
+import { FC, ReactNode, useLayoutEffect, useState } from 'react';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -9,6 +9,17 @@ const classNames = ['ml-64'];
 
 export const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
   const [showMobileSidebar, setShowMobileSidebar] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    function updateSize() {
+      if (window.innerWidth >= 1024) {
+        setShowMobileSidebar(true);
+      }
+    }
+    window.addEventListener('resize', updateSize);
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
 
   return (
     <>

@@ -3,6 +3,7 @@ import { SidebarItems } from '@/constants';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/hooks';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface SidebarProps {
   showMobileSidebar: boolean;
@@ -13,11 +14,10 @@ export const Sidebar: FC<SidebarProps> = ({ showMobileSidebar }) => {
   const { currentUser } = useAuth();
 
   return (
-    <>
-      <aside
-        className={`fixed top-0 left-0 z-20 ${
-          showMobileSidebar ? 'flex' : 'hidden'
-        } flex-col flex-shrink-0 w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width`}
+    <AnimatePresence>
+      <motion.aside
+        className={`fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width`}
+        animate={{ opacity: showMobileSidebar ? 1 : 0, left: showMobileSidebar ? 0 : -200 }}
       >
         <div className='relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
           <div className='flex flex-col flex-1 pt-5 pb-4 overflow-y-auto'>
@@ -52,12 +52,11 @@ export const Sidebar: FC<SidebarProps> = ({ showMobileSidebar }) => {
             </div>
           </div>
         </div>
-      </aside>
-      <div
-        className={`fixed inset-0 z-10 ${
-          showMobileSidebar ? 'block' : 'hidden'
-        } bg-gray-900/50 dark:bg-gray-900/90 lg:hidden`}
+      </motion.aside>
+      <motion.div
+        className={`fixed inset-0 z-10 bg-gray-900/50 dark:bg-gray-900/90 lg:hidden`}
+        animate={{ opacity: showMobileSidebar ? 1 : 0 }}
       />
-    </>
+    </AnimatePresence>
   );
 };
