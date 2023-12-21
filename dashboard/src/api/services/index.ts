@@ -6,3 +6,4 @@ export * from './financeIncomes';
 export * from './financeExpenses';
 export * from './users';
 export * from './auth';
+export * from './home';
