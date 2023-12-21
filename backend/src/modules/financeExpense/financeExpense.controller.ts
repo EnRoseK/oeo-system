@@ -1,21 +1,33 @@
 import { RequestHandler } from 'express';
-import { FinanceExpenseModel } from './financeExpense.model';
+import { FinanceExpenseModel, IFinanceExpense } from './financeExpense.model';
 import { PAGE_SIZE } from '../../constants';
 import { createFinanceExpenseBody } from './financeExpense.dto';
 import createHttpError from 'http-errors';
+import { FilterQuery } from 'mongoose';
 
 const getFilteredFinanceExpenses: RequestHandler = async (req, res, next) => {
   try {
-    const { page = '1' } = req.query;
+    const { page = '1', type, startDate, endDate } = req.query;
     const currentPage = Number(page);
 
-    const financeExpenses = await FinanceExpenseModel.find()
+    const filterQuery: FilterQuery<IFinanceExpense> = {};
+    if (type) {
+      filterQuery.type = { $in: (type as string).split(',') };
+    }
+    if (startDate && endDate) {
+      filterQuery.createdAt = {
+        $gte: new Date(startDate as string).toISOString(),
+        $lte: new Date(endDate as string).toISOString(),
+      };
+    }
+
+    const financeExpenses = await FinanceExpenseModel.find(filterQuery)
       .sort({ createdAt: -1 })
       .limit(PAGE_SIZE)
       .skip((currentPage - 1) * PAGE_SIZE)
       .populate({ path: 'productIncome' });
 
-    const financeExpensesCount = await FinanceExpenseModel.countDocuments();
+    const financeExpensesCount = await FinanceExpenseModel.countDocuments(filterQuery);
 
     res.status(200).json({
       data: financeExpenses,

@@ -2,10 +2,23 @@ import { axiosInstance } from '@/libs';
 import { CREATE_FINANCE_EXPENSE, GET_FILTERED_FINANCE_EXPENSES, REMOVE_FINANCE_EXPENSE } from '../endpoints';
 import { IFinanceExpense, IPagination } from '@/interfaces';
 
-export const getFilteredFinanceExpenses = async (page?: number, cookie?: string) => {
+export const getFilteredFinanceExpenses = async (
+  page?: number,
+  type?: string,
+  startDate?: string,
+  endDate?: string,
+  cookie?: string,
+) => {
   const searchParams = new URLSearchParams();
   if (page) {
     searchParams.set('page', page.toString());
+  }
+  if (type) {
+    searchParams.set('type', type);
+  }
+  if (startDate && endDate) {
+    searchParams.set('startDate', startDate);
+    searchParams.set('endDate', endDate);
   }
 
   return await axiosInstance

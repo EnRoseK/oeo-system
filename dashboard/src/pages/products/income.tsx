@@ -11,7 +11,6 @@ import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { DateValueType } from 'react-tailwindcss-datepicker';
 import { toast } from 'react-toastify';
 
 interface ProductIncomePageProps {
@@ -123,20 +122,6 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, p
     }
   };
 
-  const dateRangeChangeHandler = (values: DateValueType) => {
-    if (values?.endDate && values.startDate) {
-      router.push({
-        query: { ...router.query, startDate: values.startDate.toString(), endDate: values.endDate.toString() },
-      });
-    } else {
-      delete router.query.startDate;
-      delete router.query.endDate;
-      router.push({
-        query: router.query,
-      });
-    }
-  };
-
   return (
     <>
       <PageHeader
@@ -156,7 +141,7 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, p
               values={router.query.product ? (router.query.product as string).split(',') : []}
             />
             <div>
-              <DatePicker changeHandler={dateRangeChangeHandler} />
+              <DatePicker />
             </div>
           </>
         }

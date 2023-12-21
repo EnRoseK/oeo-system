@@ -6,8 +6,6 @@ import { translations } from '@/constants';
 import { IFinanceIncome, IPagination } from '@/interfaces';
 import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { DateValueType } from 'react-tailwindcss-datepicker';
 
 interface FinanceIncomePageProps {
   financeIncomes: IFinanceIncome[];
@@ -56,22 +54,6 @@ export const getServerSideProps: GetServerSideProps<FinanceIncomePageProps> = as
 };
 
 const FinanceIncomePage: NextPage<FinanceIncomePageProps> = ({ financeIncomes, pagination }) => {
-  const router = useRouter();
-
-  const dateRangeChangeHandler = (values: DateValueType) => {
-    if (values?.endDate && values.startDate) {
-      router.push({
-        query: { ...router.query, startDate: values.startDate.toString(), endDate: values.endDate.toString() },
-      });
-    } else {
-      delete router.query.startDate;
-      delete router.query.endDate;
-      router.push({
-        query: router.query,
-      });
-    }
-  };
-
   return (
     <>
       <PageHeader
@@ -81,7 +63,7 @@ const FinanceIncomePage: NextPage<FinanceIncomePageProps> = ({ financeIncomes, p
         showSearch={false}
         extraFilters={
           <div>
-            <DatePicker changeHandler={dateRangeChangeHandler} />
+            <DatePicker />
           </div>
         }
       />

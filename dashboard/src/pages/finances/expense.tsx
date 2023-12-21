@@ -1,5 +1,6 @@
 import { getFilteredFinanceExpenses, removeFinanceExpense } from '@/api/services';
 import { AddFinanceExpenseDrawer } from '@/components/features';
+import { CheckboxDropdown, DatePicker } from '@/components/form';
 import { FinanceExpenseList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
@@ -8,7 +9,9 @@ import { IFinanceExpense, IPagination } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { DateValueType } from 'react-tailwindcss-datepicker';
 import { toast } from 'react-toastify';
 
 interface FinanceExpensePageProps {
@@ -18,9 +21,15 @@ interface FinanceExpensePageProps {
 
 export const getServerSideProps: GetServerSideProps<FinanceExpensePageProps> = async ({ query, req }) => {
   try {
-    const { page = '1' } = query;
+    const { page = '1', type, startDate, endDate } = query;
 
-    const financeExpensesRes = await getFilteredFinanceExpenses(Number(page), req.cookies['connect.sid']);
+    const financeExpensesRes = await getFilteredFinanceExpenses(
+      Number(page),
+      type as string,
+      startDate as string,
+      endDate as string,
+      req.cookies['connect.sid'],
+    );
 
     return {
       props: {
@@ -56,6 +65,7 @@ export const getServerSideProps: GetServerSideProps<FinanceExpensePageProps> = a
 };
 
 const FinanceExpensePage: NextPage<FinanceExpensePageProps> = ({ financeExpenses, pagination }) => {
+  const router = useRouter();
   const { currentUser } = useAuth();
   const refreshData = useRefreshData();
   const { isConfirmed } = useConfirm();
@@ -86,6 +96,24 @@ const FinanceExpensePage: NextPage<FinanceExpensePageProps> = ({ financeExpenses
     }
   };
 
+  const typeFilterChangeHandler = (value: string, checked: boolean) => {
+    let typeFilters = router.query.type;
+    typeFilters = typeFilters ? (typeFilters as string).split(',') : [];
+
+    if (checked) {
+      typeFilters = [...typeFilters, value];
+    } else {
+      typeFilters = typeFilters.filter((c) => c !== value);
+    }
+
+    if (typeFilters.length === 0) {
+      delete router.query.type;
+      router.push({ query: router.query });
+    } else {
+      router.push({ query: { ...router.query, type: typeFilters.join(',') } });
+    }
+  };
+
   return (
     <>
       <PageHeader
@@ -93,6 +121,27 @@ const FinanceExpensePage: NextPage<FinanceExpensePageProps> = ({ financeExpenses
         title={translations.financeExpense}
         addBtnHandler={() => showDrawer('add')}
         showAddBtn={currentUser?.permission.financeExpense.create}
+        showSearch={false}
+        extraFilters={
+          <>
+            <div className='mr-4'>
+              <DatePicker />
+            </div>
+
+            <CheckboxDropdown
+              title='Төрлөөр шүүх'
+              items={[
+                { label: 'Урвалж орлого', value: 'PRODUCT' },
+                { label: 'Цалин', value: 'SALARY' },
+                { label: 'Түрээс', value: 'RENT' },
+                { label: 'Татвар', value: 'TAX' },
+                { label: 'Бусад', value: 'OTHER' },
+              ]}
+              onChangeHandler={typeFilterChangeHandler}
+              values={router.query.type ? (router.query.type as string).split(',') : []}
+            />
+          </>
+        }
       />
 
       <FinanceExpenseList financeExpesnes={financeExpenses} deleteHandler={(id: string) => deleteProduct(id)} />
