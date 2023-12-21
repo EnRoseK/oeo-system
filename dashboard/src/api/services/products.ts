@@ -12,13 +12,16 @@ export const getAllProducts = async (cookie?: string) => {
     .then((res) => res.data);
 };
 
-export const getFilteredProducts = async (page: number, search: string, cookie?: string) => {
+export const getFilteredProducts = async (page: number, search: string, category: string, cookie?: string) => {
   const searchParams = new URLSearchParams();
   if (page) {
     searchParams.set('page', page.toString());
   }
   if (search) {
     searchParams.set('q', search);
+  }
+  if (category) {
+    searchParams.set('category', category);
   }
 
   return await axiosInstance

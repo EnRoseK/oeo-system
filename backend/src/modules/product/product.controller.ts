@@ -1,10 +1,10 @@
 import { RequestHandler } from 'express';
-import { ProductModel } from './product.model';
+import { IProduct, ProductModel } from './product.model';
 import { PAGE_SIZE } from '../../constants';
 import { createAndUpdateProductBody, updateProductParams } from './product.dto';
 import { CategoryModel } from '../category/category.model';
 import createHttpError from 'http-errors';
-import mongoose from 'mongoose';
+import mongoose, { FilterQuery } from 'mongoose';
 
 const getAllProducts: RequestHandler = async (req, res, next) => {
   try {
@@ -18,16 +18,22 @@ const getAllProducts: RequestHandler = async (req, res, next) => {
 
 const getFilteredProducts: RequestHandler = async (req, res, next) => {
   try {
-    const { page = '1', q = '' } = req.query;
+    const { page = '1', q = '', category = '' } = req.query;
     const currentPage = Number(page);
+    const categoryFilter = category ? (category as string).split(',') : [];
 
-    const products = await ProductModel.find({ title: new RegExp('^' + q, 'i') })
+    const filter: FilterQuery<IProduct> = { title: new RegExp('^' + q, 'i') };
+    if (categoryFilter.length > 0) {
+      filter.categoryId = { $in: categoryFilter };
+    }
+
+    const products = await ProductModel.find(filter)
       .limit(PAGE_SIZE)
       .skip((currentPage - 1) * PAGE_SIZE)
       .sort({ createdAt: -1 })
       .populate({ path: 'category' });
 
-    const productsCount = await ProductModel.find({ title: new RegExp('^' + q, 'i') }).countDocuments();
+    const productsCount = await ProductModel.find(filter).countDocuments();
 
     res.status(200).json({
       data: products,

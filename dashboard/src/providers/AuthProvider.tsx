@@ -19,14 +19,18 @@ export const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   const router = useRouter();
   const [currentUser, setCurrentUser] = useState<IUser | undefined>(undefined);
+  const [isLoading, setLoading] = useState<boolean>(true);
 
   const fetchCurrentUser = async () => {
     try {
+      setLoading(true);
       const res = await getCurrentUser();
 
       setCurrentUser(res.data);
     } catch (error) {
       router.replace('/login');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -43,6 +47,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const value = { currentUser, fetchCurrentUser, clearUser, updateUser };
+
+  if (isLoading) return <></>;
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

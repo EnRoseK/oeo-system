@@ -1,5 +1,6 @@
 import { getAllCategories, getFilteredProducts, removeProduct } from '@/api/services';
 import { AddProductDrawer, EditProductDrawer } from '@/components/features';
+import { CheckboxDropdown } from '@/components/form';
 import { ProductList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
@@ -8,6 +9,7 @@ import { ICategory, IPagination, IProduct } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -19,10 +21,10 @@ interface ProductsPageProps {
 
 export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async ({ query, req }) => {
   try {
-    const { page = '1', search = '' } = query;
+    const { page = '1', search = '', category = '' } = query;
 
     const [productsRes, categoryRes] = await Promise.all([
-      getFilteredProducts(Number(page), search as string, req.cookies['connect.sid']),
+      getFilteredProducts(Number(page), search as string, category as string, req.cookies['connect.sid']),
       getAllCategories(req.cookies['connect.sid']),
     ]);
 
@@ -61,6 +63,7 @@ export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async (
 };
 
 const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categories }) => {
+  const router = useRouter();
   const { currentUser } = useAuth();
   const refreshData = useRefreshData();
   const [selectedProduct, setSelectedProduct] = useState<IProduct | undefined>(undefined);
@@ -95,6 +98,24 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categ
     }
   };
 
+  const categoryFilterChangeHandler = (id: string, checked: boolean) => {
+    let cFilters = router.query.category;
+    cFilters = cFilters ? (cFilters as string).split(',') : [];
+
+    if (checked) {
+      cFilters = [...cFilters, id];
+    } else {
+      cFilters = cFilters.filter((c) => c !== id);
+    }
+
+    if (cFilters.length === 0) {
+      delete router.query.category;
+      router.push({ query: router.query });
+    } else {
+      router.push({ query: { ...router.query, category: cFilters.join(',') } });
+    }
+  };
+
   return (
     <>
       <PageHeader
@@ -102,6 +123,16 @@ const ProductsPage: NextPage<ProductsPageProps> = ({ products, pagination, categ
         title={translations.products}
         addBtnHandler={() => showDrawer('add')}
         showAddBtn={currentUser?.permission.product.create}
+        extraFilters={
+          <>
+            <CheckboxDropdown
+              title='Ангилалаар шүүх'
+              items={categories.map((c) => ({ label: c.title, value: c._id }))}
+              onChangeHandler={categoryFilterChangeHandler}
+              values={router.query.category ? (router.query.category as string).split(',') : []}
+            />
+          </>
+        }
       />
       <ProductList
         products={products}
