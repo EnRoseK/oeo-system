@@ -20,10 +20,8 @@ export const getFilteredProductIncomes = async (
   if (product) {
     searchParams.set('product', product);
   }
-  if (startDate) {
+  if (startDate && endDate) {
     searchParams.set('startDate', startDate);
-  }
-  if (endDate) {
     searchParams.set('endDate', endDate);
   }
 

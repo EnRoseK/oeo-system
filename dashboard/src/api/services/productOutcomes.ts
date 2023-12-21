@@ -2,10 +2,27 @@ import { IPagination, IProductOutcome } from '@/interfaces';
 import { axiosInstance } from '@/libs';
 import { CREATE_PRODUCT_OUTCOME, GET_FILTERED_PRODUCT_OUTCOMES, REMOVE_PRODUCT_OUTCOME } from '../endpoints';
 
-export const getFilteredProductOutcomes = async (page: number, cookie?: string) => {
+export const getFilteredProductOutcomes = async (
+  page: number,
+  search: string,
+  product: string,
+  startDate: string,
+  endDate: string,
+  cookie?: string,
+) => {
   const searchParams = new URLSearchParams();
   if (page) {
     searchParams.set('page', page.toString());
+  }
+  if (search) {
+    searchParams.set('q', search);
+  }
+  if (product) {
+    searchParams.set('product', product);
+  }
+  if (startDate && endDate) {
+    searchParams.set('startDate', startDate);
+    searchParams.set('endDate', endDate);
   }
 
   return await axiosInstance

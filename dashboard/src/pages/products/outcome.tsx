@@ -1,5 +1,6 @@
 import { getAllProducts, getFilteredProductOutcomes, removeProductOutcome } from '@/api/services';
 import { AddProductOutcomeDrawer } from '@/components/features';
+import { CheckboxDropdown, DatePicker } from '@/components/form';
 import { ProductOutcomesList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
@@ -8,7 +9,9 @@ import { IPagination, IProduct, IProductOutcome } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { DateValueType } from 'react-tailwindcss-datepicker';
 import { toast } from 'react-toastify';
 
 interface ProductOutcomePageProps {
@@ -19,10 +22,17 @@ interface ProductOutcomePageProps {
 
 export const getServerSideProps: GetServerSideProps<ProductOutcomePageProps> = async ({ query, req }) => {
   try {
-    const { page = '1' } = query;
+    const { page = '1', search = '', product, startDate, endDate } = query;
 
     const [productOutcomesRes, productsRes] = await Promise.all([
-      getFilteredProductOutcomes(Number(page), req.cookies['connect.sid']),
+      getFilteredProductOutcomes(
+        Number(page),
+        search as string,
+        product as string,
+        startDate as string,
+        endDate as string,
+        req.cookies['connect.sid'],
+      ),
       getAllProducts(req.cookies['connect.sid']),
     ]);
 
@@ -62,6 +72,7 @@ export const getServerSideProps: GetServerSideProps<ProductOutcomePageProps> = a
 
 const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes, pagination, products }) => {
   const { currentUser } = useAuth();
+  const router = useRouter();
   const refreshData = useRefreshData();
 
   const { isConfirmed } = useConfirm();
@@ -93,6 +104,38 @@ const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes
     }
   };
 
+  const productFilterChangeHandler = (id: string, checked: boolean) => {
+    let prodFilters = router.query.product;
+    prodFilters = prodFilters ? (prodFilters as string).split(',') : [];
+
+    if (checked) {
+      prodFilters = [...prodFilters, id];
+    } else {
+      prodFilters = prodFilters.filter((c) => c !== id);
+    }
+
+    if (prodFilters.length === 0) {
+      delete router.query.product;
+      router.push({ query: router.query });
+    } else {
+      router.push({ query: { ...router.query, product: prodFilters.join(',') } });
+    }
+  };
+
+  const dateRangeChangeHandler = (values: DateValueType) => {
+    if (values?.endDate && values.startDate) {
+      router.push({
+        query: { ...router.query, startDate: values.startDate.toString(), endDate: values.endDate.toString() },
+      });
+    } else {
+      delete router.query.startDate;
+      delete router.query.endDate;
+      router.push({
+        query: router.query,
+      });
+    }
+  };
+
   return (
     <>
       <PageHeader
@@ -103,6 +146,19 @@ const ProductOutcomePage: NextPage<ProductOutcomePageProps> = ({ productOutcomes
         title={translations.productOutcome}
         addBtnHandler={() => showDrawer('add')}
         showAddBtn={currentUser?.permission.productOutcome.create}
+        extraFilters={
+          <>
+            <CheckboxDropdown
+              title='Урвалжаар шүүх'
+              items={products.map((p) => ({ label: p.title, value: p._id }))}
+              onChangeHandler={productFilterChangeHandler}
+              values={router.query.product ? (router.query.product as string).split(',') : []}
+            />
+            <div>
+              <DatePicker changeHandler={dateRangeChangeHandler} />
+            </div>
+          </>
+        }
       />
 
       <ProductOutcomesList productOutcomes={productOutcomes} deleteHandler={(id: string) => deleteProduct(id)} />
