@@ -1,25 +1,36 @@
 import { RequestHandler } from 'express';
-import { ProductIncomeModel } from './productIncome.model';
+import { IProductIncome, ProductIncomeModel } from './productIncome.model';
 import { PAGE_SIZE } from '../../constants';
 import { createProductIncomeBody } from './productIncome.dto';
 import { ProductModel } from '../product/product.model';
 import createHttpError from 'http-errors';
-import mongoose from 'mongoose';
+import mongoose, { FilterQuery } from 'mongoose';
 import { nanoid } from '../../libs';
 import { FinanceExpenseModel } from '../financeExpense/financeExpense.model';
 
 const getFilteredProductIncomes: RequestHandler = async (req, res, next) => {
   try {
-    const { page = '1' } = req.query;
+    const { page = '1', q = '', product, startDate, endDate } = req.query;
     const currentPage = Number(page);
 
-    const productIncomes = await ProductIncomeModel.find()
+    const filterQuery: FilterQuery<IProductIncome> = { productIncomeId: new RegExp('^' + q, 'i') };
+    if (product) {
+      filterQuery.productId = { $in: (product as string).split(',') };
+    }
+    if (startDate && endDate) {
+      filterQuery.createdAt = {
+        $gte: new Date(startDate as string).toISOString(),
+        $lte: new Date(endDate as string).toISOString(),
+      };
+    }
+
+    const productIncomes = await ProductIncomeModel.find(filterQuery)
       .sort({ createdAt: -1 })
       .limit(PAGE_SIZE)
       .skip((currentPage - 1) * PAGE_SIZE)
       .populate({ path: 'product' });
 
-    const productIncomesCount = await ProductIncomeModel.countDocuments();
+    const productIncomesCount = await ProductIncomeModel.countDocuments(filterQuery);
 
     res.status(200).json({
       data: productIncomes,

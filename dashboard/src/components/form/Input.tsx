@@ -6,9 +6,10 @@ interface InputProps extends ComponentProps<'input'> {
   name?: string;
   error?: boolean;
   errorMsg?: string;
+  width?: string | number;
 }
 
-export const Input: FC<InputProps> = ({ label, id, name, error = false, errorMsg, ...rest }) => {
+export const Input: FC<InputProps> = ({ label, id, name, error = false, errorMsg, width = '100%', ...rest }) => {
   return (
     <div>
       {label && (
@@ -22,6 +23,7 @@ export const Input: FC<InputProps> = ({ label, id, name, error = false, errorMsg
         className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500  disabled:pointer-events-none disabled:bg-gray-50/50 disabled:dark:bg-gray-700/50 disabled:dark:text-white/50 disabled:text-gray-900/50 ${
           error ? 'ring-red-600 border-red-600 dark:ring-red-500 dark:border-red-500' : ''
         }`}
+        style={{ width }}
         {...rest}
       />
       {error && <p className='italic text-xs mt-1 text-red-600 dark:text-red-500'>{errorMsg}</p>}

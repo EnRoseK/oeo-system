@@ -1,5 +1,6 @@
 import { getAllProducts, getFilteredProductIncomes, removeProductIncome } from '@/api/services';
 import { AddProductIncomeDrawer } from '@/components/features';
+import { CheckboxDropdown, DatePicker } from '@/components/form';
 import { ProductIncomeList } from '@/components/list';
 import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
@@ -8,7 +9,9 @@ import { IPagination, IProduct, IProductIncome } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { isAxiosError } from 'axios';
 import { GetServerSideProps, NextPage } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { DateValueType } from 'react-tailwindcss-datepicker';
 import { toast } from 'react-toastify';
 
 interface ProductIncomePageProps {
@@ -19,10 +22,17 @@ interface ProductIncomePageProps {
 
 export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = async ({ query, req }) => {
   try {
-    const { page } = query;
+    const { page = '1', search = '', product, startDate, endDate } = query;
 
     const [productIncomesRes, productsRes] = await Promise.all([
-      getFilteredProductIncomes(Number(page), req.cookies['connect.sid']),
+      getFilteredProductIncomes(
+        Number(page),
+        search as string,
+        product as string,
+        startDate as string,
+        endDate as string,
+        req.cookies['connect.sid'],
+      ),
       getAllProducts(req.cookies['connect.sid']),
     ]);
 
@@ -61,6 +71,7 @@ export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = as
 };
 
 const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, pagination, products }) => {
+  const router = useRouter();
   const { currentUser } = useAuth();
   const refreshData = useRefreshData();
   const { isConfirmed } = useConfirm();
@@ -94,6 +105,38 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, p
     }
   };
 
+  const productFilterChangeHandler = (id: string, checked: boolean) => {
+    let prodFilters = router.query.product;
+    prodFilters = prodFilters ? (prodFilters as string).split(',') : [];
+
+    if (checked) {
+      prodFilters = [...prodFilters, id];
+    } else {
+      prodFilters = prodFilters.filter((c) => c !== id);
+    }
+
+    if (prodFilters.length === 0) {
+      delete router.query.product;
+      router.push({ query: router.query });
+    } else {
+      router.push({ query: { ...router.query, product: prodFilters.join(',') } });
+    }
+  };
+
+  const dateRangeChangeHandler = (values: DateValueType) => {
+    if (values?.endDate && values.startDate) {
+      router.push({
+        query: { ...router.query, startDate: values.startDate.toString(), endDate: values.endDate.toString() },
+      });
+    } else {
+      delete router.query.startDate;
+      delete router.query.endDate;
+      router.push({
+        query: router.query,
+      });
+    }
+  };
+
   return (
     <>
       <PageHeader
@@ -104,6 +147,19 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = ({ productIncomes, p
         title={translations.productIncome}
         addBtnHandler={() => showDrawer('add')}
         showAddBtn={currentUser?.permission.productIncome.create}
+        extraFilters={
+          <>
+            <CheckboxDropdown
+              title='Урвалжаар шүүх'
+              items={products.map((p) => ({ value: p._id, label: p.title }))}
+              onChangeHandler={productFilterChangeHandler}
+              values={router.query.product ? (router.query.product as string).split(',') : []}
+            />
+            <div>
+              <DatePicker changeHandler={dateRangeChangeHandler} />
+            </div>
+          </>
+        }
       />
 
       <ProductIncomeList productIncomes={productIncomes} deleteHandler={(id: string) => deleteProductIncome(id)} />

@@ -37,7 +37,7 @@ export const PageHeader: FC<PageHeaderProps> = ({
         <h1 className='text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white mb-4'>{title}</h1>
         <div className='items-center justify-between block sm:flex md:divide-x md:divide-gray-100 dark:divide-gray-700'>
           <div className='flex flex-col sm:flex-row items-start sm:items-center mb-4 sm:mb-0'>
-            <SearchInput submitHandler={searchSubmit} />
+            <SearchInput submitHandler={searchSubmit} initialValue={router.query.search as string} />
             {extraFilters}
           </div>
           {showAddBtn && addBtnHandler && <MediumButton onClick={addBtnHandler}>Нэмэх</MediumButton>}
