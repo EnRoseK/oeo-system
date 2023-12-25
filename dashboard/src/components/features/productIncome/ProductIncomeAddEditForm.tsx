@@ -60,6 +60,7 @@ export const ProductIncomeAddEditForm: FC<ProductIncomeAddEditFormProps> = ({
               onBlur={handleBlur}
               error={!!errors.basePrice && touched.basePrice}
               errorMsg={errors.basePrice}
+              placeholder='Нэгж үнэ'
             />
             <Input
               label='Тоо ширхэг'
@@ -71,6 +72,7 @@ export const ProductIncomeAddEditForm: FC<ProductIncomeAddEditFormProps> = ({
               onBlur={handleBlur}
               error={!!errors.quantity && touched.quantity}
               errorMsg={errors.quantity}
+              placeholder='Тоо ширхэг'
             />
             <Input
               label='Нийт үнэ'
@@ -79,6 +81,7 @@ export const ProductIncomeAddEditForm: FC<ProductIncomeAddEditFormProps> = ({
               name='totalPrice'
               value={values.basePrice * values.quantity}
               disabled
+              placeholder='Нийт үнэ'
             />
 
             <div className='bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute'>

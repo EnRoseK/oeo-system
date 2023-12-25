@@ -57,6 +57,7 @@ export const FinanceExpenseAddEditForm: FC<FinanceExpenseAddEditFormProps> = ({
               onBlur={handleBlur}
               error={!!errors.amount && touched.amount}
               errorMsg={errors.type}
+              placeholder='Дүн'
             />
 
             <Textarea
@@ -69,6 +70,7 @@ export const FinanceExpenseAddEditForm: FC<FinanceExpenseAddEditFormProps> = ({
               onBlur={handleBlur}
               error={!!errors.description && touched.description}
               errorMsg={errors.description}
+              placeholder='Энд орлогын талаар дэлгэрэнгүй тайлбар бичих боломжтой'
             />
 
             <div className='bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute'>

@@ -45,6 +45,7 @@ export const ProductAddEditForm: FC<ProductAddEditFormProps> = ({
               onBlur={handleBlur}
               error={!!errors.title && touched.title}
               errorMsg={errors.title}
+              placeholder='Урвалжийн нэр'
             />
 
             <Select
@@ -69,6 +70,7 @@ export const ProductAddEditForm: FC<ProductAddEditFormProps> = ({
               onBlur={handleBlur}
               error={!!errors.description && touched.description}
               errorMsg={errors.description}
+              placeholder='Энд урвалжийн талаар дэлгэрэнгүй тайлбар бичих боломжтой'
             />
 
             <Input
@@ -82,6 +84,7 @@ export const ProductAddEditForm: FC<ProductAddEditFormProps> = ({
               error={!!errors.remainder && touched.remainder}
               errorMsg={errors.remainder}
               disabled={edit}
+              placeholder='Үлдэгдэл'
             />
 
             <div className='bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute'>
