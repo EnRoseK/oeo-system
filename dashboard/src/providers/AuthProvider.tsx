@@ -26,11 +26,8 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
       setLoading(true);
       const res = await getCurrentUser();
 
-      console.log({ res });
-
       setCurrentUser(res.data);
     } catch (error) {
-      console.log({ error });
       router.replace('/login');
     } finally {
       setLoading(false);
