@@ -10,7 +10,7 @@ if (envalid.NODE_ENV === 'production') {
   cookieConfig.secure = true;
   cookieConfig.sameSite = 'none';
   cookieConfig.httpOnly = false;
-  // cookieConfig.domain = ".e-cpta.mn";
+  cookieConfig.domain = '.onch-enkh-onosh.com';
 }
 
 export const sessionConfig: SessionOptions = {
