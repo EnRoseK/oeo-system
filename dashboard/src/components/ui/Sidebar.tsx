@@ -54,7 +54,7 @@ export const Sidebar: FC<SidebarProps> = ({ showMobileSidebar }) => {
         </div>
       </motion.aside>
       <motion.div
-        className={`fixed inset-0 z-10 bg-gray-900/50 dark:bg-gray-900/90 lg:hidden`}
+        className={`fixed pointer-events-none inset-0 z-10 bg-gray-900/50 dark:bg-gray-900/90 lg:hidden`}
         animate={{ opacity: showMobileSidebar ? 1 : 0 }}
       />
     </AnimatePresence>

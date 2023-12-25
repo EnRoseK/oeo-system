@@ -1,5 +1,6 @@
 import { Footer, Header, MainWrapper, Sidebar } from '@/components/ui';
-import { FC, ReactNode, useLayoutEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { FC, ReactNode, useEffect, useLayoutEffect, useState } from 'react';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -8,6 +9,7 @@ interface DashboardLayoutProps {
 const classNames = ['ml-64'];
 
 export const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
+  const router = useRouter();
   const [showMobileSidebar, setShowMobileSidebar] = useState<boolean>(false);
 
   useLayoutEffect(() => {
@@ -28,6 +30,22 @@ export const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
       setShowMobileSidebar(false);
     }
   }, []);
+
+  useEffect(() => {
+    router.events.on('routeChangeStart', () => {
+      if (window.innerWidth < 1024) {
+        setShowMobileSidebar(false);
+      }
+    });
+
+    return () => {
+      router.events.off('routeChangeStart', () => {
+        if (window.innerWidth < 1024) {
+          setShowMobileSidebar(false);
+        }
+      });
+    };
+  }, [router]);
 
   return (
     <>
