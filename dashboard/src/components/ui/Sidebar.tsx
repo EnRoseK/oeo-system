@@ -16,7 +16,9 @@ export const Sidebar: FC<SidebarProps> = ({ showMobileSidebar }) => {
   return (
     <AnimatePresence>
       <motion.aside
-        className={`fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width`}
+        className={`fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 h-full pt-16 font-normal duration-75 lg:flex transition-width ${
+          !showMobileSidebar ? 'pointer-events-none' : ''
+        }`}
         animate={{ opacity: showMobileSidebar ? 1 : 0, left: showMobileSidebar ? 0 : -200 }}
       >
         <div className='relative flex flex-col flex-1 min-h-0 pt-0 bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700'>
