@@ -54,7 +54,7 @@ export const DashboardLayout: FC<DashboardLayoutProps> = ({ children }) => {
         <Sidebar showMobileSidebar={showMobileSidebar} />
 
         <MainWrapper>
-          <main className='overflow-y-auto flex-1'>{children}</main>
+          <main>{children}</main>
           <Footer />
         </MainWrapper>
       </div>
