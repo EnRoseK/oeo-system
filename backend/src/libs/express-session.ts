@@ -7,7 +7,7 @@ const cookieConfig: CookieOptions = {
 };
 
 if (envalid.NODE_ENV === 'production') {
-  cookieConfig.secure = true;
+  cookieConfig.secure = false;
   cookieConfig.sameSite = false;
   cookieConfig.httpOnly = false;
   cookieConfig.domain = '.onch-enkh-onosh.com';
