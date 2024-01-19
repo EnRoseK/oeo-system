@@ -21,6 +21,13 @@ export const ListItem: FC<ListItemProps> = ({ productOutcome, number, deleteHand
       <TableRowItem>{productOutcome.quantity.toLocaleString()}ш</TableRowItem>
       <TableRowItem>{productOutcome.basePrice.toLocaleString()}₮</TableRowItem>
       <TableRowItem>{productOutcome.totalPrice.toLocaleString()}₮</TableRowItem>
+      <TableRowItem>
+        {productOutcome.payment
+          .replaceAll('CARD', 'Карт')
+          .replaceAll('CASH', 'Бэлэн мөнгө')
+          .replaceAll('TRANSFER', 'Шилжүүлэг')
+          .replaceAll('RENT', 'Зээл')}
+      </TableRowItem>
       <TableRowItem>{new Date(productOutcome.createdAt).toLocaleDateString()}</TableRowItem>
 
       <ActionButtons

@@ -1,6 +1,7 @@
 import { Document, Schema, Types, model } from 'mongoose';
 
 export interface IProductOutcome extends Document<Types.ObjectId> {
+  payment: 'CARD' | 'CASH' | 'TRANSFER' | 'RENT';
   productOutcomeId: string;
   productId: string;
   quantity: number;
@@ -12,6 +13,11 @@ export interface IProductOutcome extends Document<Types.ObjectId> {
 
 const ProductOutcomeSchema = new Schema<IProductOutcome>(
   {
+    payment: {
+      type: String,
+      enum: ['CARD', 'CASH', 'TRANSFER', 'RENT'],
+      required: true,
+    },
     productOutcomeId: {
       type: String,
       required: true,

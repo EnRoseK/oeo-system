@@ -12,10 +12,10 @@ const permissions = [
   { key: 'product', title: 'Урвалж' },
   { key: 'productIncome', title: 'Урвалж орлого' },
   { key: 'productOutcome', title: 'Шижилгээ' },
-  { key: 'financeExpense', title: 'Санхүүгийн зарлага' },
-  { key: 'financeIncome', title: 'Санхүүгийн орлого' },
+  { key: 'expenses', title: 'Зарлага' },
+  { key: 'productReport', title: 'Урвалж тайлан' },
+  { key: 'incomeReport', title: 'Орлого тайлан' },
   { key: 'users', title: 'Хэрэглэгчид' },
-  { key: 'log', title: 'Лог' },
 ];
 
 const actions = [
@@ -48,6 +48,7 @@ export const PermissionUpdateForm: FC<PermissionUpdateFormProps> = ({ permission
       toast.success(res.message);
       closeHandler();
     } catch (error) {
+      console.log(error);
       errorHandler(error);
     }
   };

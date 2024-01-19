@@ -9,6 +9,7 @@ export interface ProductOutcomeInitialValuesType {
   productId: string;
   basePrice: number;
   quantity: number;
+  payment: string;
 }
 
 interface ProductOutcomeAddEditFormProps {
@@ -81,6 +82,23 @@ export const ProductOutcomeAddEditForm: FC<ProductOutcomeAddEditFormProps> = ({
               disabled
               value={values.basePrice * values.quantity}
               placeholder='Нийт үнэ'
+            />
+            <Select
+              items={[
+                { label: 'Карт', value: 'CARD' },
+                { label: 'Бэлэн мөнгө', value: 'CASH' },
+                { label: 'Шилжүүлэг', value: 'TRANSFER' },
+                { label: 'Зээл', value: 'RENT' },
+              ]}
+              label='Төлбөрийн төрөл'
+              id='payment'
+              name='payment'
+              placeHolder='Төрөл сонгох'
+              value={values.payment}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={!!errors.payment && touched.payment}
+              errorMsg={errors.payment}
             />
 
             <div className='bottom-0 left-0 flex justify-center w-full pb-4 space-x-4 md:px-4 md:absolute'>

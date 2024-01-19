@@ -23,10 +23,10 @@ export const checkUserPermission =
       | 'product'
       | 'productIncome'
       | 'productOutcome'
-      | 'financeIncome'
-      | 'financeExpense'
+      | 'productReport'
+      | 'incomeReport'
       | 'users'
-      | 'log',
+      | 'expenses',
     action: 'read' | 'create' | 'update' | 'delete',
   ) =>
   async (req: Request, res: Response, next: NextFunction) => {

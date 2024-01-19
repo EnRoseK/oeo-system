@@ -6,7 +6,6 @@ import { ProductModel } from '../product/product.model';
 import createHttpError from 'http-errors';
 import mongoose, { FilterQuery } from 'mongoose';
 import { nanoid } from '../../libs';
-import { FinanceExpenseModel } from '../financeExpense/financeExpense.model';
 
 const getFilteredProductIncomes: RequestHandler = async (req, res, next) => {
   try {
@@ -20,7 +19,7 @@ const getFilteredProductIncomes: RequestHandler = async (req, res, next) => {
     if (startDate && endDate) {
       filterQuery.createdAt = {
         $gte: new Date(startDate as string).toISOString(),
-        $lte: new Date(endDate as string).toISOString(),
+        $lte: new Date(endDate as string).toISOString().replace('T00:00:00.000Z', 'T23:59:59.999Z'),
       };
     }
 
@@ -64,10 +63,6 @@ const createProductIncome: RequestHandler<unknown, unknown, createProductIncomeB
     );
 
     await ProductModel.findByIdAndUpdate(productId, { $inc: { remainder: quantity } }, { session });
-    await FinanceExpenseModel.create(
-      [{ type: 'PRODUCT', amount: newProductIncome.totalPrice, productIncomeId: newProductIncome._id }],
-      { session },
-    );
 
     await session.commitTransaction();
 
@@ -100,7 +95,6 @@ const removeProductIncome: RequestHandler = async (req, res, next) => {
     );
 
     await ProductIncomeModel.findByIdAndDelete(id);
-    await FinanceExpenseModel.findOneAndDelete({ productIncomeId: productIncomeExist._id });
 
     await session.commitTransaction();
 

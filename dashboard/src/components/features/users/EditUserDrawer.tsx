@@ -33,10 +33,10 @@ export const EditUserDrawer: FC<EditUserDrawerProps> = ({ show, closeHandler, us
             product: { read: true, update: false, delete: false, create: false },
             productIncome: { read: true, update: false, delete: false, create: false },
             productOutcome: { read: true, update: false, delete: false, create: false },
-            financeIncome: { read: true, update: false, delete: false, create: false },
-            financeExpense: { read: true, update: false, delete: false, create: false },
+            productReport: { read: true, update: false, delete: false, create: false },
+            incomeReport: { read: true, update: false, delete: false, create: false },
             users: { read: true, update: false, delete: false, create: false },
-            log: { read: true, update: false, delete: false, create: false },
+            expenses: { read: true, update: false, delete: false, create: false },
           }
         }
       />

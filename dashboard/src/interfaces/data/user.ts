@@ -13,10 +13,10 @@ export interface IPermission {
   product: IPermissionItem;
   productIncome: IPermissionItem;
   productOutcome: IPermissionItem;
-  financeIncome: IPermissionItem;
-  financeExpense: IPermissionItem;
+  productReport: IPermissionItem;
+  incomeReport: IPermissionItem;
   users: IPermissionItem;
-  log: IPermissionItem;
+  expenses: IPermissionItem;
 }
 
 export interface IPermissionItem {

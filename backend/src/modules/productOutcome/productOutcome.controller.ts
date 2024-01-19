@@ -5,7 +5,6 @@ import { createProductOutcomeBody } from './productOutcome.dto';
 import { ProductModel } from '../product/product.model';
 import createHttpError from 'http-errors';
 import mongoose, { FilterQuery } from 'mongoose';
-import { FinanceIncomeModel } from '../financeIncome/financeIncome.model';
 import { nanoid } from '../../libs';
 
 const getFilteredProductOutcomes: RequestHandler = async (req, res, next) => {
@@ -20,7 +19,7 @@ const getFilteredProductOutcomes: RequestHandler = async (req, res, next) => {
     if (startDate && endDate) {
       filterQuery.createdAt = {
         $gte: new Date(startDate as string).toISOString(),
-        $lte: new Date(endDate as string).toISOString(),
+        $lte: new Date(endDate as string).toISOString().replace('T00:00:00.000Z', 'T23:59:59.999Z'),
       };
     }
 
@@ -53,7 +52,7 @@ const createProductOutcome: RequestHandler<unknown, unknown, createProductOutcom
   const session = await mongoose.startSession();
 
   try {
-    const { productId, quantity, basePrice } = req.body;
+    const { productId, quantity, basePrice, payment } = req.body;
 
     const productExist = await ProductModel.findById(productId);
     if (!productExist) {
@@ -69,12 +68,16 @@ const createProductOutcome: RequestHandler<unknown, unknown, createProductOutcom
     await ProductModel.findByIdAndUpdate(productId, { $inc: { remainder: -quantity } }, { session });
 
     const [newProductOutcome] = await ProductOutcomeModel.create(
-      [{ productId, quantity, basePrice, totalPrice: quantity * basePrice, productOutcomeId: 'PO' + nanoid() }],
-      { session },
-    );
-
-    await FinanceIncomeModel.create(
-      [{ type: 'PRODUCT', amount: newProductOutcome.totalPrice, productOutcomeId: newProductOutcome._id }],
+      [
+        {
+          productId,
+          quantity,
+          basePrice,
+          totalPrice: quantity * basePrice,
+          productOutcomeId: 'PO' + nanoid(),
+          payment,
+        },
+      ],
       { session },
     );
 
@@ -109,7 +112,6 @@ const removeProductOutcome: RequestHandler = async (req, res, next) => {
     );
 
     await ProductOutcomeModel.findByIdAndDelete(id);
-    await FinanceIncomeModel.findOneAndDelete({ productOutcomeId: id });
 
     await session.commitTransaction();
 

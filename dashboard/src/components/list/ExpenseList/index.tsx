@@ -1,21 +1,21 @@
 import { Table, TableBody, TableHead, TableHeadItem } from '@/components/Table';
+import { ResultNotFound } from '@/components/ui';
+import { useCheckEmpty, useGetCurrentPage } from '@/hooks';
+import { IExpense } from '@/interfaces';
 import { FC } from 'react';
 import { ListItem } from './ListItem';
-import { IFinanceExpense } from '@/interfaces';
 import { PAGE_SIZE } from '@/constants';
-import { useCheckEmpty, useGetCurrentPage } from '@/hooks';
-import { ResultNotFound } from '@/components/ui';
 
-const TABLE_HEADS = ['#', 'Төрөл', 'Дүн', 'Тайлбар', 'Урвалж орлогын дугаар', 'Үүссэн огноо', 'Үйлдэл'];
+const TABLE_HEADS = ['#', 'Зарлагын дугаар', 'Гарчиг', 'Тайлбар', 'Төрөл', 'Үнэ', 'Үүссэн огноо', 'Үйлдэл'];
 
-interface FinanceExpenseListProps {
-  financeExpesnes: IFinanceExpense[];
+interface ExpenseListProps {
+  expenses: IExpense[];
   deleteHandler: (id: string) => void;
 }
 
-export const FinanceExpenseList: FC<FinanceExpenseListProps> = ({ financeExpesnes, deleteHandler }) => {
+export const ExpenseList: FC<ExpenseListProps> = ({ expenses, deleteHandler }) => {
   const currentPage = useGetCurrentPage();
-  const isEmpty = useCheckEmpty(financeExpesnes.length);
+  const isEmpty = useCheckEmpty(expenses.length);
 
   return (
     <div className='flex flex-col'>
@@ -30,13 +30,13 @@ export const FinanceExpenseList: FC<FinanceExpenseListProps> = ({ financeExpesne
               </TableHead>
               {!isEmpty && (
                 <TableBody>
-                  {financeExpesnes.map((financeExpense, ind) => {
+                  {expenses.map((expense, ind) => {
                     return (
                       <ListItem
+                        expense={expense}
                         number={(currentPage - 1) * PAGE_SIZE + ind + 1}
-                        financeExpense={financeExpense}
                         deleteHandler={deleteHandler}
-                        key={financeExpense._id}
+                        key={expense._id}
                       />
                     );
                   })}

@@ -7,3 +7,4 @@ export * from './financeExpenses';
 export * from './users';
 export * from './auth';
 export * from './home';
+export * from './expense';

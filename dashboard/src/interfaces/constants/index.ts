@@ -9,10 +9,10 @@ export interface ISidebarItem {
     | 'product'
     | 'productIncome'
     | 'productOutcome'
-    | 'financeIncome'
-    | 'financeExpense'
+    | 'productReport'
+    | 'incomeReport'
     | 'users'
-    | 'log';
+    | 'expenses';
 }
 
 export interface IUserMenuItem {

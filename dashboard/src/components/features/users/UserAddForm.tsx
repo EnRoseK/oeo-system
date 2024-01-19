@@ -28,10 +28,9 @@ const permissions = [
   { key: 'product', title: 'Урвалж' },
   { key: 'productIncome', title: 'Урвалж орлого' },
   { key: 'productOutcome', title: 'Шижилгээ' },
-  { key: 'financeExpense', title: 'Санхүүгийн зарлага' },
-  { key: 'financeIncome', title: 'Санхүүгийн орлого' },
+  { key: 'productReport', title: 'Урвалж тайлан' },
+  { key: 'incomeReport', title: 'Орлого тайлан' },
   { key: 'users', title: 'Хэрэглэгчид' },
-  { key: 'log', title: 'Лог' },
 ];
 
 const actions = [
@@ -48,10 +47,9 @@ export const UserAddForm: FC<UserAddFormProps> = ({ closeHandler, initialValues,
     product: { read: true, update: false, delete: false, create: false },
     productIncome: { read: true, update: false, delete: false, create: false },
     productOutcome: { read: true, update: false, delete: false, create: false },
-    financeIncome: { read: true, update: false, delete: false, create: false },
-    financeExpense: { read: true, update: false, delete: false, create: false },
+    productReport: { read: true, update: false, delete: false, create: false },
+    incomeReport: { read: true, update: false, delete: false, create: false },
     users: { read: true, update: false, delete: false, create: false },
-    log: { read: true, update: false, delete: false, create: false },
   });
 
   return (

@@ -8,6 +8,7 @@ export interface IProductOutcome {
   quantity: number;
   totalPrice: number;
   product: IProduct;
+  payment: 'CARD' | 'CASH' | 'TRANSFER' | 'RENT';
   createdAt: string;
   updatedAt: string;
 }

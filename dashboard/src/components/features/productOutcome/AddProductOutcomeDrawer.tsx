@@ -50,7 +50,7 @@ export const AddProductOutcomeDrawer: FC<AddProductOutcomeDrawerProps> = ({ prod
 
       <ProductOutcomeAddEditForm
         products={products}
-        initialValues={{ productId: '', basePrice: 0, quantity: 0 }}
+        initialValues={{ productId: '', basePrice: 0, quantity: 0, payment: '' }}
         onSubmitHandler={onSubmit}
         closeHandler={closeHandler}
       />

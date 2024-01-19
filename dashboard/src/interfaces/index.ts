@@ -8,3 +8,4 @@ export * from './data/financeIncome';
 export * from './data/financeExpense';
 export * from './data/user';
 export * from './data/home';
+export * from './data/expense';

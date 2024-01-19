@@ -11,10 +11,10 @@ export interface IUser extends Document<Types.ObjectId> {
     product: { read: boolean; update: boolean; delete: boolean; create: boolean };
     productIncome: { read: boolean; update: boolean; delete: boolean; create: boolean };
     productOutcome: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    financeIncome: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    financeExpense: { read: boolean; update: boolean; delete: boolean; create: boolean };
     users: { read: boolean; update: boolean; delete: boolean; create: boolean };
-    log: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    productReport: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    incomeReport: { read: boolean; update: boolean; delete: boolean; create: boolean };
+    expenses: { read: boolean; update: boolean; delete: boolean; create: boolean };
   };
   createdAt: Date;
   updatedAt: Date;
@@ -113,7 +113,7 @@ const UserSchema = new Schema<IUser>(
           default: false,
         },
       },
-      financeIncome: {
+      productReport: {
         read: {
           type: Boolean,
           default: true,
@@ -131,7 +131,7 @@ const UserSchema = new Schema<IUser>(
           default: false,
         },
       },
-      financeExpense: {
+      incomeReport: {
         read: {
           type: Boolean,
           default: true,
@@ -167,7 +167,7 @@ const UserSchema = new Schema<IUser>(
           default: false,
         },
       },
-      log: {
+      expenses: {
         read: {
           type: Boolean,
           default: true,

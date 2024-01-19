@@ -14,6 +14,9 @@ export const translations = {
   settings: 'Тохиргоо',
   logout: 'Гарах',
   login: 'Нэвтрэх',
+  productReport: 'Урвалж тайлан',
+  incomeReport: 'Орлого тайлан',
+  expense: 'Зарлага',
 };
 
 export const SidebarItems: ISidebarItem[] = [
@@ -47,16 +50,22 @@ export const SidebarItems: ISidebarItem[] = [
     permissionKey: 'productOutcome',
   },
   {
-    title: translations.financeIncome,
-    url: '/finances/income',
-    icon: Icons.GiReceiveMoney,
-    permissionKey: 'financeIncome',
+    title: translations.expense,
+    url: '/expenses',
+    icon: Icons.GiExpense,
+    permissionKey: 'expenses',
   },
   {
-    title: translations.financeExpense,
-    url: '/finances/expense',
-    icon: Icons.FaMoneyBillTransfer,
-    permissionKey: 'financeExpense',
+    title: translations.productReport,
+    url: '/reports/product',
+    icon: Icons.GrDocumentTest,
+    permissionKey: 'productReport',
+  },
+  {
+    title: translations.incomeReport,
+    url: '/reports/income',
+    icon: Icons.GrDocumentDownload,
+    permissionKey: 'incomeReport',
   },
   {
     title: translations.users,
