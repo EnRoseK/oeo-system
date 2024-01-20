@@ -20,7 +20,7 @@ export const SearchInput: FC<SearchInputProps> = (props) => {
       <label htmlFor='products-search' className='sr-only'>
         Хайх
       </label>
-      <div className='relative w-48 mt-1 sm:w-64 xl:w-96'>
+      <div className='relative w-48 mt-1 sm:w-64 xl:w-80'>
         <input
           value={search}
           onChange={(e) => setSearch(e.target.value)}

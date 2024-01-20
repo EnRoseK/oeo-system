@@ -51,14 +51,14 @@ const ProductsPage: NextPage<ProductsPageProps> = (props) => {
   const { isConfirmed } = useConfirm();
   const refreshData = useRefreshData();
 
-  const categoryFilterChangeHandler = (id: string, checked: boolean) => {
+  const categoryFilterChangeHandler = (value: string, checked: boolean) => {
     let cFilters = router.query.category;
     cFilters = cFilters ? (cFilters as string).split(',') : [];
 
     if (checked) {
-      cFilters = [...cFilters, id];
+      cFilters = [...cFilters, value];
     } else {
-      cFilters = cFilters.filter((c) => c !== id);
+      cFilters = cFilters.filter((c) => c !== value);
     }
 
     if (cFilters.length === 0) {
