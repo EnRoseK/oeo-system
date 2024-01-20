@@ -6,3 +6,4 @@ export * from './utils';
 export * from './products';
 export * from './expenses';
 export * from './productIncomes';
+export * from './productExpenses';

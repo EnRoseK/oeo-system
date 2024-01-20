@@ -6,7 +6,7 @@ export const translations = {
   products: 'Урвалжууд',
   categories: 'Урвалж ангилал',
   productIncome: 'Урвалж орлого',
-  productOutcome: 'Шинжилгээ',
+  productExpense: 'Шинжилгээ',
   users: 'Хэрэглэгчид',
   settings: 'Тохиргоо',
   logout: 'Гарах',
@@ -44,8 +44,8 @@ export const SidebarItems: ISidebarItem[] = [
     icon: Icons.GrDocumentStore,
   },
   {
-    title: translations.productOutcome,
-    url: '/products/outcome',
+    title: translations.productExpense,
+    url: '/products/expense',
     icon: Icons.IoDocumentsOutline,
   },
   {
