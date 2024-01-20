@@ -61,7 +61,7 @@ export const DashboardLayout: FC<DashboardLayoutProps> = (props) => {
           />
         )}
 
-        <div className='relative w-full h-full bg-gray-50 lg:ml-64 dark:bg-gray-900'>
+        <div className='relative w-full min-h-[calc(100vh_-_64px)] bg-gray-50 lg:ml-64 dark:bg-gray-900'>
           <main>{children}</main>
           <Footer />
         </div>
