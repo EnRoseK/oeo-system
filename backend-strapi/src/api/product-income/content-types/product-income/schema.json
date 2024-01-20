@@ -1,0 +1,32 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_incomes",
+  "info": {
+    "singularName": "product-income",
+    "pluralName": "product-incomes",
+    "displayName": "ProductIncome",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "basePrice": {
+      "type": "integer",
+      "required": true
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true
+    },
+    "totalPrice": {
+      "type": "integer"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product.product"
+    }
+  }
+}

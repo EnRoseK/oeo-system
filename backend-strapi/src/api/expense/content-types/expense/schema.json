@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "expenses",
+  "info": {
+    "singularName": "expense",
+    "pluralName": "expenses",
+    "displayName": "Expense"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "type": {
+      "type": "enumeration",
+      "enum": [
+        "CARD",
+        "CASH",
+        "TRANSFER",
+        "RENT"
+      ],
+      "required": true
+    },
+    "amount": {
+      "type": "biginteger",
+      "required": true
+    }
+  }
+}

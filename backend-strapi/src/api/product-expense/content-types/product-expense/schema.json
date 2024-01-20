@@ -1,0 +1,41 @@
+{
+  "kind": "collectionType",
+  "collectionName": "product_expenses",
+  "info": {
+    "singularName": "product-expense",
+    "pluralName": "product-expenses",
+    "displayName": "ProductExpense"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "basePrice": {
+      "type": "integer",
+      "required": true
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true
+    },
+    "totalPrice": {
+      "type": "integer"
+    },
+    "paymentType": {
+      "type": "enumeration",
+      "enum": [
+        "CARD",
+        "CASH",
+        "TRANSFER",
+        "RENT"
+      ],
+      "required": true
+    },
+    "product": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::product.product"
+    }
+  }
+}

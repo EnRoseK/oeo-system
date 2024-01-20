@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { ListItem } from './ListItem';
 import { Table, TableBody, TableHead, TableHeadItem } from '@/components/Table';
 import { ICategory } from '@/interfaces';
-import { EmptyPage, ResultNotFound } from '@/components/ui';
+import { ResultNotFound } from '@/components/ui';
 import { useCheckEmpty, useGetCurrentPage } from '@/hooks';
 import { PAGE_SIZE } from '@/constants';
 

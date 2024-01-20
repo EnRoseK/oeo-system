@@ -1,7 +1,7 @@
 import { getFilteredExpenses } from '@/api/services';
 import { DatePicker } from '@/components/form';
 import { ExpenseList } from '@/components/list';
-import { PageHeader } from '@/components/ui';
+import { PageHeader, Pagination } from '@/components/ui';
 import { translations } from '@/constants';
 import { IExpense, IPagination } from '@/interfaces';
 import { isAxiosError } from 'axios';
@@ -59,7 +59,7 @@ export const getServerSideProps: GetServerSideProps<ExpensesProps> = async ({ qu
   }
 };
 
-const Expenses: NextPage<ExpensesProps> = ({ expenses }) => {
+const Expenses: NextPage<ExpensesProps> = ({ expenses, pagination }) => {
   return (
     <>
       <PageHeader
@@ -73,6 +73,7 @@ const Expenses: NextPage<ExpensesProps> = ({ expenses }) => {
         }
       />
       <ExpenseList expenses={expenses} />
+      <Pagination pagination={pagination} />
     </>
   );
 };
