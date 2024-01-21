@@ -7,3 +7,4 @@ export * from './products';
 export * from './expenses';
 export * from './productIncomes';
 export * from './productExpenses';
+export * from './settings';
