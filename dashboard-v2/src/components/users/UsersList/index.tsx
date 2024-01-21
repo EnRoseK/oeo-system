@@ -1,19 +1,20 @@
 import { Table, TableBody, TableHead, TableHeadItem, ResultNotFound } from '@/components';
 import { FC } from 'react';
 import { ListItem } from './ListItem';
-import { IProductIncome } from '@/interfaces';
+import { IUser } from '@/interfaces';
 import { useCheckEmpty } from '@/hooks';
 
-const TABLE_HEADS = ['Дугаар', 'Урвалжийн нэр', 'Тоо ширхэг', 'Нэгж үнэ', 'Нийт үнэ', 'Үүссэн огноо', 'Үйлдэл'];
+const TABLE_HEADS = ['Дугаар', 'Нэр', 'Овог', 'И-мэйл', 'Үйлдэл'];
 
-interface ProductIncomeListProps {
-  productIncomes: IProductIncome[];
+interface UsersListProps {
+  users: IUser[];
   deleteHandler: (id: number) => void;
 }
 
-export const ProductIncomeList: FC<ProductIncomeListProps> = (props) => {
-  const { productIncomes, deleteHandler } = props;
-  const isEmpty = useCheckEmpty(productIncomes.length);
+export const UsersList: FC<UsersListProps> = (props) => {
+  const { users, deleteHandler } = props;
+
+  const isEmpty = useCheckEmpty(users.length);
 
   return (
     <div className='flex flex-col'>
@@ -29,10 +30,8 @@ export const ProductIncomeList: FC<ProductIncomeListProps> = (props) => {
 
               {!isEmpty && (
                 <TableBody>
-                  {productIncomes.map((productIncome) => {
-                    return (
-                      <ListItem productIncome={productIncome} deleteHandler={deleteHandler} key={productIncome.id} />
-                    );
+                  {users.map((user) => {
+                    return <ListItem user={user} deleteHandler={deleteHandler} key={user.id} />;
                   })}
                 </TableBody>
               )}

@@ -7,7 +7,9 @@ interface ListItemProps {
   deleteHandler: (id: number) => void;
 }
 
-export const ListItem: FC<ListItemProps> = ({ productIncome, deleteHandler }) => {
+export const ListItem: FC<ListItemProps> = (props) => {
+  const { productIncome, deleteHandler } = props;
+
   return (
     <TableRow>
       <TableRowItem>{productIncome.id}</TableRowItem>
