@@ -1,8 +1,7 @@
 import { SidebarItems } from '@/constants';
 import classNames from 'classnames';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
 import { FC } from 'react';
+import { SidebarItem } from './SidebarItem';
 
 interface SidebarProps {
   show: boolean;
@@ -12,7 +11,6 @@ interface SidebarProps {
 
 export const Sidebar: FC<SidebarProps> = (props) => {
   const { show, onAnimationEnd, closeHandler } = props;
-  const router = useRouter();
 
   return (
     <>
@@ -28,27 +26,7 @@ export const Sidebar: FC<SidebarProps> = (props) => {
             <div className='flex-1 px-3 space-y-1 bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700'>
               <ul className='pb-2 space-y-2'>
                 {SidebarItems.map((item, index) => {
-                  const isActive = router.pathname === item.url;
-
-                  return (
-                    <li key={index}>
-                      <Link
-                        href={item.url}
-                        className={`flex items-center p-2 text-base text-gray-900 rounded-lg hover:bg-gray-100 group dark:text-gray-200 dark:hover:bg-gray-700 ${
-                          isActive ? 'bg-gray-100 dark:bg-gray-700' : ''
-                        }`}
-                      >
-                        <span
-                          className={`text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white ${
-                            isActive ? 'text-gray-900 dark:text-white' : ''
-                          }`}
-                        >
-                          <item.icon size={24} />
-                        </span>
-                        <span className='ml-3'>{item.title}</span>
-                      </Link>
-                    </li>
-                  );
+                  return <SidebarItem key={index} item={item} />;
                 })}
               </ul>
             </div>

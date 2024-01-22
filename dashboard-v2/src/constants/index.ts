@@ -14,6 +14,8 @@ export const translations = {
   productReport: 'Урвалж тайлан',
   incomeReport: 'Орлого тайлан',
   expense: 'Зарлага',
+  report: 'Тайлан',
+  product: 'Урвалж',
 };
 
 export const UserMenuItems: IUserMenuItem[] = [
@@ -29,24 +31,27 @@ export const SidebarItems: ISidebarItem[] = [
     icon: Icons.HiChartPie,
   },
   {
-    title: translations.products,
-    url: '/products',
+    title: translations.product,
+    url: '#',
     icon: Icons.GiChemicalDrop,
-  },
-  {
-    title: translations.categories,
-    url: '/products/categories',
-    icon: Icons.BiSolidCategory,
-  },
-  {
-    title: translations.productIncome,
-    url: '/products/income',
-    icon: Icons.GrDocumentStore,
-  },
-  {
-    title: translations.productExpense,
-    url: '/products/expense',
-    icon: Icons.IoDocumentsOutline,
+    child: [
+      {
+        title: translations.products,
+        url: '/products',
+      },
+      {
+        title: translations.categories,
+        url: '/products/categories',
+      },
+      {
+        title: translations.productIncome,
+        url: '/products/income',
+      },
+      {
+        title: translations.productExpense,
+        url: '/products/expense',
+      },
+    ],
   },
   {
     title: translations.expense,
@@ -54,14 +59,13 @@ export const SidebarItems: ISidebarItem[] = [
     icon: Icons.GiExpense,
   },
   {
-    title: translations.productReport,
-    url: '/reports/product',
-    icon: Icons.GrDocumentTest,
-  },
-  {
-    title: translations.incomeReport,
-    url: '/reports/income',
+    title: translations.report,
+    url: '#',
     icon: Icons.GrDocumentDownload,
+    child: [
+      { title: translations.productReport, url: '/reports/product' },
+      { title: translations.incomeReport, url: '/reports/income' },
+    ],
   },
   {
     title: translations.users,

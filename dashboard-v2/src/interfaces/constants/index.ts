@@ -9,6 +9,10 @@ export interface ISidebarItem {
   title: string;
   url: string;
   icon: IconType;
+  child?: {
+    title: string;
+    url: string;
+  }[];
 }
 
 export interface IBreadcrumbItem {

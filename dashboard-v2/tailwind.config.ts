@@ -191,6 +191,14 @@ const config: Config = {
             right: '-100%',
           },
         },
+        collapseOpen: {
+          '0%': { 'grid-template-rows': '0fr' },
+          '100%': { 'grid-template-rows': '1fr' },
+        },
+        collapseClose: {
+          '0%': { 'grid-template-rows': '1fr' },
+          '100%': { 'grid-template-rows': '0fr' },
+        },
       },
       animation: {
         userMenuOpen: 'userMenuOpen .3s ease forwards',
@@ -203,6 +211,8 @@ const config: Config = {
         popupClose: 'popupClose .3s ease forwards',
         drawerOpen: 'drawerOpen .3s ease forwards',
         drawerClose: 'drawerClose .3s ease forwards',
+        collapseOpen: 'collapseOpen .2s ease forwards',
+        collapseClose: 'collapseClose .2s ease forwards',
       },
     },
   },
