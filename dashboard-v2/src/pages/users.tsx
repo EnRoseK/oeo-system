@@ -3,6 +3,7 @@ import { PageHeader, UsersList } from '@/components';
 import { translations } from '@/constants';
 import { IUser, ServiceQuery } from '@/interfaces';
 import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
 
 interface UsersPageProps {
   users: IUser[];
@@ -40,6 +41,10 @@ const UsersPage: NextPage<UsersPageProps> = (props) => {
   // TODO: Add user create, edit drawer and delete handler
   return (
     <>
+      <Head>
+        <title>{translations.settings} | Онч Энх Онош</title>
+      </Head>
+
       <PageHeader
         title={translations.users}
         breadcrumbItems={[{ title: translations.users, url: '/users' }]}

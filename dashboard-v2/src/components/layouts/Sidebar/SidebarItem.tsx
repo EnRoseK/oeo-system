@@ -56,7 +56,7 @@ export const SidebarItem: FC<SidebarItemProps> = (props) => {
             <span className='flex-1 ml-3 text-left whitespace-nowrap'>{item.title}</span>
             <svg
               sidebar-toggle-item
-              className='w-6 h-6'
+              className={classNames('w-6 h-6', { '-rotate-90': showChild })}
               fill='currentColor'
               viewBox='0 0 20 20'
               xmlns='http://www.w3.org/2000/svg'

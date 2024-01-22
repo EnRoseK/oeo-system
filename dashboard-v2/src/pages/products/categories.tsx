@@ -6,6 +6,7 @@ import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { ICategory, IPagination, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
 import { toast } from 'react-toastify';
 
 interface ProductsCategoriesPageProps {
@@ -62,6 +63,10 @@ const ProductsCategoriesPage: NextPage<ProductsCategoriesPageProps> = (props) =>
 
   return (
     <>
+      <Head>
+        <title>{translations.categories} | Онч Энх Онош</title>
+      </Head>
+
       <PageHeader
         title={translations.categories}
         breadcrumbItems={[{ title: translations.categories, url: '/products/categories' }]}

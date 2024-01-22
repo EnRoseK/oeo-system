@@ -12,6 +12,7 @@ import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductIncome, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
@@ -105,6 +106,10 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = (props) => {
 
   return (
     <>
+      <Head>
+        <title>{translations.productIncome} | Онч Энх Онош</title>
+      </Head>
+
       <PageHeader
         breadcrumbItems={[
           { title: translations.products, url: '/products' },

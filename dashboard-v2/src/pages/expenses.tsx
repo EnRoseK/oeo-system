@@ -13,6 +13,7 @@ import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IExpense, IPagination, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 
@@ -101,6 +102,10 @@ const ExpensesPage: NextPage<ExpensesPageProps> = (props) => {
 
   return (
     <>
+      <Head>
+        <title>{translations.expense} | Онч Энх Онош</title>
+      </Head>
+
       <PageHeader
         title={translations.expense}
         breadcrumbItems={[{ title: translations.expense, url: '/expenses' }]}
