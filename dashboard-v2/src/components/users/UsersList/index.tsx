@@ -4,15 +4,16 @@ import { ListItem } from './ListItem';
 import { IUser } from '@/interfaces';
 import { useCheckEmpty } from '@/hooks';
 
-const TABLE_HEADS = ['Дугаар', 'Нэр', 'Овог', 'И-мэйл', 'Үйлдэл'];
+const TABLE_HEADS = ['Дугаар', 'Хэрэглэгчийн нэр', 'Нэр', 'Овог', 'И-мэйл', 'Эрх', 'Үйлдэл'];
 
 interface UsersListProps {
   users: IUser[];
   deleteHandler: (id: number) => void;
+  editHandler: (user: IUser) => void;
 }
 
 export const UsersList: FC<UsersListProps> = (props) => {
-  const { users, deleteHandler } = props;
+  const { users, deleteHandler, editHandler } = props;
 
   const isEmpty = useCheckEmpty(users.length);
 
@@ -31,7 +32,9 @@ export const UsersList: FC<UsersListProps> = (props) => {
               {!isEmpty && (
                 <TableBody>
                   {users.map((user) => {
-                    return <ListItem user={user} deleteHandler={deleteHandler} key={user.id} />;
+                    return (
+                      <ListItem user={user} deleteHandler={deleteHandler} key={user.id} editHandler={editHandler} />
+                    );
                   })}
                 </TableBody>
               )}
