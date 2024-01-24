@@ -1,6 +1,8 @@
 import { ISidebarItem, IUserMenuItem } from '@/interfaces';
 import { Icons } from '@/libs';
 
+export const siteName = 'Онч Энх Онош';
+
 export const translations = {
   dashboard: 'Хянах самбар',
   products: 'Урвалжууд',

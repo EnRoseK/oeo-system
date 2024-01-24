@@ -1,13 +1,15 @@
-import { DatePicker, PageHeader } from '@/components';
-import { translations } from '@/constants';
+import { DatePicker, PageHeader, ProductReportList } from '@/components';
+import { siteName, translations } from '@/constants';
 import { NextPage } from 'next';
 import Head from 'next/head';
 
 const ProductsReport: NextPage = () => {
+  const title = `${translations.productReport} | ${siteName}`;
+
   return (
     <>
       <Head>
-        <title>{translations.productReport} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <PageHeader
@@ -22,6 +24,8 @@ const ProductsReport: NextPage = () => {
           </>
         }
       />
+
+      <ProductReportList />
     </>
   );
 };

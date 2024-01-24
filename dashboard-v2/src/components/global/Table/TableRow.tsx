@@ -1,11 +1,17 @@
-import React, { FC, ReactNode } from 'react';
+import classNames from 'classnames';
+import React, { ComponentProps, FC, ReactNode } from 'react';
 
-interface TableRowProps {
+interface TableRowProps extends ComponentProps<'tr'> {
   children: ReactNode;
+  className?: string;
 }
 
 export const TableRow: FC<TableRowProps> = (props) => {
-  const { children } = props;
+  const { children, className, ...rest } = props;
 
-  return <tr className='hover:bg-gray-100 dark:hover:bg-gray-700'>{children}</tr>;
+  return (
+    <tr className={classNames('hover:bg-gray-100 dark:hover:bg-gray-700', className)} {...rest}>
+      {children}
+    </tr>
+  );
 };

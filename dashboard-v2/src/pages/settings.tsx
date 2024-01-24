@@ -1,14 +1,16 @@
 import { PasswordForm, UserInformationForm } from '@/components';
 import { Breadcrumbs } from '@/components/global/PageHeader/Breadcrumbs';
-import { translations } from '@/constants';
+import { siteName, translations } from '@/constants';
 import { NextPage } from 'next';
 import Head from 'next/head';
 
 const SettingsPage: NextPage = () => {
+  const title = `${translations.settings} | ${siteName}`;
+
   return (
     <>
       <Head>
-        <title>{translations.settings} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <div className='grid grid-cols-1 px-4 pt-6 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900'>

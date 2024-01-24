@@ -7,7 +7,7 @@ import {
   Pagination,
   ProductExpensesList,
 } from '@/components';
-import { PAGE_SIZE, translations } from '@/constants';
+import { PAGE_SIZE, siteName, translations } from '@/constants';
 import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductExpense, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
@@ -63,6 +63,8 @@ export const getServerSideProps: GetServerSideProps<ProductExpensePageProps> = a
 };
 
 const ProductExpensePage: NextPage<ProductExpensePageProps> = (props) => {
+  const title = `${translations.productExpense} | ${siteName}`;
+
   const { productExpenses = [], pagination, products = [] } = props;
   const router = useRouter();
   const [openDrawer, closeDrawer] = useDrawer();
@@ -108,7 +110,7 @@ const ProductExpensePage: NextPage<ProductExpensePageProps> = (props) => {
   return (
     <>
       <Head>
-        <title>{translations.productExpense} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <PageHeader

@@ -3,13 +3,15 @@ import { NextPageWithLayout } from './_app';
 import { ReactNode } from 'react';
 import { LoginForm } from '@/components';
 import Head from 'next/head';
-import { translations } from '@/constants';
+import { siteName, translations } from '@/constants';
 
 const LoginPage: NextPageWithLayout = () => {
+  const title = `${translations.login} | ${siteName}`;
+
   return (
     <>
       <Head>
-        <title>{translations.login} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <div className='flex flex-col items-center justify-center px-6 pt-8 mx-auto md:h-screen pt:mt-0 dark:bg-gray-900'>

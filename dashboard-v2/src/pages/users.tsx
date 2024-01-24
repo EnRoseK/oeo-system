@@ -1,6 +1,6 @@
 import { userServices } from '@/api/services';
 import { AddUser, EditUser, PageHeader, UsersList } from '@/components';
-import { translations } from '@/constants';
+import { siteName, translations } from '@/constants';
 import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IRole, IUser, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
@@ -41,6 +41,8 @@ export const getServerSideProps: GetServerSideProps<UsersPageProps> = async (ctx
 };
 
 const UsersPage: NextPage<UsersPageProps> = (props) => {
+  const title = `${translations.users} | ${siteName}`;
+
   const { users = [], roles = [] } = props;
   const [openDrawer, closeDrawer] = useDrawer();
   const { isConfirmed } = useConfirm();
@@ -71,7 +73,7 @@ const UsersPage: NextPage<UsersPageProps> = (props) => {
   return (
     <>
       <Head>
-        <title>{translations.users} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <PageHeader

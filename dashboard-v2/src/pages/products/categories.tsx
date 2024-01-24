@@ -1,7 +1,7 @@
 import { categoryServices } from '@/api/services';
 import { AddCategory, CategoryList, PageHeader, Pagination } from '@/components';
 import { EditCategory } from '@/components/categories/EditCategory';
-import { PAGE_SIZE, translations } from '@/constants';
+import { PAGE_SIZE, siteName, translations } from '@/constants';
 import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { ICategory, IPagination, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
@@ -34,6 +34,8 @@ export const getServerSideProps: GetServerSideProps<ProductsCategoriesPageProps>
 };
 
 const ProductsCategoriesPage: NextPage<ProductsCategoriesPageProps> = (props) => {
+  const title = `${translations.categories} | ${siteName}`;
+
   const { categories = [], pagination } = props;
   const [openDrawer, closeDrawer] = useDrawer();
   const { isConfirmed } = useConfirm();
@@ -64,7 +66,7 @@ const ProductsCategoriesPage: NextPage<ProductsCategoriesPageProps> = (props) =>
   return (
     <>
       <Head>
-        <title>{translations.categories} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <PageHeader

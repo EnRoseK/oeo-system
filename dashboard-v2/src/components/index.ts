@@ -9,3 +9,4 @@ export * from './productIncomes';
 export * from './productExpenses';
 export * from './settings';
 export * from './users';
+export * from './productReport';

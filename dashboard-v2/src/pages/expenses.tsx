@@ -8,7 +8,7 @@ import {
   PageHeader,
   Pagination,
 } from '@/components';
-import { PAGE_SIZE, translations } from '@/constants';
+import { PAGE_SIZE, siteName, translations } from '@/constants';
 import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IExpense, IPagination, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
@@ -54,6 +54,8 @@ export const getServerSideProps: GetServerSideProps<ExpensesPageProps> = async (
 };
 
 const ExpensesPage: NextPage<ExpensesPageProps> = (props) => {
+  const title = `${translations.expense} | ${siteName}`;
+
   const { expenses = [], pagination } = props;
   const [openDrawer, closeDrawer] = useDrawer();
   const { isConfirmed } = useConfirm();
@@ -103,7 +105,7 @@ const ExpensesPage: NextPage<ExpensesPageProps> = (props) => {
   return (
     <>
       <Head>
-        <title>{translations.expense} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <PageHeader

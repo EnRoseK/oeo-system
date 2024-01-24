@@ -1,6 +1,6 @@
 import { categoryServices, productServices } from '@/api/services';
 import { AddProduct, CheckboxDropdown, EditProduct, PageHeader, Pagination, ProductList } from '@/components';
-import { PAGE_SIZE, translations } from '@/constants';
+import { PAGE_SIZE, siteName, translations } from '@/constants';
 import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { ICategory, IPagination, IProduct, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
@@ -46,6 +46,8 @@ export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async (
 };
 
 const ProductsPage: NextPage<ProductsPageProps> = (props) => {
+  const title = `${translations.products} | ${siteName}`;
+
   const { products = [], pagination, categories = [] } = props;
   const router = useRouter();
   const [openDrawer, closeDrawer] = useDrawer();
@@ -95,7 +97,7 @@ const ProductsPage: NextPage<ProductsPageProps> = (props) => {
   return (
     <>
       <Head>
-        <title>{translations.products} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <PageHeader

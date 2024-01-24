@@ -7,7 +7,7 @@ import {
   Pagination,
   ProductIncomeList,
 } from '@/components';
-import { PAGE_SIZE, translations } from '@/constants';
+import { PAGE_SIZE, siteName, translations } from '@/constants';
 import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductIncome, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
@@ -62,6 +62,8 @@ export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = as
 };
 
 const ProductIncomePage: NextPage<ProductIncomePageProps> = (props) => {
+  const title = `${translations.productIncome} | ${siteName}`;
+
   const { productIncomes = [], pagination, products = [] } = props;
   const router = useRouter();
   const [openDrawer, closeDrawer] = useDrawer();
@@ -107,7 +109,7 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = (props) => {
   return (
     <>
       <Head>
-        <title>{translations.productIncome} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <PageHeader

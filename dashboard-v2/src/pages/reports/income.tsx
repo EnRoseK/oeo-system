@@ -1,13 +1,15 @@
 import { DatePicker, PageHeader } from '@/components';
-import { translations } from '@/constants';
+import { siteName, translations } from '@/constants';
 import { NextPage } from 'next';
 import Head from 'next/head';
 
 const IncomeReportPage: NextPage = () => {
+  const title = `${translations.incomeReport} | ${siteName}`;
+
   return (
     <>
       <Head>
-        <title>{translations.incomeReport} | Онч Энх Онош</title>
+        <title>{title}</title>
       </Head>
 
       <PageHeader
