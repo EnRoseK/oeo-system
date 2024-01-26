@@ -947,6 +947,44 @@ export interface ApiProductIncomeProductIncome extends Schema.CollectionType {
   };
 }
 
+export interface ApiProductReportProductReport extends Schema.CollectionType {
+  collectionName: 'product_reports';
+  info: {
+    singularName: 'product-report';
+    pluralName: 'product-reports';
+    displayName: 'ProductReport';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    product: Attribute.Relation<
+      'api::product-report.product-report',
+      'oneToOne',
+      'api::product.product'
+    >;
+    before: Attribute.Integer & Attribute.Required;
+    after: Attribute.Integer & Attribute.Required;
+    incomeAmount: Attribute.Integer & Attribute.Required;
+    expenseAmount: Attribute.Integer & Attribute.Required;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::product-report.product-report',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::product-report.product-report',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 declare module '@strapi/types' {
   export module Shared {
     export interface ContentTypes {
@@ -970,6 +1008,7 @@ declare module '@strapi/types' {
       'api::product-category.product-category': ApiProductCategoryProductCategory;
       'api::product-expense.product-expense': ApiProductExpenseProductExpense;
       'api::product-income.product-income': ApiProductIncomeProductIncome;
+      'api::product-report.product-report': ApiProductReportProductReport;
     }
   }
 }
