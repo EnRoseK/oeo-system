@@ -1,4 +1,4 @@
-import { DatePicker, PageHeader } from '@/components';
+import { DatePicker, IncomeReportList, PageHeader } from '@/components';
 import { siteName, translations } from '@/constants';
 import { NextPage } from 'next';
 import Head from 'next/head';
@@ -24,6 +24,7 @@ const IncomeReportPage: NextPage = () => {
           </>
         }
       />
+      <IncomeReportList />
     </>
   );
 };

@@ -10,3 +10,4 @@ export * from './productExpenses';
 export * from './settings';
 export * from './users';
 export * from './productReport';
+export * from './incomeReport';

@@ -802,6 +802,39 @@ export interface ApiExpenseExpense extends Schema.CollectionType {
   };
 }
 
+export interface ApiIncomeReportIncomeReport extends Schema.CollectionType {
+  collectionName: 'income_reports';
+  info: {
+    singularName: 'income-report';
+    pluralName: 'income-reports';
+    displayName: 'IncomeReport';
+    description: '';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    totalIncome: Attribute.Integer & Attribute.Required;
+    totalExpense: Attribute.Integer & Attribute.Required;
+    incomesByType: Attribute.Component<'income-report.income-by-type', true>;
+    expensesByType: Attribute.Component<'income-report.expense-by-type', true>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::income-report.income-report',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::income-report.income-report',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiProductProduct extends Schema.CollectionType {
   collectionName: 'products';
   info: {
@@ -1004,6 +1037,7 @@ declare module '@strapi/types' {
       'plugin::users-permissions.user': PluginUsersPermissionsUser;
       'plugin::i18n.locale': PluginI18NLocale;
       'api::expense.expense': ApiExpenseExpense;
+      'api::income-report.income-report': ApiIncomeReportIncomeReport;
       'api::product.product': ApiProductProduct;
       'api::product-category.product-category': ApiProductCategoryProductCategory;
       'api::product-expense.product-expense': ApiProductExpenseProductExpense;
