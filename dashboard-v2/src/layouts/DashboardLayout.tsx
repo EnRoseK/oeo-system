@@ -10,7 +10,7 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: FC<DashboardLayoutProps> = (props) => {
   const { children } = props;
-  const { data } = useSession();
+  const { data, status } = useSession();
 
   const router = useRouter();
   const [showMobileSidebar, setShowMobileSidebar] = useState<boolean>(false);
@@ -53,12 +53,12 @@ export const DashboardLayout: FC<DashboardLayoutProps> = (props) => {
   }, [router]);
 
   useEffect(() => {
-    if (!data) {
+    if (!data && status === 'unauthenticated') {
       router.replace('/login');
     } else {
       setIsLoading(false);
     }
-  }, [data, router]);
+  }, [data, router, status]);
 
   if (isLoading) {
     return <></>;

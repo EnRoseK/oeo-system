@@ -7,6 +7,7 @@ import { errorHandler } from '@/utils';
 import { categoryServices } from '@/api/services';
 import { useRefreshData } from '@/hooks';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface EditCategoryProps {
   closeHandler: () => void;
@@ -16,10 +17,11 @@ interface EditCategoryProps {
 export const EditCategory: FC<EditCategoryProps> = (props) => {
   const { closeHandler, category } = props;
   const refreshData = useRefreshData();
+  const { data } = useSession();
 
   const submitHandler = async (values: InitialCategoryValueType) => {
     try {
-      await categoryServices.updateCategory(category.id, values);
+      await categoryServices.updateCategory(category.id, values, data?.jwt!);
 
       closeHandler();
       toast.success('Ангилалын мэдээлэл амжилттай шинэчлэгдлээ');

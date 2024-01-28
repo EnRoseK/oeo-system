@@ -7,16 +7,16 @@ export interface IUser {
   provider: string;
   confirmed: boolean;
   blocked: boolean;
-  role: IRole;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface IRole {
-  id: number;
-  name: string;
-  description: string;
-  type: string;
+  permission: {
+    category: boolean;
+    product: boolean;
+    productIncome: boolean;
+    productExpense: boolean;
+    expense: boolean;
+    productReport: boolean;
+    incomeReport: boolean;
+    user: boolean;
+  };
   createdAt: string;
   updatedAt: string;
 }

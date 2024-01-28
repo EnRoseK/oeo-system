@@ -6,6 +6,7 @@ import { errorHandler } from '@/utils';
 import { productServices } from '@/api/services';
 import { useRefreshData } from '@/hooks';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface AddProductProps {
   closeHandler: () => void;
@@ -15,17 +16,21 @@ interface AddProductProps {
 export const AddProduct: FC<AddProductProps> = (props) => {
   const { closeHandler, categories } = props;
   const refreshData = useRefreshData();
+  const { data } = useSession();
 
   const submitHandler = async (values: InitialProductValueType) => {
     try {
-      await productServices.createProduct({
-        title: values.title,
-        description: values.description,
-        balance: values.balance,
-        product_category: {
-          set: [Number(values.category)],
+      await productServices.createProduct(
+        {
+          title: values.title,
+          description: values.description,
+          balance: values.balance,
+          product_category: {
+            set: [Number(values.category)],
+          },
         },
-      });
+        data?.jwt!,
+      );
 
       closeHandler();
       toast.success('Урвалж амжилттай нэмэгдлээ');

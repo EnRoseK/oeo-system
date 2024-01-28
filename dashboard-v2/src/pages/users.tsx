@@ -1,23 +1,35 @@
 import { userServices } from '@/api/services';
 import { AddUser, EditUser, PageHeader, UsersList } from '@/components';
 import { siteName, translations } from '@/constants';
-import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
-import { IRole, IUser, ServiceQuery } from '@/interfaces';
+import { useCheckPermission, useConfirm, useDrawer, useRefreshData } from '@/hooks';
+import { IUser, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { toast } from 'react-toastify';
 
 interface UsersPageProps {
   users: IUser[];
-  roles: IRole[];
 }
 
 export const getServerSideProps: GetServerSideProps<UsersPageProps> = async (ctx) => {
-  const { query } = ctx;
+  const { query, req } = ctx;
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+
   const { search } = query;
   const reqQuery: ServiceQuery = {
     filters: {},
+    jwt: session.jwt,
   };
 
   if (search) {
@@ -30,12 +42,11 @@ export const getServerSideProps: GetServerSideProps<UsersPageProps> = async (ctx
     };
   }
 
-  const [usersRes, rolesRes] = await Promise.all([userServices.getUsers(reqQuery), userServices.getRoles()]);
+  const [usersRes] = await Promise.all([userServices.getUsers(reqQuery)]);
 
   return {
     props: {
       users: usersRes,
-      roles: rolesRes.roles,
     },
   };
 };
@@ -43,17 +54,20 @@ export const getServerSideProps: GetServerSideProps<UsersPageProps> = async (ctx
 const UsersPage: NextPage<UsersPageProps> = (props) => {
   const title = `${translations.users} | ${siteName}`;
 
-  const { users = [], roles = [] } = props;
+  const { users = [] } = props;
+  useCheckPermission('user');
+
   const [openDrawer, closeDrawer] = useDrawer();
   const { isConfirmed } = useConfirm();
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const openAddDrawer = () => {
-    openDrawer(<AddUser closeHandler={closeDrawer} roles={roles} />);
+    openDrawer(<AddUser closeHandler={closeDrawer} />);
   };
 
   const openEditDrawer = (user: IUser) => {
-    openDrawer(<EditUser closeHandler={closeDrawer} user={user} roles={roles} />);
+    openDrawer(<EditUser closeHandler={closeDrawer} user={user} />);
   };
 
   const deleteHandler = async (id: number) => {
@@ -61,7 +75,7 @@ const UsersPage: NextPage<UsersPageProps> = (props) => {
       const confirmed = await isConfirmed('Та энэ хэрэглэгчийг устгахдаа итгэлтэй байна уу?');
       if (!confirmed) return;
 
-      await userServices.deleteUser(id);
+      await userServices.deleteUser(id, session?.jwt!);
 
       toast.warning('Хэрэглэгчийг амжилттай устгалаа');
       refreshData();

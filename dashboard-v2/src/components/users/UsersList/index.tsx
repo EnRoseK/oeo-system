@@ -4,7 +4,7 @@ import { ListItem } from './ListItem';
 import { IUser } from '@/interfaces';
 import { useCheckEmpty } from '@/hooks';
 
-const TABLE_HEADS = ['Дугаар', 'Хэрэглэгчийн нэр', 'Нэр', 'Овог', 'И-мэйл', 'Эрх', 'Үйлдэл'];
+const TABLE_HEADS = ['Дугаар', 'Нэр', 'Овог', 'И-мэйл', 'Үйлдэл'];
 
 interface UsersListProps {
   users: IUser[];

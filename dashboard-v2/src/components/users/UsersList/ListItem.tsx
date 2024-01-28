@@ -14,11 +14,9 @@ export const ListItem: FC<ListItemProps> = (props) => {
   return (
     <TableRow>
       <TableRowItem>{user.id}</TableRowItem>
-      <TableRowItem>{user.username}</TableRowItem>
       <TableRowItem>{user.firstName}</TableRowItem>
       <TableRowItem>{user.lastName}</TableRowItem>
       <TableRowItem>{user.email}</TableRowItem>
-      <TableRowItem>{user.role.name}</TableRowItem>
 
       <ActionButtons deleteHandler={() => deleteHandler(user.id)} editHandler={() => editHandler(user)} />
     </TableRow>

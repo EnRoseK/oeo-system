@@ -72,6 +72,10 @@
     "lastName": {
       "type": "string",
       "required": true
+    },
+    "permission": {
+      "type": "json",
+      "required": true
     }
   }
 }

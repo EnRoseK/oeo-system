@@ -1,8 +1,10 @@
 import { expenseServices, productExpenseServices } from '@/api/services';
 import { DatePicker, IncomeReportList, PageHeader } from '@/components';
 import { siteName, translations } from '@/constants';
+import { useCheckPermission } from '@/hooks';
 import { IExpense, IProductExpense, ServiceQuery } from '@/interfaces';
 import { GetServerSideProps, NextPage } from 'next';
+import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 
 interface IncomeReportPageProps {
@@ -11,7 +13,17 @@ interface IncomeReportPageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<IncomeReportPageProps> = async (ctx) => {
-  const { query } = ctx;
+  const { query, req } = ctx;
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+
   const { startDate, endDate } = query;
 
   if (!startDate || !endDate) {
@@ -24,6 +36,7 @@ export const getServerSideProps: GetServerSideProps<IncomeReportPageProps> = asy
   }
 
   const reqQuery: ServiceQuery = {
+    jwt: session.jwt,
     limit: -1,
     filters: {
       $and: [
@@ -49,7 +62,7 @@ export const getServerSideProps: GetServerSideProps<IncomeReportPageProps> = asy
 const IncomeReportPage: NextPage<IncomeReportPageProps> = (props) => {
   const { expenses, productExpense } = props;
   const title = `${translations.incomeReport} | ${siteName}`;
-
+  useCheckPermission('incomeReport');
   const uniqueDates = Array.from(
     new Set([
       ...expenses.map((expense) => expense.createdAt.split('T')[0]),

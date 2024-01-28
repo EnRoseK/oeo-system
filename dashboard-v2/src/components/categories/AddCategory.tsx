@@ -6,6 +6,7 @@ import { errorHandler } from '@/utils';
 import { useRefreshData } from '@/hooks';
 import { categoryServices } from '@/api/services';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface AddCategoryProps {
   closeHandler: () => void;
@@ -14,10 +15,11 @@ interface AddCategoryProps {
 export const AddCategory: FC<AddCategoryProps> = (props) => {
   const { closeHandler } = props;
   const refreshData = useRefreshData();
+  const { data } = useSession();
 
   const submitHandler = async (values: InitialCategoryValueType) => {
     try {
-      await categoryServices.createCategory(values);
+      await categoryServices.createCategory(values, data?.jwt!);
 
       closeHandler();
       toast.success('Ангилал амжилттай нэмэгдлээ');

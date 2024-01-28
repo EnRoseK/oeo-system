@@ -9,3 +9,4 @@ export * from './Table';
 export * from './ActionButtons';
 export * from './Pagination';
 export * from './CheckboxDropdown';
+export * from './Toggle';

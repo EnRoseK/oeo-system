@@ -8,18 +8,18 @@ interface AuthLayoutProps {
 
 export const AuthLayout: FC<AuthLayoutProps> = (props) => {
   const { children } = props;
-  const { data } = useSession();
+  const { data, status } = useSession();
   const router = useRouter();
 
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (data) {
+    if (data && status === 'authenticated') {
       router.replace('/');
     } else {
       setIsLoading(false);
     }
-  }, [data, router]);
+  }, [data, router, status]);
 
   if (isLoading) {
     return <></>;

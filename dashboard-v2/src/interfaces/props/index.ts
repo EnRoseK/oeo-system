@@ -10,6 +10,7 @@ export interface ServiceQuery {
   limit?: number;
   filters?: any;
   fields?: string[] | string;
+  jwt: string;
 }
 
 export interface RequestQuery {

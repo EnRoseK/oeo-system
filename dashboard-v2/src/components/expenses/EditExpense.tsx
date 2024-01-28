@@ -7,6 +7,7 @@ import { errorHandler } from '@/utils';
 import { useRefreshData } from '@/hooks';
 import { expenseServices } from '@/api/services';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface EditExpenseProps {
   closeHandler: () => void;
@@ -16,10 +17,11 @@ interface EditExpenseProps {
 export const EditExpense: FC<EditExpenseProps> = (props) => {
   const { closeHandler, expense } = props;
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const submitHandler = async (values: InitialExpenseValueType) => {
     try {
-      await expenseServices.updateExpense(expense.id, values);
+      await expenseServices.updateExpense(expense.id, values, session?.jwt!);
 
       closeHandler();
       toast.success('Зарлагын мэдээлэл амжилттай шинэчлэгдлээ');

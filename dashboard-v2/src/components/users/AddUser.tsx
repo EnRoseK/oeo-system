@@ -1,36 +1,72 @@
 import { CloseIcon } from '@/assets/icons';
 import { translations } from '@/constants';
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { InitialUserValueType, UserForm } from './UserForm';
 import { errorHandler } from '@/utils';
-import { IRole } from '@/interfaces';
 import { useRefreshData } from '@/hooks';
 import { userServices } from '@/api/services';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
+import { v4 as uuidv4 } from 'uuid';
 
 interface AddUserProps {
   closeHandler: () => void;
-  roles: IRole[];
 }
 
 export const AddUser: FC<AddUserProps> = (props) => {
-  const { closeHandler, roles } = props;
+  const { closeHandler } = props;
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
+
+  const [permission, setPermission] = useState({
+    category: false,
+    expense: false,
+    incomeReport: false,
+    product: false,
+    productExpense: false,
+    productIncome: false,
+    productReport: false,
+    user: false,
+  });
+
+  const changePermission = (
+    key:
+      | 'category'
+      | 'expense'
+      | 'incomeReport'
+      | 'product'
+      | 'productExpense'
+      | 'productIncome'
+      | 'productReport'
+      | 'user',
+  ) => {
+    setPermission((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const submitHandler = async (values: InitialUserValueType) => {
     try {
-      await userServices.createUser({
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        confirmed: true,
-        blocked: false,
-        role: {
-          set: [Number(values.role)],
+      const username = uuidv4();
+
+      await userServices.createUser(
+        {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          confirmed: true,
+          blocked: false,
+          role: {
+            connect: [
+              {
+                id: 1,
+              },
+            ],
+          },
+          password: values.password,
+          username,
+          permission,
         },
-        password: values.password,
-        username: values.username,
-      });
+        session?.jwt!,
+      );
 
       closeHandler();
       toast.success('Хэрэглэгч амжилттай нэмэгдлээ');
@@ -54,17 +90,16 @@ export const AddUser: FC<AddUserProps> = (props) => {
       </button>
 
       <UserForm
-        roles={roles}
         closeHandler={closeHandler}
         submitHandler={submitHandler}
         initialValues={{
-          username: '',
           firstName: '',
           lastName: '',
           email: '',
           password: '',
-          role: '',
         }}
+        permission={permission}
+        changePermission={changePermission}
       />
     </div>
   );

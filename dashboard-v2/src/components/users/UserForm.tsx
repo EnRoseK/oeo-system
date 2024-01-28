@@ -1,29 +1,57 @@
 import { FC } from 'react';
-import { Button, Input, Select } from '@/components';
+import { Button, Input, Toggle } from '@/components';
 import { Form, Formik } from 'formik';
 import { CloseIcon } from '@/assets/icons';
 import { userCreateValidation, userUpdateValidation } from '@/validations';
-import { IRole } from '@/interfaces';
+
+const permissions = [
+  { name: 'Урвалж ангилал', key: 'category' },
+  { name: 'Урвалжууд', key: 'product' },
+  { name: 'Урвалж орлого', key: 'productIncome' },
+  { name: 'Шинжилгээ', key: 'productExpense' },
+  { name: 'Зарлага', key: 'expense' },
+  { name: 'Урвалж тайлан', key: 'productReport' },
+  { name: 'Орлого тайлан', key: 'incomeReport' },
+  { name: 'Хэрэглэгчид', key: 'user' },
+] as const;
 
 export interface InitialUserValueType {
-  username: string;
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  role: string;
 }
 
 interface UserFormProps {
   closeHandler: () => void;
   initialValues: InitialUserValueType;
   submitHandler: (values: InitialUserValueType) => void;
-  roles: IRole[];
   editing?: boolean;
+  permission: {
+    category: boolean;
+    product: boolean;
+    productIncome: boolean;
+    productExpense: boolean;
+    expense: boolean;
+    productReport: boolean;
+    incomeReport: boolean;
+    user: boolean;
+  };
+  changePermission: (
+    key:
+      | 'category'
+      | 'expense'
+      | 'incomeReport'
+      | 'product'
+      | 'productExpense'
+      | 'productIncome'
+      | 'productReport'
+      | 'user',
+  ) => void;
 }
 
 export const UserForm: FC<UserFormProps> = (props) => {
-  const { closeHandler, initialValues, submitHandler, roles, editing = false } = props;
+  const { closeHandler, initialValues, submitHandler, editing = false, permission, changePermission } = props;
 
   return (
     <Formik
@@ -35,17 +63,6 @@ export const UserForm: FC<UserFormProps> = (props) => {
         <Form className='flex-1'>
           <div className='flex flex-col h-full'>
             <div className='space-y-4 mb-4 flex-1'>
-              <Input
-                label='Хэрэглэгчийн нэр'
-                id='username'
-                name='username'
-                placeholder='Хэрэглэгчийн нэр'
-                value={values.username}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={!!errors.username && touched.username}
-                errorMsg={errors.username}
-              />
               <Input
                 label='Нэр'
                 id='firstName'
@@ -92,18 +109,24 @@ export const UserForm: FC<UserFormProps> = (props) => {
                 error={!!errors.password && touched.password}
                 errorMsg={errors.password}
               />
-              <Select
-                items={roles.map((role) => ({ value: role.id.toString(), label: role.name }))}
-                label='Эрх'
-                id='role'
-                name='role'
-                placeHolder='Эрх сонгох'
-                value={values.role}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={!!errors.role && touched.role}
-                errorMsg={errors.role}
-              />
+              <div>
+                <label className='block mb-2 text-sm font-medium text-gray-900 dark:text-white'>Эрх</label>
+                <div className='flex flex-col gap-4'>
+                  {permissions.map((p, index) => {
+                    return (
+                      <Toggle
+                        key={index}
+                        label={p.name}
+                        id={p.key}
+                        checked={permission[p.key]}
+                        onChange={(e) => {
+                          changePermission(p.key);
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
             <div className='flex items-center w-full pb-4 space-x-4'>

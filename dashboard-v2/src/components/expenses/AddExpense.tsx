@@ -6,6 +6,7 @@ import { errorHandler } from '@/utils';
 import { useRefreshData } from '@/hooks';
 import { expenseServices } from '@/api/services';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface AddExpenseProps {
   closeHandler: () => void;
@@ -14,10 +15,11 @@ interface AddExpenseProps {
 export const AddExpense: FC<AddExpenseProps> = (props) => {
   const { closeHandler } = props;
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const submitHandler = async (values: InitialExpenseValueType) => {
     try {
-      await expenseServices.createExpense(values);
+      await expenseServices.createExpense(values, session?.jwt!);
 
       closeHandler();
       toast.success('Зарлага амжилттай нэмэгдлээ');

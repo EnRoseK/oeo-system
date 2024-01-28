@@ -8,10 +8,11 @@ import {
   ProductExpensesList,
 } from '@/components';
 import { PAGE_SIZE, siteName, translations } from '@/constants';
-import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
+import { useCheckPermission, useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductExpense, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -23,13 +24,24 @@ interface ProductExpensePageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<ProductExpensePageProps> = async (ctx) => {
-  const { query } = ctx;
+  const { query, req } = ctx;
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+
   const { page = '1', search, product, startDate, endDate } = query;
 
   const reqQuery: ServiceQuery = {
     page: Number(page),
     pageSize: PAGE_SIZE,
     filters: { product: {} },
+    jwt: session.jwt,
   };
   if (search) {
     reqQuery.filters.product.title = {
@@ -50,7 +62,7 @@ export const getServerSideProps: GetServerSideProps<ProductExpensePageProps> = a
 
   const [productExpensesRes, productsRes] = await Promise.all([
     productExpenseServices.getProductExpenses(reqQuery),
-    productServices.getProducts({ limit: -1 }),
+    productServices.getProducts({ limit: -1, jwt: session.jwt }),
   ]);
 
   return {
@@ -64,12 +76,13 @@ export const getServerSideProps: GetServerSideProps<ProductExpensePageProps> = a
 
 const ProductExpensePage: NextPage<ProductExpensePageProps> = (props) => {
   const title = `${translations.productExpense} | ${siteName}`;
-
+  useCheckPermission('productExpense');
   const { productExpenses = [], pagination, products = [] } = props;
   const router = useRouter();
   const [openDrawer, closeDrawer] = useDrawer();
   const { isConfirmed } = useConfirm();
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const productFilterChangeHandler = (value: string, checked: boolean) => {
     let prodFilters = router.query.product;
@@ -98,7 +111,7 @@ const ProductExpensePage: NextPage<ProductExpensePageProps> = (props) => {
       const confirmed = await isConfirmed('Та энэ шинжилгээг устгахдаа итгэлтэй байна уу?');
       if (!confirmed) return;
 
-      await productExpenseServices.deleteProductExpense(id);
+      await productExpenseServices.deleteProductExpense(id, session?.jwt!);
 
       toast.warning('Шинжилгээг амжилттай устгалаа');
       refreshData();

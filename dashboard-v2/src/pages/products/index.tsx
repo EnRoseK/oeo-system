@@ -1,10 +1,11 @@
 import { categoryServices, productServices } from '@/api/services';
 import { AddProduct, CheckboxDropdown, EditProduct, PageHeader, Pagination, ProductList } from '@/components';
 import { PAGE_SIZE, siteName, translations } from '@/constants';
-import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
+import { useCheckPermission, useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { ICategory, IPagination, IProduct, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -16,13 +17,24 @@ interface ProductsPageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async (ctx) => {
-  const { query } = ctx;
+  const { query, req } = ctx;
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+
   const { page = '1', search, category } = query;
 
   const reqQuery: ServiceQuery = {
     page: Number(page),
     pageSize: PAGE_SIZE,
     filters: {},
+    jwt: session.jwt,
   };
   if (search) {
     reqQuery.filters.title = { $contains: search };
@@ -33,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async (
 
   const [productsRes, categoriesRes] = await Promise.all([
     productServices.getProducts(reqQuery),
-    categoryServices.getCategories({ limit: -1 }),
+    categoryServices.getCategories({ limit: -1, jwt: session.jwt }),
   ]);
 
   return {
@@ -47,12 +59,13 @@ export const getServerSideProps: GetServerSideProps<ProductsPageProps> = async (
 
 const ProductsPage: NextPage<ProductsPageProps> = (props) => {
   const title = `${translations.products} | ${siteName}`;
-
+  useCheckPermission('product');
   const { products = [], pagination, categories = [] } = props;
   const router = useRouter();
   const [openDrawer, closeDrawer] = useDrawer();
   const { isConfirmed } = useConfirm();
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const categoryFilterChangeHandler = (value: string, checked: boolean) => {
     let cFilters = router.query.category;
@@ -85,7 +98,7 @@ const ProductsPage: NextPage<ProductsPageProps> = (props) => {
       const confirmed = await isConfirmed('Та энэ урвалжийг устгахдаа итгэлтэй байна уу?');
       if (!confirmed) return;
 
-      await productServices.deleteProduct(id);
+      await productServices.deleteProduct(id, session?.jwt!);
 
       toast.warning('Урвалжийг амжилттай устгалаа');
       refreshData();

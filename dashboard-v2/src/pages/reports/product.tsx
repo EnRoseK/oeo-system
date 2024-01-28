@@ -1,8 +1,10 @@
 import { productExpenseServices, productIncomeServices, productServices } from '@/api/services';
 import { DatePicker, PageHeader, ProductReportList } from '@/components';
 import { siteName, translations } from '@/constants';
+import { useCheckPermission } from '@/hooks';
 import { IProduct, IProductExpense, IProductIncome } from '@/interfaces';
 import { GetServerSideProps, NextPage } from 'next';
+import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 
 interface ProductsReportProps {
@@ -12,10 +14,22 @@ interface ProductsReportProps {
 }
 
 export const getServerSideProps: GetServerSideProps<ProductsReportProps> = async (ctx) => {
+  const { req } = ctx;
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+
   const [productsRes, productIncomesRes, productExpensesRes] = await Promise.all([
-    productServices.getProducts({ limit: -1 }),
-    productIncomeServices.getProductIncomes({ limit: -1 }),
-    productExpenseServices.getProductExpenses({ limit: -1 }),
+    productServices.getProducts({ limit: -1, jwt: session.jwt }),
+    productIncomeServices.getProductIncomes({ limit: -1, jwt: session.jwt }),
+    productExpenseServices.getProductExpenses({ limit: -1, jwt: session.jwt }),
   ]);
 
   return {
@@ -29,7 +43,7 @@ export const getServerSideProps: GetServerSideProps<ProductsReportProps> = async
 
 const ProductsReport: NextPage<ProductsReportProps> = (props) => {
   const { products, productIncomes, productExpenses } = props;
-
+  useCheckPermission('productReport');
   const title = `${translations.productReport} | ${siteName}`;
 
   return (

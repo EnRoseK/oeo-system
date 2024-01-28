@@ -3,7 +3,7 @@ import { axiosInstance } from '@/libs';
 import { convertApiUrl } from '@/utils';
 import { CREATE_PRODUCT_INCOME, DELETE_PRODUCT_INCOME, GET_PRODUCT_INCOMES } from '../endpoints';
 
-const getProductIncomes = async ({ page, pageSize, filters, limit }: ServiceQuery) => {
+const getProductIncomes = async ({ page, pageSize, filters, limit, jwt }: ServiceQuery) => {
   const paramaters: RequestQuery = {
     sort: 'createdAt:desc',
     populate: 'product',
@@ -27,16 +27,35 @@ const getProductIncomes = async ({ page, pageSize, filters, limit }: ServiceQuer
   }
 
   return await axiosInstance
-    .get<{ data: IProductIncome[]; meta: { pagination: IPagination } }>(convertApiUrl(GET_PRODUCT_INCOMES, paramaters))
+    .get<{ data: IProductIncome[]; meta: { pagination: IPagination } }>(
+      convertApiUrl(GET_PRODUCT_INCOMES, paramaters),
+      {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      },
+    )
     .then((res) => res.data);
 };
 
-const createProductIncome = async (data: any) => {
-  return await axiosInstance.post(CREATE_PRODUCT_INCOME, data).then((res) => res.data);
+const createProductIncome = async (data: any, jwt: string) => {
+  return await axiosInstance
+    .post(CREATE_PRODUCT_INCOME, data, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+    .then((res) => res.data);
 };
 
-const deleteProductIncome = async (id: number) => {
-  return await axiosInstance.delete(DELETE_PRODUCT_INCOME(id)).then((res) => res.status);
+const deleteProductIncome = async (id: number, jwt: string) => {
+  return await axiosInstance
+    .delete(DELETE_PRODUCT_INCOME(id), {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+    .then((res) => res.status);
 };
 
 export const productIncomeServices = { getProductIncomes, createProductIncome, deleteProductIncome };

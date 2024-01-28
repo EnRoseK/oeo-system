@@ -8,10 +8,11 @@ import {
   ProductIncomeList,
 } from '@/components';
 import { PAGE_SIZE, siteName, translations } from '@/constants';
-import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
+import { useCheckPermission, useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IPagination, IProduct, IProductIncome, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -23,12 +24,23 @@ interface ProductIncomePageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = async (ctx) => {
-  const { query } = ctx;
+  const { query, req } = ctx;
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+
   const { page = '1', search, product, startDate, endDate } = query;
   const reqQuery: ServiceQuery = {
     page: Number(page),
     pageSize: PAGE_SIZE,
     filters: { product: {} },
+    jwt: session.jwt,
   };
   if (search) {
     reqQuery.filters.product.title = {
@@ -49,7 +61,7 @@ export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = as
 
   const [productIncomesRes, productsRes] = await Promise.all([
     productIncomeServices.getProductIncomes(reqQuery),
-    productServices.getProducts({ limit: -1 }),
+    productServices.getProducts({ limit: -1, jwt: session.jwt }),
   ]);
 
   return {
@@ -63,12 +75,13 @@ export const getServerSideProps: GetServerSideProps<ProductIncomePageProps> = as
 
 const ProductIncomePage: NextPage<ProductIncomePageProps> = (props) => {
   const title = `${translations.productIncome} | ${siteName}`;
-
+  useCheckPermission('productIncome');
   const { productIncomes = [], pagination, products = [] } = props;
   const router = useRouter();
   const [openDrawer, closeDrawer] = useDrawer();
   const { isConfirmed } = useConfirm();
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const productFilterChangeHandler = (value: string, checked: boolean) => {
     let prodFilters = router.query.product;
@@ -97,7 +110,7 @@ const ProductIncomePage: NextPage<ProductIncomePageProps> = (props) => {
       const confirmed = await isConfirmed('Та энэ урвалж орлогыг устгахдаа итгэлтэй байна уу?');
       if (!confirmed) return;
 
-      await productIncomeServices.deleteProductIncome(id);
+      await productIncomeServices.deleteProductIncome(id, session?.jwt!);
 
       toast.warning('Урвалж орлогыг амжилттай устгалаа');
       refreshData();

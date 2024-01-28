@@ -3,6 +3,7 @@ import { siteName, translations } from '@/constants';
 import { IProductExpense, IUser } from '@/interfaces';
 import { convertDateToString } from '@/utils/convertDateToString';
 import { GetServerSideProps, NextPage } from 'next';
+import { getSession } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/image';
 
@@ -11,10 +12,22 @@ interface DashboardProps {
   users: IUser[];
 }
 
-export const getServerSideProps: GetServerSideProps<DashboardProps> = async () => {
+export const getServerSideProps: GetServerSideProps<DashboardProps> = async (ctx) => {
+  const { req } = ctx;
+
+  const session = await getSession({ req });
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+
   const [productExpensesRes, usersRes] = await Promise.all([
-    productExpenseServices.getProductExpenses({ pageSize: 5 }),
-    userServices.getUsers({}),
+    productExpenseServices.getProductExpenses({ pageSize: 5, jwt: session.jwt }),
+    userServices.getUsers({ jwt: session.jwt }),
   ]);
 
   return {

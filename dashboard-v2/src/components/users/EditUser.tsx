@@ -1,37 +1,71 @@
 import { CloseIcon } from '@/assets/icons';
 import { translations } from '@/constants';
-import { IRole, IUser } from '@/interfaces';
-import { FC } from 'react';
+import { IUser } from '@/interfaces';
+import { FC, useState } from 'react';
 import { InitialUserValueType, UserForm } from './UserForm';
 import { errorHandler } from '@/utils';
 import { userServices } from '@/api/services';
-import { useRefreshData } from '@/hooks';
+import { useCurrentUser, useRefreshData } from '@/hooks';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface EditUserProps {
   closeHandler: () => void;
   user: IUser;
-  roles: IRole[];
 }
 
 export const EditUser: FC<EditUserProps> = (props) => {
-  const { closeHandler, user, roles } = props;
+  const { closeHandler, user } = props;
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
+  const { currentUser, updateCurrentUser } = useCurrentUser();
+
+  const [permission, setPermission] = useState(user.permission);
+
+  const changePermission = (
+    key:
+      | 'category'
+      | 'expense'
+      | 'incomeReport'
+      | 'product'
+      | 'productExpense'
+      | 'productIncome'
+      | 'productReport'
+      | 'user',
+  ) => {
+    setPermission((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const submitHandler = async (values: InitialUserValueType) => {
     try {
-      await userServices.updateUser(user.id, {
-        username: values.username,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        confirmed: true,
-        blocked: false,
-        role: {
-          connect: [{ id: Number(values.role) }],
-          disconnect: [{ id: Number(values.role) }],
+      const updatedUser = await userServices.updateUser(
+        user.id,
+        {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          email: values.email,
+          confirmed: true,
+          blocked: false,
+          role: {
+            connect: [
+              {
+                id: 1,
+              },
+            ],
+            disconnect: [
+              {
+                id: 1,
+              },
+            ],
+          },
+          permission,
         },
-      });
+        session?.jwt!,
+      );
+
+      if (updatedUser.id === currentUser?.id) {
+        updateCurrentUser(updatedUser);
+      }
 
       closeHandler();
       toast.success('Хэрэглэгчийн мэдээлэл амжилттай шинэчлэгдлээ');
@@ -58,15 +92,14 @@ export const EditUser: FC<EditUserProps> = (props) => {
         closeHandler={closeHandler}
         submitHandler={submitHandler}
         initialValues={{
-          username: user.username,
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
           password: '',
-          role: user.role.id.toString(),
         }}
-        roles={roles}
         editing
+        permission={permission}
+        changePermission={changePermission}
       />
     </div>
   );

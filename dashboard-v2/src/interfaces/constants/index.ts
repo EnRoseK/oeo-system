@@ -12,7 +12,27 @@ export interface ISidebarItem {
   child?: {
     title: string;
     url: string;
+    permissionKey?: (
+      | 'category'
+      | 'expense'
+      | 'incomeReport'
+      | 'product'
+      | 'productExpense'
+      | 'productIncome'
+      | 'productReport'
+      | 'user'
+    )[];
   }[];
+  permissionKey?: (
+    | 'category'
+    | 'expense'
+    | 'incomeReport'
+    | 'product'
+    | 'productExpense'
+    | 'productIncome'
+    | 'productReport'
+    | 'user'
+  )[];
 }
 
 export interface IBreadcrumbItem {

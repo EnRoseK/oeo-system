@@ -36,22 +36,27 @@ export const SidebarItems: ISidebarItem[] = [
     title: translations.product,
     url: '#',
     icon: Icons.GiChemicalDrop,
+    permissionKey: ['product', 'category', 'productIncome', 'productExpense'],
     child: [
       {
         title: translations.products,
         url: '/products',
+        permissionKey: ['product'],
       },
       {
         title: translations.categories,
         url: '/products/categories',
+        permissionKey: ['category'],
       },
       {
         title: translations.productIncome,
         url: '/products/income',
+        permissionKey: ['productIncome'],
       },
       {
         title: translations.productExpense,
         url: '/products/expense',
+        permissionKey: ['productExpense'],
       },
     ],
   },
@@ -59,20 +64,23 @@ export const SidebarItems: ISidebarItem[] = [
     title: translations.expense,
     url: '/expenses',
     icon: Icons.GiExpense,
+    permissionKey: ['expense'],
   },
   {
     title: translations.report,
     url: '#',
     icon: Icons.GrDocumentDownload,
+    permissionKey: ['productReport', 'incomeReport'],
     child: [
-      { title: translations.productReport, url: '/reports/product' },
-      { title: translations.incomeReport, url: '/reports/income' },
+      { title: translations.productReport, url: '/reports/product', permissionKey: ['productReport'] },
+      { title: translations.incomeReport, url: '/reports/income', permissionKey: ['incomeReport'] },
     ],
   },
   {
     title: translations.users,
     url: '/users',
     icon: Icons.FiUsers,
+    permissionKey: ['user'],
   },
   {
     title: translations.settings,

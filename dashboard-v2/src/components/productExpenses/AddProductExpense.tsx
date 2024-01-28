@@ -7,6 +7,7 @@ import { errorHandler } from '@/utils';
 import { productExpenseServices } from '@/api/services';
 import { useRefreshData } from '@/hooks';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface AddProductExpenseProps {
   closeHandler: () => void;
@@ -16,17 +17,21 @@ interface AddProductExpenseProps {
 export const AddProductExpense: FC<AddProductExpenseProps> = (props) => {
   const { closeHandler, products } = props;
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const submitHandler = async (values: InitialProductExpenseValueType) => {
     try {
-      await productExpenseServices.createProductExpense({
-        basePrice: values.basePrice,
-        quantity: values.quantity,
-        paymentType: values.paymentType,
-        product: {
-          set: [Number(values.productId)],
+      await productExpenseServices.createProductExpense(
+        {
+          basePrice: values.basePrice,
+          quantity: values.quantity,
+          paymentType: values.paymentType,
+          product: {
+            set: [Number(values.productId)],
+          },
         },
-      });
+        session?.jwt!,
+      );
 
       closeHandler();
       toast.success('Шинжилгээ амжилттай нэмэгдлээ');

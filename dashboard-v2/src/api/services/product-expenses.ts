@@ -3,7 +3,7 @@ import { axiosInstance } from '@/libs';
 import { convertApiUrl } from '@/utils';
 import { CREATE_PRODUCT_EXPENSE, DELETE_PRODUCT_EXPENSE, GET_PRODUCT_EXPENSES } from '../endpoints';
 
-const getProductExpenses = async ({ page, pageSize, filters, limit }: ServiceQuery) => {
+const getProductExpenses = async ({ page, pageSize, filters, limit, jwt }: ServiceQuery) => {
   const paramaters: RequestQuery = {
     sort: 'createdAt:desc',
     populate: 'product',
@@ -30,16 +30,32 @@ const getProductExpenses = async ({ page, pageSize, filters, limit }: ServiceQue
     .get<{
       data: IProductExpense[];
       meta: { pagination: IPagination };
-    }>(convertApiUrl(GET_PRODUCT_EXPENSES, paramaters))
+    }>(convertApiUrl(GET_PRODUCT_EXPENSES, paramaters), {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
     .then((res) => res.data);
 };
 
-const createProductExpense = async (data: any) => {
-  return await axiosInstance.post(CREATE_PRODUCT_EXPENSE, data).then((res) => res.data);
+const createProductExpense = async (data: any, jwt: string) => {
+  return await axiosInstance
+    .post(CREATE_PRODUCT_EXPENSE, data, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+    .then((res) => res.data);
 };
 
-const deleteProductExpense = async (id: number) => {
-  return await axiosInstance.delete(DELETE_PRODUCT_EXPENSE(id)).then((res) => res.status);
+const deleteProductExpense = async (id: number, jwt: string) => {
+  return await axiosInstance
+    .delete(DELETE_PRODUCT_EXPENSE(id), {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+    .then((res) => res.status);
 };
 
 export const productExpenseServices = { getProductExpenses, createProductExpense, deleteProductExpense };

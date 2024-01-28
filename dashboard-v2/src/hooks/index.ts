@@ -7,3 +7,4 @@ export * from './useRefreshData';
 export * from './useDrawer';
 export * from './useStopScroll';
 export * from './useCurrentUser';
+export * from './useCheckPermission';

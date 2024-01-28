@@ -7,6 +7,7 @@ import { errorHandler } from '@/utils';
 import { useRefreshData } from '@/hooks';
 import { productIncomeServices } from '@/api/services';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface AddProductIncomeProps {
   closeHandler: () => void;
@@ -16,16 +17,20 @@ interface AddProductIncomeProps {
 export const AddProductIncome: FC<AddProductIncomeProps> = (props) => {
   const { closeHandler, products } = props;
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const submitHandler = async (values: InitialProductIncomeValueType) => {
     try {
-      await productIncomeServices.createProductIncome({
-        basePrice: values.basePrice,
-        quantity: values.quantity,
-        product: {
-          set: [Number(values.productId)],
+      await productIncomeServices.createProductIncome(
+        {
+          basePrice: values.basePrice,
+          quantity: values.quantity,
+          product: {
+            set: [Number(values.productId)],
+          },
         },
-      });
+        session?.jwt!,
+      );
 
       closeHandler();
       toast.success('Урвалж орлого амжилттай нэмэгдлээ');

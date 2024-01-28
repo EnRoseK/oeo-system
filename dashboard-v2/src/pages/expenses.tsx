@@ -9,10 +9,11 @@ import {
   Pagination,
 } from '@/components';
 import { PAGE_SIZE, siteName, translations } from '@/constants';
-import { useConfirm, useDrawer, useRefreshData } from '@/hooks';
+import { useCheckPermission, useConfirm, useDrawer, useRefreshData } from '@/hooks';
 import { IExpense, IPagination, ServiceQuery } from '@/interfaces';
 import { errorHandler } from '@/utils';
 import { GetServerSideProps, NextPage } from 'next';
+import { getSession, useSession } from 'next-auth/react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
@@ -23,12 +24,24 @@ interface ExpensesPageProps {
 }
 
 export const getServerSideProps: GetServerSideProps<ExpensesPageProps> = async (ctx) => {
-  const { query } = ctx;
+  const { query, req } = ctx;
+  const session = await getSession({ req });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: true,
+      },
+    };
+  }
+
   const { page = '1', search, type, startDate, endDate } = query;
   const reqQuery: ServiceQuery = {
     page: Number(page),
     pageSize: PAGE_SIZE,
     filters: {},
+    jwt: session.jwt,
   };
   if (search) {
     reqQuery.filters.name = { $contains: search };
@@ -55,12 +68,14 @@ export const getServerSideProps: GetServerSideProps<ExpensesPageProps> = async (
 
 const ExpensesPage: NextPage<ExpensesPageProps> = (props) => {
   const title = `${translations.expense} | ${siteName}`;
+  useCheckPermission('expense');
 
   const { expenses = [], pagination } = props;
   const [openDrawer, closeDrawer] = useDrawer();
   const { isConfirmed } = useConfirm();
   const router = useRouter();
   const refreshData = useRefreshData();
+  const { data: session } = useSession();
 
   const openAddDrawer = () => {
     openDrawer(<AddExpense closeHandler={closeDrawer} />);
@@ -75,7 +90,7 @@ const ExpensesPage: NextPage<ExpensesPageProps> = (props) => {
       const confirmed = await isConfirmed('Та энэ зарлагыг устгахдаа итгэлтэй байна уу?');
       if (!confirmed) return;
 
-      await expenseServices.deleteExpense(id);
+      await expenseServices.deleteExpense(id, session?.jwt!);
 
       toast.warning('Зарлагыг амжилттай устгалаа');
       refreshData();

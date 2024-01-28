@@ -27,6 +27,7 @@ export default NextAuth({
             email: credentials.email,
             password: credentials.password,
           });
+
           return { user, jwt } as any;
         } catch (error) {
           // Sign In Fail
@@ -50,4 +51,5 @@ export default NextAuth({
       return Promise.resolve(token);
     },
   },
+  secret: process.env.NEXTAUTH_SECRET,
 });

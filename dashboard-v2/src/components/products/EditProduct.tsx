@@ -6,6 +6,7 @@ import { errorHandler } from '@/utils';
 import { productServices } from '@/api/services';
 import { useRefreshData } from '@/hooks';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 interface EditProductProps {
   closeHandler: () => void;
@@ -16,16 +17,21 @@ interface EditProductProps {
 export const EditProduct: FC<EditProductProps> = (props) => {
   const { closeHandler, product, categories } = props;
   const refreshData = useRefreshData();
+  const { data } = useSession();
 
   const submitHandler = async (values: InitialProductValueType) => {
     try {
-      await productServices.updateProduct(product.id, {
-        title: values.title,
-        description: values.description,
-        product_category: {
-          set: [Number(values.category)],
+      await productServices.updateProduct(
+        product.id,
+        {
+          title: values.title,
+          description: values.description,
+          product_category: {
+            set: [Number(values.category)],
+          },
         },
-      });
+        data?.jwt!,
+      );
 
       closeHandler();
       toast.success('Урвалжийн мэдээлэл амжилттай шинэчлэгдлээ');
