@@ -775,6 +775,7 @@ export interface ApiExpenseExpense extends Schema.CollectionType {
     singularName: 'expense';
     pluralName: 'expenses';
     displayName: 'Expense';
+    description: '';
   };
   options: {
     draftAndPublish: false;
@@ -784,7 +785,7 @@ export interface ApiExpenseExpense extends Schema.CollectionType {
     description: Attribute.Text;
     type: Attribute.Enumeration<['CARD', 'CASH', 'TRANSFER', 'RENT']> &
       Attribute.Required;
-    amount: Attribute.BigInteger & Attribute.Required;
+    amount: Attribute.Integer & Attribute.Required;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     createdBy: Attribute.Relation<

@@ -4,7 +4,8 @@
   "info": {
     "singularName": "expense",
     "pluralName": "expenses",
-    "displayName": "Expense"
+    "displayName": "Expense",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -29,7 +30,7 @@
       "required": true
     },
     "amount": {
-      "type": "biginteger",
+      "type": "integer",
       "required": true
     }
   }
