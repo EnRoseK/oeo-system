@@ -1,6 +1,6 @@
 import { TableRow, TableRowItem, ActionButtons } from '@/components';
 import { IProductIncome } from '@/interfaces';
-import React, { FC } from 'react';
+import { FC } from 'react';
 
 interface ListItemProps {
   productIncome: IProductIncome;
@@ -9,12 +9,6 @@ interface ListItemProps {
 
 export const ListItem: FC<ListItemProps> = (props) => {
   const { productIncome, deleteHandler } = props;
-  const today = new Date().toISOString();
-
-  const startOfDay = today.split('T')[0] + 'T00:00:00.000Z';
-  const endOfDay = today.split('T')[0] + 'T23:59:59.999Z';
-
-  const isTodaysIncome = productIncome.createdAt <= endOfDay && productIncome.createdAt >= startOfDay;
 
   return (
     <TableRow>
@@ -27,11 +21,8 @@ export const ListItem: FC<ListItemProps> = (props) => {
 
       <ActionButtons
         showEdit={false}
-        showDelete={isTodaysIncome}
         deleteHandler={() => {
-          if (isTodaysIncome) {
-            deleteHandler(productIncome.id);
-          }
+          deleteHandler(productIncome.id);
         }}
       />
     </TableRow>

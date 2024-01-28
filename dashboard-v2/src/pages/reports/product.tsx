@@ -1,38 +1,34 @@
-import { productReportServices } from '@/api/services';
+import { productExpenseServices, productIncomeServices, productServices } from '@/api/services';
 import { DatePicker, PageHeader, ProductReportList } from '@/components';
 import { siteName, translations } from '@/constants';
-import { IProductReport, ServiceQuery } from '@/interfaces';
+import { IProduct, IProductExpense, IProductIncome } from '@/interfaces';
 import { GetServerSideProps, NextPage } from 'next';
 import Head from 'next/head';
 
 interface ProductsReportProps {
-  productReports: IProductReport[];
+  productIncomes: IProductIncome[];
+  productExpenses: IProductExpense[];
+  products: IProduct[];
 }
 
 export const getServerSideProps: GetServerSideProps<ProductsReportProps> = async (ctx) => {
-  const { query } = ctx;
-  const { startDate, endDate } = query;
-  const reqQuery: ServiceQuery = {
-    filters: {},
-  };
-  if (startDate && endDate) {
-    reqQuery.filters.$and = [
-      { createdAt: { $lte: new Date(endDate as string).toISOString().replace('T00:00:00.000Z', 'T23:59:59.999Z') } },
-      { createdAt: { $gte: new Date(startDate as string).toISOString() } },
-    ];
-  }
-
-  const res = await productReportServices.getProductReports(reqQuery);
+  const [productsRes, productIncomesRes, productExpensesRes] = await Promise.all([
+    productServices.getProducts({ limit: -1 }),
+    productIncomeServices.getProductIncomes({ limit: -1 }),
+    productExpenseServices.getProductExpenses({ limit: -1 }),
+  ]);
 
   return {
     props: {
-      productReports: res.data,
+      products: productsRes.data,
+      productExpenses: productExpensesRes.data,
+      productIncomes: productIncomesRes.data,
     },
   };
 };
 
 const ProductsReport: NextPage<ProductsReportProps> = (props) => {
-  const { productReports } = props;
+  const { products, productIncomes, productExpenses } = props;
 
   const title = `${translations.productReport} | ${siteName}`;
 
@@ -55,7 +51,7 @@ const ProductsReport: NextPage<ProductsReportProps> = (props) => {
         }
       />
 
-      <ProductReportList productReports={productReports} />
+      <ProductReportList products={products} productIncomes={productIncomes} productExpenses={productExpenses} />
     </>
   );
 };

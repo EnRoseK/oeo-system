@@ -1,8 +1,6 @@
-import React, { FC, ReactNode } from 'react';
+import React, { FC, PropsWithChildren } from 'react';
 
-interface TableRowItemProps {
-  children: ReactNode;
-}
+interface TableRowItemProps extends PropsWithChildren {}
 
 export const TableRowItem: FC<TableRowItemProps> = (props) => {
   const { children } = props;
