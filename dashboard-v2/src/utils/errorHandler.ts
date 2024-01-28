@@ -10,7 +10,8 @@ export const errorHandler = (error: unknown, message?: string) => {
     toast.error(
       (error.response?.data?.error?.message || message)
         .replaceAll('Email already taken', 'И-мэйл бүртгэлтэй байна')
-        .replaceAll('Username already taken', 'Хэрэглэгчийн нэр бүртгэлтэй байна'),
+        .replaceAll('Username already taken', 'Хэрэглэгчийн нэр бүртгэлтэй байна')
+        .replaceAll('The provided current password is invalid', 'Одоогийн нууц үг буруу байна'),
     );
   } else {
     toast.error(message);

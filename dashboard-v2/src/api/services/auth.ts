@@ -1,5 +1,5 @@
 import { axiosInstance } from '@/libs';
-import { ME, SIGN_IN } from '../endpoints';
+import { CHANGE_PASSWORD, ME, SIGN_IN } from '../endpoints';
 import { IUser } from '@/interfaces';
 
 const signIn = async ({ email, password }: { email: string; password: string }) => {
@@ -18,4 +18,14 @@ const me = async (jwt: string) => {
     .then((res) => res.data);
 };
 
-export const authServices = { signIn, me };
+const changePassword = async ({ jwt, values }: { jwt: string; values: any }) => {
+  return await axiosInstance
+    .post<{ jwt: string; user: IUser }>(CHANGE_PASSWORD, values, {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+    })
+    .then((res) => res.data);
+};
+
+export const authServices = { signIn, me, changePassword };

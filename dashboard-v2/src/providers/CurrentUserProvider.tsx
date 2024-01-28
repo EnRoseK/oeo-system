@@ -17,7 +17,7 @@ export const CurrentUserProvider: FC<CurrentUserProviderProps> = (props) => {
   const { children } = props;
 
   const [currentUser, setCurrentUser] = useState<IUser | undefined>(undefined);
-  const { data } = useSession();
+  const { data, status } = useSession();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -26,10 +26,10 @@ export const CurrentUserProvider: FC<CurrentUserProviderProps> = (props) => {
       updateCurrentUser(res);
     };
 
-    if (data) {
+    if (data && status === 'authenticated') {
       fetchCurrentUser();
     }
-  }, [data]);
+  }, [data, status]);
 
   const updateCurrentUser = (user: IUser) => {
     setCurrentUser(user);

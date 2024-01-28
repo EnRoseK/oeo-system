@@ -29,7 +29,7 @@ const createUser = async (data: any) => {
 };
 
 const updateUser = async (id: number, data: any) => {
-  return await axiosInstance.put(UPDATE_USER(id), data).then((res) => res.data);
+  return await axiosInstance.put<IUser>(UPDATE_USER(id), data).then((res) => res.data);
 };
 
 const deleteUser = async (id: number) => {
