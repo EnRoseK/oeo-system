@@ -6,3 +6,4 @@ export * from './useGetCurrentPage';
 export * from './useRefreshData';
 export * from './useDrawer';
 export * from './useStopScroll';
+export * from './useCurrentUser';

@@ -1,5 +1,6 @@
 import { Footer, Header, Sidebar } from '@/components';
 import { useAnimation } from '@/hooks';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { FC, ReactNode, useEffect, useState } from 'react';
 
@@ -9,10 +10,12 @@ interface DashboardLayoutProps {
 
 export const DashboardLayout: FC<DashboardLayoutProps> = (props) => {
   const { children } = props;
+  const { data } = useSession();
 
   const router = useRouter();
   const [showMobileSidebar, setShowMobileSidebar] = useState<boolean>(false);
   const [renderMobileSidebar, onAnimationEnd] = useAnimation(showMobileSidebar);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     function updateSize() {
@@ -48,6 +51,18 @@ export const DashboardLayout: FC<DashboardLayoutProps> = (props) => {
       });
     };
   }, [router]);
+
+  useEffect(() => {
+    if (!data) {
+      router.replace('/login');
+    } else {
+      setIsLoading(false);
+    }
+  }, [data, router]);
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <>
