@@ -1,5 +1,6 @@
 import { TableRow, TableRowItem, TableRowItemDescription, ActionButtons } from '@/components';
 import { IExpense } from '@/interfaces';
+import { convertNumberToCurrency } from '@/utils';
 import { convertDateToString } from '@/utils/convertDateToString';
 import { FC } from 'react';
 
@@ -24,7 +25,7 @@ export const ListItem: FC<ListItemProps> = (props) => {
           .replaceAll('TRANSFER', 'Шилжүүлэг')
           .replaceAll('RENT', 'Зээл')}
       </TableRowItem>
-      <TableRowItem>{expense.amount.toLocaleString()}₮</TableRowItem>
+      <TableRowItem>{convertNumberToCurrency(expense.amount)}</TableRowItem>
       <TableRowItem>{convertDateToString(new Date(expense.createdAt))}</TableRowItem>
       <ActionButtons
         editHandler={() => editHandler(expense)}

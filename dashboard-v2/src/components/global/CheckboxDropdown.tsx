@@ -36,22 +36,25 @@ export const CheckboxDropdown: FC<CheckboxDropdownProps> = (props) => {
       {showDropdown && (
         <div
           id='dropdown'
-          className='absolute top-full right-0 mt-2 z-10 block w-56 p-3 bg-white rounded-lg shadow dark:bg-gray-700'
+          className='absolute top-full right-0 mt-2 z-10 block min-w-full w-max p-3 bg-white rounded-lg shadow dark:bg-gray-700'
         >
-          <ul className='space-y-2 text-sm' aria-labelledby='dropdownDefault'>
+          <ul className='space-y-2 text-sm'>
             {items.map((item, index) => {
               return (
                 <li key={index} className='flex items-center'>
                   <input
                     id={item.label}
                     type='checkbox'
-                    className='w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500'
+                    className='cursor-pointer w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded-md focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600'
                     onChange={(e) => {
                       onChangeHandler(item.value, e.target.checked);
                     }}
                     checked={values.includes(item.value)}
                   />
-                  <label htmlFor={item.label} className='ml-2 text-sm font-medium text-gray-900 dark:text-gray-100'>
+                  <label
+                    htmlFor={item.label}
+                    className='cursor-pointer ms-2 text-sm font-medium text-gray-900 dark:text-gray-300'
+                  >
                     {item.label}
                   </label>
                 </li>

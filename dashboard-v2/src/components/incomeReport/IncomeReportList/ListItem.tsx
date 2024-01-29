@@ -1,6 +1,7 @@
 import { Table, TableBody, TableHead, TableHeadItem, TableRow, TableRowItem } from '@/components';
 import { useAnimation } from '@/hooks';
 import { IExpense, IProductExpense } from '@/interfaces';
+import { convertNumberToCurrency } from '@/utils';
 import { convertDateToString } from '@/utils/convertDateToString';
 import classNames from 'classnames';
 import React, { FC, useState } from 'react';
@@ -26,9 +27,9 @@ export const ListItem: FC<ListItemProps> = (props) => {
     <>
       <TableRow onClick={() => setExpand((prev) => !prev)} className='cursor-pointer'>
         <TableRowItem>{convertDateToString(new Date(date))}</TableRowItem>
-        <TableRowItem>{totalIncomes}₮</TableRowItem>
-        <TableRowItem>{totalExpense}₮</TableRowItem>
-        <TableRowItem>{totalIncomes - totalExpense}₮</TableRowItem>
+        <TableRowItem>{convertNumberToCurrency(totalIncomes)}</TableRowItem>
+        <TableRowItem>{convertNumberToCurrency(totalExpense)}</TableRowItem>
+        <TableRowItem>{convertNumberToCurrency(totalIncomes - totalExpense)}</TableRowItem>
       </TableRow>
 
       {renderExpand && (
@@ -53,59 +54,67 @@ export const ListItem: FC<ListItemProps> = (props) => {
                       <TableRow>
                         <TableRowItem>Орлого</TableRowItem>
                         <TableRowItem>
-                          {productExpenses
-                            .filter((expense) => expense.paymentType === 'CARD')
-                            .reduce((acc, cur) => acc + cur.totalPrice, 0)}
-                          ₮
+                          {convertNumberToCurrency(
+                            productExpenses
+                              .filter((expense) => expense.paymentType === 'CARD')
+                              .reduce((acc, cur) => acc + cur.totalPrice, 0),
+                          )}
                         </TableRowItem>
                         <TableRowItem>
-                          {productExpenses
-                            .filter((expense) => expense.paymentType === 'CASH')
-                            .reduce((acc, cur) => acc + cur.totalPrice, 0)}
-                          ₮
+                          {convertNumberToCurrency(
+                            productExpenses
+                              .filter((expense) => expense.paymentType === 'CASH')
+                              .reduce((acc, cur) => acc + cur.totalPrice, 0),
+                          )}
                         </TableRowItem>
                         <TableRowItem>
-                          {productExpenses
-                            .filter((expense) => expense.paymentType === 'TRANSFER')
-                            .reduce((acc, cur) => acc + cur.totalPrice, 0)}
-                          ₮
+                          {convertNumberToCurrency(
+                            productExpenses
+                              .filter((expense) => expense.paymentType === 'TRANSFER')
+                              .reduce((acc, cur) => acc + cur.totalPrice, 0),
+                          )}
                         </TableRowItem>
                         <TableRowItem>
-                          {productExpenses
-                            .filter((expense) => expense.paymentType === 'RENT')
-                            .reduce((acc, cur) => acc + cur.totalPrice, 0)}
-                          ₮
+                          {convertNumberToCurrency(
+                            productExpenses
+                              .filter((expense) => expense.paymentType === 'RENT')
+                              .reduce((acc, cur) => acc + cur.totalPrice, 0),
+                          )}
                         </TableRowItem>
-                        <TableRowItem>{totalIncomes}₮</TableRowItem>
+                        <TableRowItem>{convertNumberToCurrency(totalIncomes)}</TableRowItem>
                       </TableRow>
 
                       <TableRow>
                         <TableRowItem>Зарлага</TableRowItem>
                         <TableRowItem>
-                          {expenses
-                            .filter((expense) => expense.type === 'CARD')
-                            .reduce((acc, cur) => acc + cur.amount, 0)}
-                          ₮
+                          {convertNumberToCurrency(
+                            expenses
+                              .filter((expense) => expense.type === 'CARD')
+                              .reduce((acc, cur) => acc + cur.amount, 0),
+                          )}
                         </TableRowItem>
                         <TableRowItem>
-                          {expenses
-                            .filter((expense) => expense.type === 'CASH')
-                            .reduce((acc, cur) => acc + cur.amount, 0)}
-                          ₮
+                          {convertNumberToCurrency(
+                            expenses
+                              .filter((expense) => expense.type === 'CASH')
+                              .reduce((acc, cur) => acc + cur.amount, 0),
+                          )}
                         </TableRowItem>
                         <TableRowItem>
-                          {expenses
-                            .filter((expense) => expense.type === 'TRANSFER')
-                            .reduce((acc, cur) => acc + cur.amount, 0)}
-                          ₮
+                          {convertNumberToCurrency(
+                            expenses
+                              .filter((expense) => expense.type === 'TRANSFER')
+                              .reduce((acc, cur) => acc + cur.amount, 0),
+                          )}
                         </TableRowItem>
                         <TableRowItem>
-                          {expenses
-                            .filter((expense) => expense.type === 'RENT')
-                            .reduce((acc, cur) => acc + cur.amount, 0)}
-                          ₮
+                          {convertNumberToCurrency(
+                            expenses
+                              .filter((expense) => expense.type === 'RENT')
+                              .reduce((acc, cur) => acc + cur.amount, 0),
+                          )}
                         </TableRowItem>
-                        <TableRowItem>{totalExpense}₮</TableRowItem>
+                        <TableRowItem>{convertNumberToCurrency(totalExpense)}</TableRowItem>
                       </TableRow>
                     </TableBody>
                   </Table>

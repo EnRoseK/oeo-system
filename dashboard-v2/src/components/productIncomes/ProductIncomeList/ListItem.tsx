@@ -1,5 +1,6 @@
 import { TableRow, TableRowItem, ActionButtons } from '@/components';
 import { IProductIncome } from '@/interfaces';
+import { convertNumberToCurrency } from '@/utils';
 import { FC } from 'react';
 
 interface ListItemProps {
@@ -15,8 +16,8 @@ export const ListItem: FC<ListItemProps> = (props) => {
       <TableRowItem>{productIncome.id}</TableRowItem>
       <TableRowItem>{productIncome.product.title}</TableRowItem>
       <TableRowItem>{productIncome.quantity.toLocaleString()}ш</TableRowItem>
-      <TableRowItem>{productIncome.basePrice.toLocaleString()}₮</TableRowItem>
-      <TableRowItem>{productIncome.totalPrice.toLocaleString()}₮</TableRowItem>
+      <TableRowItem>{convertNumberToCurrency(productIncome.basePrice)}</TableRowItem>
+      <TableRowItem>{convertNumberToCurrency(productIncome.totalPrice)}</TableRowItem>
       <TableRowItem>{new Date(productIncome.createdAt).toLocaleDateString()}</TableRowItem>
 
       <ActionButtons

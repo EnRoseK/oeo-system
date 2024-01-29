@@ -1,5 +1,6 @@
 import { TableRow, TableRowItem, ActionButtons } from '@/components';
 import { IProductExpense } from '@/interfaces';
+import { convertNumberToCurrency } from '@/utils';
 import { FC } from 'react';
 
 interface ListItemProps {
@@ -15,8 +16,8 @@ export const ListItem: FC<ListItemProps> = (props) => {
       <TableRowItem>{productExpense.id}</TableRowItem>
       <TableRowItem>{productExpense.product.title}</TableRowItem>
       <TableRowItem>{productExpense.quantity.toLocaleString()}ш</TableRowItem>
-      <TableRowItem>{productExpense.basePrice.toLocaleString()}₮</TableRowItem>
-      <TableRowItem>{productExpense.totalPrice.toLocaleString()}₮</TableRowItem>
+      <TableRowItem>{convertNumberToCurrency(productExpense.basePrice)}</TableRowItem>
+      <TableRowItem>{convertNumberToCurrency(productExpense.totalPrice)}</TableRowItem>
       <TableRowItem>
         {productExpense.paymentType
           .replaceAll('CARD', 'Карт')
