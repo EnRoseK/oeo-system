@@ -6,13 +6,15 @@ import { errorHandler } from '@/utils';
 import { userInformationValidation } from '@/validations';
 import { userServices } from '@/api/services';
 import { toast } from 'react-toastify';
+import { useSession } from 'next-auth/react';
 
 export const UserInformationForm: FC = () => {
   const { currentUser, updateCurrentUser } = useCurrentUser();
+  const { data: session } = useSession();
 
   const submitHandler = async (values: { firstName: string; lastName: string; email: string }) => {
     try {
-      const res = await userServices.updateUser(currentUser?.id!, values);
+      const res = await userServices.updateUser(currentUser?.id!, values, session?.jwt!);
 
       toast.success('Мэдээлэл амжилттай шинэчлэгдлээ');
       updateCurrentUser(res);
